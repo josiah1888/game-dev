@@ -21,7 +21,7 @@ namespace TermProject
         public int velocity;
         public bool alive;
         public int health;
-        private const int STANDARD_HEALTH = 1000;
+        protected const int STANDARD_HEALTH = 1000;
         private const float VISION_FIELD = .02f;
         private const int VISION_LENGTH = 350;
         public float Scale = 1.0f;

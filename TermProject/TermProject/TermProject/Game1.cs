@@ -11,7 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TermProject
 {
-    //SEMO1 - Auth Token: b69515e4205f67b0d9abedc33d938bed968f1f77
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
