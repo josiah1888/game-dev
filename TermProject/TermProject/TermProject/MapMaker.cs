@@ -15,15 +15,15 @@ namespace TermProject
             List<GameObject> mapObjects = new List<GameObject>();
             try
             {
-                List<string> lines = new List<string>(System.IO.File.ReadAllLines(asset));
-                for (int x = 0; x < lines.Min(i => i.Length); x++)
+                List<string> lines = new List<string>(System.IO.File.ReadAllLines("../../../" + asset)); // asset not getting copied to bin folder
+                for (int x = 0; x < lines.Count; x++)
                 {
-                    for (int y = 0; y < lines.Count; y++)
+                    for (int y = 0; y < lines.Min(i => i.Length); y++)
                     {
                         if (this.Legend.ContainsKey(lines[x][y]))
                         {
                             Type gameObjectType = this.Legend[lines[x][y]];
-                            GameObject gameObject = new GameObject();
+                            GameObject gameObject = null;
                             if (gameObjectType == typeof(SemiSolidTile))
                             {
                                 gameObject = new SemiSolidTile();
@@ -36,7 +36,7 @@ namespace TermProject
                             gameObject.position.X = Tile.SIZE * x;
                             gameObject.position.Y = Tile.SIZE * y;
 
-                            mapObjects.Add(gameObject);
+                            if (gameObject != null) mapObjects.Add(gameObject);
                         }
                         else
                         {
