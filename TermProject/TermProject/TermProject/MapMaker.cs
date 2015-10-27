@@ -8,9 +8,9 @@ namespace TermProject
 {
     public class MapMaker
     {
-        Dictionary<char, GameObject> Legend = new Dictionary<char,GameObject>();
+        public Dictionary<char, Type> Legend;
 
-        List<GameObject> ReadMap(string asset)
+        public List<GameObject> ReadMap(string asset)
         {
             List<GameObject> mapObjects = new List<GameObject>();
             try
@@ -20,7 +20,29 @@ namespace TermProject
                 {
                     for (int y = 0; y < lines.Count; y++)
                     {
-                        mapObjects.Add(this.Legend[lines[x][y]]);
+                        if (this.Legend.ContainsKey(lines[x][y]))
+                        {
+                            Type gameObjectType = this.Legend[lines[x][y]];
+                            GameObject gameObject = new GameObject();
+                            if (gameObjectType == typeof(SemiSolidTile))
+                            {
+                                gameObject = new SemiSolidTile();
+                            }
+                            else if (gameObjectType == typeof(SolidTile))
+                            {
+                                gameObject = new SolidTile();
+                            }
+
+                            gameObject.position.X = Tile.SIZE * x;
+                            gameObject.position.Y = Tile.SIZE * y;
+
+                            mapObjects.Add(gameObject);
+                        }
+                        else
+                        {
+                            //throw new Exception("Invalid character found in map");
+                            // for final testing?
+                        }
                     }
                 }
             }

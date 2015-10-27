@@ -16,6 +16,17 @@ namespace TermProject
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Dictionary<char, Type> MapLegend = GetLegend();
+        List<GameObject> levelObjects;
+
+        private static Dictionary<char, Type> GetLegend()
+        {
+            Dictionary<char, Type> legend = new Dictionary<char, Type>();
+            legend.Add('*', (new SolidTile()).GetType());
+            legend.Add('_', (new SemiSolidTile()).GetType());
+            return legend;
+        }
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -33,7 +44,9 @@ namespace TermProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            MapMaker mapMaker = new MapMaker();
+            mapMaker.Legend = MapLegend;
+            levelObjects = mapMaker.ReadMap("maps/level1");
             // TODO: use this.Content to load your game content here
         }
 
@@ -56,8 +69,14 @@ namespace TermProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+                spriteBatch.Begin();
 
-            // TODO: Add your drawing code here
+            levelObjects.ForEach(i =>
+            {
+                spriteBatch.Draw(i.sprite, i.position, null, Color.White, i.rotation, i.center, 1.0f, SpriteEffects.None, 0);
+            });
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
