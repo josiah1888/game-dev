@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TermProject
 {
-    class GameObject
+    public class GameObject
     {
         public Texture2D sprite;
         public Vector2 position;
@@ -34,7 +34,7 @@ namespace TermProject
             }
         }
 
-        private void setup(Texture2D loadedTexture, Vector2 position, int health)
+        public void setup(Texture2D loadedTexture, Vector2 position, int health)
         {
             this.rotation = 0.0f;
             this.position = position;
@@ -43,6 +43,11 @@ namespace TermProject
             this.velocity = 10;
             this.alive = false;
             this.health = health;
+        }
+
+        public GameObject()
+        {
+
         }
 
         public GameObject(Texture2D loadedTexture)
