@@ -33,7 +33,7 @@ namespace TermProject
 
         List<GameObject> levelObjects;
 
-        AnimatedObject Player;
+        Player Player;
 
         public Game1()
         {
@@ -55,7 +55,7 @@ namespace TermProject
             MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
-            Player = new AnimatedObject(Content.Load<Texture2D>("Sprites/solid-tile"), new Vector2(35, 400), 0f, 1f, 1, 1, 1);
+            Player = new Player(Content.Load<Texture2D>("Sprites/solid-tile"), new Vector2(35, 400), 1, 1);
             levelObjects.Add(Player);
 
             for (int i = 0; i < levelObjects.Count; i++)
@@ -80,6 +80,7 @@ namespace TermProject
 
             // TODO: Add your update logic here
             Update_Player();
+            Update_Positions();
             base.Update(gameTime);
         }
 
@@ -87,6 +88,15 @@ namespace TermProject
         {
             KeyboardState keyboardState = Keyboard.GetState();
             Player.Move(keyboardState.GetPressedKeys());
+        }
+
+        private void Update_Positions()
+        {
+            levelObjects.ForEach(i =>
+            {
+                i.position.X += i.velocity.X;
+                i.position.Y += i.velocity.Y;
+            });
         }
 
         protected override void Draw(GameTime gameTime)
