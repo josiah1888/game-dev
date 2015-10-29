@@ -53,7 +53,7 @@ namespace TermProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
-            levelObjects = mapMaker.ReadMap("maps/level1");
+            levelObjects = mapMaker.ReadMap("maps/level2");
             // TODO: use this.Content to load your game content here
         }
 

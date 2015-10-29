@@ -40,8 +40,8 @@ namespace TermProject
                                 gameObject = new SolidTile(this.Content);
                             }
 
-                            gameObject.position.X = Tile.SIZE * x;
-                            gameObject.position.Y = Tile.SIZE * y;
+                            gameObject.position.X = Tile.SIZE * y;
+                            gameObject.position.Y = Tile.SIZE * x;
 
                             if (gameObject != null) mapObjects.Add(gameObject);
                         }
