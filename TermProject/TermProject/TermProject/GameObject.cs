@@ -18,8 +18,10 @@ namespace TermProject
         public Vector2 position;
         public float rotation;
         public Vector2 center;
-        public int velocity;
+        public Vector2 velocity;
         public bool alive;
+        public bool obeysGravity;
+        public bool isOnGround;
         public int health;
         protected const int STANDARD_HEALTH = 1000;
         private const float VISION_FIELD = .02f;
@@ -40,8 +42,10 @@ namespace TermProject
             this.position = position;
             this.sprite = loadedTexture;
             this.center = new Vector2(sprite.Width / 2, sprite.Height / 2);
-            this.velocity = 10;
+            this.velocity = Vector2.Zero;
             this.alive = false;
+            this.obeysGravity = false;
+            this.isOnGround = true; // ensures vertical velocity 
             this.health = health;
         }
 
@@ -73,8 +77,8 @@ namespace TermProject
         public void MoveTowards(GameObject otherGuy)
         {
             Vector2 direction = GetDirection(otherGuy);
-            this.position.X += direction.X * this.velocity;
-            this.position.Y += direction.Y * this.velocity;
+            this.position.X += direction.X * this.velocity.X;
+            this.position.Y += direction.Y * this.velocity.Y;
 
             this.rotation = GetAngle(direction, Vector2.UnitY);
         }
@@ -103,39 +107,39 @@ namespace TermProject
         {
             if (keys.Contains(Keys.Up) && keys.Contains(Keys.Right))
             {
-                this.position.Y -= this.velocity / 2;
-                this.position.X += this.velocity / 2;
+                this.position.Y -= this.velocity.Y / 2;
+                this.position.X += this.velocity.X / 2;
             }
             else if (keys.Contains(Keys.Right) && keys.Contains(Keys.Down))
             {
-                this.position.Y += this.velocity / 2;
-                this.position.X += this.velocity / 2;
+                this.position.Y += this.velocity.Y / 2;
+                this.position.X += this.velocity.X / 2;
             }
             else if (keys.Contains(Keys.Down) && keys.Contains(Keys.Left))
             {
-                this.position.Y += this.velocity / 2;
-                this.position.X -= this.velocity / 2;
+                this.position.Y += this.velocity.Y / 2;
+                this.position.X -= this.velocity.X / 2;
             }
             else if (keys.Contains(Keys.Left) && keys.Contains(Keys.Up))
             {
-                this.position.Y -= this.velocity / 2;
-                this.position.X -= this.velocity / 2;
+                this.position.Y -= this.velocity.Y / 2;
+                this.position.X -= this.velocity.X / 2;
             }
             else if (keys.Contains(Keys.Left))
             {
-                this.position.X -= this.velocity;
+                this.position.X -= this.velocity.X;
             }
             else if (keys.Contains(Keys.Up))
             {
-                this.position.Y -= this.velocity;
+                this.position.Y -= this.velocity.Y;
             }
             else if (keys.Contains(Keys.Down))
             {
-                this.position.Y += this.velocity;
+                this.position.Y += this.velocity.Y;
             }
             else if (keys.Contains(Keys.Right))
             {
-                this.position.X += this.velocity;
+                this.position.X += this.velocity.X;
             }
         }
 
@@ -143,6 +147,11 @@ namespace TermProject
         {
             return GetAngle(GetDirection(otherGuy), Vector2.UnitY) - rotation < VISION_FIELD
                 && DistanceFrom(otherGuy) < VISION_LENGTH;
+        }
+
+        public void ApplyGravity()
+        {
+
         }
     }
 }
