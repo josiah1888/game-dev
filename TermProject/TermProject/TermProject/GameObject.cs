@@ -20,6 +20,8 @@ namespace TermProject
         public Vector2 center;
         public Vector2 velocity;
         public bool alive;
+        public bool obeysGravity;
+        public bool isOnGround;
         public int health;
         protected const int STANDARD_HEALTH = 1000;
         private const float VISION_FIELD = .02f;
@@ -42,6 +44,8 @@ namespace TermProject
             this.center = new Vector2(sprite.Width / 2, sprite.Height / 2);
             this.velocity = Vector2.Zero;
             this.alive = false;
+            this.obeysGravity = false;
+            this.isOnGround = true; // ensures vertical velocity 
             this.health = health;
         }
 
@@ -143,6 +147,11 @@ namespace TermProject
         {
             return GetAngle(GetDirection(otherGuy), Vector2.UnitY) - rotation < VISION_FIELD
                 && DistanceFrom(otherGuy) < VISION_LENGTH;
+        }
+
+        public void ApplyGravity()
+        {
+
         }
     }
 }

@@ -57,6 +57,13 @@ namespace TermProject
             levelObjects = mapMaker.ReadMap("maps/level1");
             Player = new AnimatedObject(Content.Load<Texture2D>("Sprites/solid-tile"), new Vector2(35, 400), 0f, 1f, 1, 1, 1);
             levelObjects.Add(Player);
+
+            for (int i = 0; i < levelObjects.Count; i++)
+            {
+                if (!(levelObjects[i] is Tile))
+                    levelObjects[i].obeysGravity = true;
+            }
+
             // TODO: use this.Content to load your game content here
         }
 
