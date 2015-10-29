@@ -33,7 +33,6 @@ namespace TermProject
 
         List<GameObject> levelObjects;
 
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -54,6 +53,12 @@ namespace TermProject
             MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
+
+            for (int i = 0; i < levelObjects.Count; i++)
+            {
+                if (!(levelObjects[i] is Tile))
+                    levelObjects[i].obeysGravity = true;
+            }
             // TODO: use this.Content to load your game content here
         }
 
