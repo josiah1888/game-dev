@@ -16,16 +16,23 @@ namespace TermProject
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Dictionary<char, Type> MapLegend = GetLegend();
+        private Dictionary<char, Type> _MapLegend;
+        public Dictionary<char, Type> MapLegend
+        {
+            get
+            {
+                if (_MapLegend == null)
+                {
+                    _MapLegend = new Dictionary<char, Type>();
+                    _MapLegend.Add('*', (new SolidTile()).GetType());
+                    _MapLegend.Add('_', (new SemiSolidTile()).GetType());
+                }
+                return _MapLegend;
+            }
+        }
+
         List<GameObject> levelObjects;
 
-        private static Dictionary<char, Type> GetLegend()
-        {
-            Dictionary<char, Type> legend = new Dictionary<char, Type>();
-            legend.Add('*', (new SolidTile()).GetType());
-            legend.Add('_', (new SemiSolidTile()).GetType());
-            return legend;
-        }
 
         public Game1()
         {
@@ -44,7 +51,7 @@ namespace TermProject
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            MapMaker mapMaker = new MapMaker();
+            MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
             // TODO: use this.Content to load your game content here

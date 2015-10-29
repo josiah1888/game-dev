@@ -28,6 +28,12 @@ namespace TermProject
         {
         }
 
+        public Tile(Texture2D loadedTexture)
+            : base(loadedTexture)
+        {
+
+        }
+
         public Tile(Texture2D loadedTexture, Vector2 position, TileType type)
             : base(loadedTexture, position)
         {

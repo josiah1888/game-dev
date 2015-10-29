@@ -47,8 +47,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\test_platform1.png">
-      <Name>test_platform1</Name>
+    <Compile Include="Sprites\semi-solid-tile.png">
+      <Name>semi-solid-tile</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -62,8 +62,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\test_sprite1.png">
-      <Name>test_sprite1</Name>
+    <Compile Include="Sprites\solid-tile.png">
+      <Name>solid-tile</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

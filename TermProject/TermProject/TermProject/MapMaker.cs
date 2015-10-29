@@ -3,12 +3,19 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Microsoft.Xna.Framework.Content;
 
 namespace TermProject
 {
     public class MapMaker
     {
         public Dictionary<char, Type> Legend;
+        private ContentManager Content;
+
+        public MapMaker(ContentManager content)
+        {
+            this.Content = content;
+        }
 
         public List<GameObject> ReadMap(string asset)
         {
@@ -26,11 +33,11 @@ namespace TermProject
                             GameObject gameObject = null;
                             if (gameObjectType == typeof(SemiSolidTile))
                             {
-                                gameObject = new SemiSolidTile();
+                                gameObject = new SemiSolidTile(this.Content);
                             }
                             else if (gameObjectType == typeof(SolidTile))
                             {
-                                gameObject = new SolidTile();
+                                gameObject = new SolidTile(this.Content);
                             }
 
                             gameObject.position.X = Tile.SIZE * x;
