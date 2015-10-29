@@ -33,6 +33,7 @@ namespace TermProject
 
         List<GameObject> levelObjects;
 
+        AnimatedObject Player;
 
         public Game1()
         {
@@ -53,7 +54,9 @@ namespace TermProject
             spriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
-            levelObjects = mapMaker.ReadMap("maps/level2");
+            levelObjects = mapMaker.ReadMap("maps/level1");
+            Player = new AnimatedObject(Content.Load<Texture2D>("Sprites/solid-tile"), new Vector2(35, 400), 0f, 1f, 1, 1, 1);
+            levelObjects.Add(Player);
             // TODO: use this.Content to load your game content here
         }
 
@@ -69,8 +72,14 @@ namespace TermProject
                 this.Exit();
 
             // TODO: Add your update logic here
-
+            Update_Player();
             base.Update(gameTime);
+        }
+
+        private void Update_Player()
+        {
+            KeyboardState keyboardState = Keyboard.GetState();
+            Player.Move(keyboardState.GetPressedKeys());
         }
 
         protected override void Draw(GameTime gameTime)
