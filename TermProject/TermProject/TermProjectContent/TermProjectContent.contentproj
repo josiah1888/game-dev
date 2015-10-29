@@ -42,15 +42,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Maps\jumptest">
-      <Name>jumptest</Name>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sprites\semi-solid-tile.png">
       <Name>semi-solid-tile</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
     </Compile>
     <Compile Include="Sprites\test_platform1_left.png">
       <Name>test_platform1_left</Name>
@@ -67,6 +60,11 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Maps\jumptest">
+      <Name>jumptest</Name>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 

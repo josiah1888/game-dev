@@ -14,7 +14,7 @@ namespace TermProject
 {
     public class Tile : GameObject
     {
-        public const int SIZE = 25;
+        public const int SIZE = 32;
         public enum TileType
         {
             SemiSolid,
