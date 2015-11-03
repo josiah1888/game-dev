@@ -87,7 +87,7 @@ namespace TermProject
         private void Update_Player()
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            Player.Move(keyboardState.GetPressedKeys());
+            Player.Move(keyboardState.GetPressedKeys(), levelObjects);
         }
 
         private void Update_Positions()

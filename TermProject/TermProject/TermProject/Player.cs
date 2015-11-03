@@ -24,12 +24,23 @@ namespace TermProject
             Right = 1
         }
 
-        public new void Move(Keys[] keys)
+        private Rectangle PlayerFeet
         {
-            bool PlayerIsOnGround = true; // needs to be implemented
-
-            if (PlayerIsOnGround && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
+            get
             {
+                return new Rectangle(this.Rectangle.X, this.Rectangle.Y + this.Rectangle.Height, this.Rectangle.Width, 1);
+            }
+        }
+
+        public bool IsOnGround(List<GameObject> levelObjects)
+        {
+            return levelObjects.Any(i => i.Rectangle.Intersects(this.PlayerFeet));
+        }
+
+        public void Move(Keys[] keys, List<GameObject> levelObjects)
+        {
+            if (IsOnGround(levelObjects) && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
+             {
                 Jump();
             }
 
