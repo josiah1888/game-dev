@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TermProject
 {
-    class AnimatedObject : GameObject
+    public class AnimatedObject : GameObject
     {
         private int FrameCount;
         private float TimePerFrame;
