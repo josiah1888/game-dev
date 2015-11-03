@@ -51,7 +51,7 @@ namespace TermProject
         public void Move(Keys[] keys, List<GameObject> levelObjects)
         {
             if (IsOnGround(levelObjects) && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
-             {
+            {
                 Jump();
             }
 
@@ -70,7 +70,7 @@ namespace TermProject
         {
             this.velocity.Y = -10;
         }
-		
+
         private void Move(Direction direction)
         {
             this.velocity.X = Math.Max(MAX_SPEED * -1, Math.Min(this.velocity.X + (int)direction, MAX_SPEED));

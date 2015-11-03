@@ -1,0 +1,27 @@
+Frog
+ - AI
+  -- jumping
+  -- maybe intersection prediction with the player
+ - sprites
+  -- jumping
+  
+Large Flightless Bird
+ - AI
+   -- Walking at varying speeds
+   -- Stays on platforms, does not fall
+ - sprites
+   -- walking and pecking
+   
+Soda Thrower
+ - AI
+   -- repeatedly drinks then throws soda cans
+   -- soda cans roll of ledges
+ - sprites
+   -- grabs soda
+   -- drinks soda
+   -- throws soda
+ - Soda Can  
+   -- can jump on soda cans
+   -- bounces while rolling
+   - sprites
+    -- rolling can
