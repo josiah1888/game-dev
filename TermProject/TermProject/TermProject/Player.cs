@@ -10,15 +10,14 @@ namespace TermProject
 {
     class Player : AnimatedObject
     {
-        Rectangle groundChecker;
-
         public Player(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec)
             : base(loadedTexture, position, 0f, 1f, 1f, frameCount, framesPerSec)
         {
 
         }
 
-        private const int MAX_SPEED = 8;
+        private const int MAX_SPEED = 4;
+        private const int MAX_GRAVITY = 3;
 
         private enum Direction
         {
@@ -26,17 +25,27 @@ namespace TermProject
             Right = 1
         }
 
-        private Rectangle PlayerFeet
+        public void Update(List<GameObject> levelObjects, Keys[] keys)
         {
-            get
+            ApplyGravity(levelObjects);
+            Move(keys, levelObjects);
+        }
+
+        private void ApplyGravity(List<GameObject> levelObjects)
+        {
+            if (!IsOnGround(levelObjects))
             {
-                return new Rectangle(this.Rectangle.X, this.Rectangle.Y + this.Rectangle.Height, this.Rectangle.Width, 1);
+                this.velocity.Y = Math.Min(MAX_GRAVITY, this.velocity.Y + 1);
+            }
+            else if (this.velocity.Y > 0)
+            {
+                this.velocity.Y = 0;
             }
         }
 
         public bool IsOnGround(List<GameObject> levelObjects)
         {
-            return levelObjects.Any(i => i.Rectangle.Intersects(this.PlayerFeet));
+            return this.velocity.Y >= 0 && levelObjects.Where(i => i is SemiSolidTile || i is SolidTile).Any(i => i.TopRectangle.Intersects(this.BottomRectangle));
         }
 
         public void Move(Keys[] keys, List<GameObject> levelObjects)
@@ -61,18 +70,6 @@ namespace TermProject
         {
             this.velocity.Y = -10;
         }
-
-        public void FallOntoGround(List<GameObject> levelObjects)
-        {
-            for (int i = 0; i < levelObjects.Count; i++)
-            {
-                if(groundChecker.Intersects(levelObjects[i].Rectangle)
-                {
-                    if((levelObjects[i] is SemiSolidTile || levelObjects[i] is SolidTile) && this.velocity.Y > 0)
-                        this.isOnGround = true;
-                }
-            }
-		}
 		
         private void Move(Direction direction)
         {

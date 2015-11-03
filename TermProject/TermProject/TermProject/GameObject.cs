@@ -157,5 +157,21 @@ namespace TermProject
             if (this.isOnGround)
                 this.velocity.Y = 0;
         }
+
+        public Rectangle TopRectangle
+        {
+            get
+            {
+                return new Rectangle(this.Rectangle.X, this.Rectangle.Y, this.Rectangle.Width, 4);
+            }
+        }
+
+        public Rectangle BottomRectangle
+        {
+            get
+            {
+                return new Rectangle(this.Rectangle.X, this.Rectangle.Y + this.Rectangle.Height, this.Rectangle.Width, 4);
+            }
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace TermProject
             this.Type = type;
         }
 
-        public new Rectangle Rectangle
+        private new Rectangle Rectangle
         {
             get
             {

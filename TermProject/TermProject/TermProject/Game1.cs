@@ -55,7 +55,7 @@ namespace TermProject
             MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
-            Player = new Player(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(35, 400), 1, 1);
+            Player = new Player(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(35, 50), 1, 1);
             levelObjects.Add(Player);
 
             for (int i = 0; i < levelObjects.Count; i++)
@@ -87,7 +87,7 @@ namespace TermProject
         private void Update_Player()
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            Player.Move(keyboardState.GetPressedKeys(), levelObjects);
+            Player.Update(levelObjects, keyboardState.GetPressedKeys());
         }
 
         private void Update_Positions()
@@ -106,7 +106,7 @@ namespace TermProject
 
             levelObjects.ForEach(i =>
             {
-                spriteBatch.Draw(i.sprite, i.position, null, Color.White, i.rotation, i.center, 1.0f, SpriteEffects.None, 0);
+                spriteBatch.Draw(i.sprite, i.position, null, Color.White, i.rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
             });
 
             spriteBatch.End();
