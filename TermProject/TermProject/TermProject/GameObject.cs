@@ -151,7 +151,11 @@ namespace TermProject
 
         public void ApplyGravity()
         {
+            if (this.obeysGravity && !this.isOnGround)
+                this.velocity.Y += 1;
 
+            if (this.isOnGround)
+                this.velocity.Y = 0;
         }
     }
 }
