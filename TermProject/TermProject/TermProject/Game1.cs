@@ -55,7 +55,7 @@ namespace TermProject
             MapMaker mapMaker = new MapMaker(Content);
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
-            Player = new Player(Content.Load<Texture2D>("Sprites/solid-tile"), new Vector2(35, 400), 1, 1);
+            Player = new Player(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(35, 400), 1, 1);
             levelObjects.Add(Player);
 
             for (int i = 0; i < levelObjects.Count; i++)
