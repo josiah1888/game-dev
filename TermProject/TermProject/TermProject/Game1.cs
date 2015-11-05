@@ -34,6 +34,16 @@ namespace TermProject
         List<GameObject> levelObjects;
 
         Player Player;
+        Enemy frog;
+
+        public void frogAI(Enemy frog)
+        {
+            if (frog.getState() == Enemy.EnemyState.Idle)
+            {
+                frog.velocity.Y = -10;
+                //frog.velocity.X = frog.MAX_SPEED * frog.
+            }
+        }
 
         public Game1()
         {
@@ -56,6 +66,7 @@ namespace TermProject
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
             Player = new Player(Content.Load<Texture2D>("Sprites/playerIdle"), new Vector2(35, 50), 1, 1);
+            //frog = new Enemy(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(100, 50), 1, 1, frogAI(frog));
             levelObjects.Add(Player);
 
             for (int i = 0; i < levelObjects.Count; i++)
