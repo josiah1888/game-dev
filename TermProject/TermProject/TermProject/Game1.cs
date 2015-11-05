@@ -34,15 +34,28 @@ namespace TermProject
         List<GameObject> levelObjects;
 
         Player Player;
-        Enemy frog;
+        Enemy Frog;
 
-        public void frogAI(Enemy frog)
+        public Action<Enemy> GetFrogAI()
         {
-            if (frog.getState() == Enemy.EnemyState.Idle)
+            return (Enemy frog) =>
             {
-                frog.velocity.Y = -10;
-                //frog.velocity.X = frog.MAX_SPEED * frog.
-            }
+                // do ai logic using this instance of frog
+
+                //if (frog.getState() == Enemy.EnemyState.Idle)
+                //{
+                //    frog.velocity.Y = -10;
+                //    //frog.velocity.X = frog.MAX_SPEED * frog.
+                //}
+            };
+        }
+
+        public Action<Enemy> GetBirdAI()
+        {
+            return (Enemy bird) =>
+            {
+                // logic in here
+            };
         }
 
         public Game1()
@@ -66,7 +79,7 @@ namespace TermProject
             mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
             Player = new Player(Content.Load<Texture2D>("Sprites/playerIdle"), new Vector2(35, 50), 1, 1);
-            //frog = new Enemy(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(100, 50), 1, 1, frogAI(frog));
+            Frog = new Enemy(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(100, 50), 1, 1, GetFrogAI());
             levelObjects.Add(Player);
 
             for (int i = 0; i < levelObjects.Count; i++)
@@ -113,7 +126,7 @@ namespace TermProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-                spriteBatch.Begin();
+            spriteBatch.Begin();
 
             levelObjects.ForEach(i =>
             {

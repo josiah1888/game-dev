@@ -9,7 +9,7 @@ namespace TermProject
 {
     public class Enemy : AnimatedObject
     {
-        private Func<Vector2> Ai;
+        private Action<Enemy> Ai;
         public enum EnemyState { Idle, Attack }
         public EnemyState state;
         public const int threshold = 50;
@@ -23,10 +23,10 @@ namespace TermProject
             Right = 1
         }
 
-        public Enemy(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec, Action ai)
+        public Enemy(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec, Action<Enemy> ai)
             : base(loadedTexture, position, 0f, 1f, 1f, frameCount, framesPerSec)
         {
-            //.Ai = ai;
+            this.Ai = ai;
         }
 
         public EnemyState getState()
@@ -44,7 +44,7 @@ namespace TermProject
             if (obeysGravity)
                 ApplyGravity(levelObjects);
 
-            this.position = this.Ai();
+            this.Ai(this);
         }
 
         public bool IsOnGround(List<GameObject> levelObjects)
