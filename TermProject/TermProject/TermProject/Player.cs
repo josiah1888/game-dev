@@ -18,6 +18,7 @@ namespace TermProject
 
         private const int MAX_SPEED = 4;
         private const int MAX_GRAVITY = 3;
+        private const float MIN_BOUNCE_BACK = .8f;
 
         private enum Direction
         {
@@ -29,6 +30,7 @@ namespace TermProject
         {
             ApplyGravity(levelObjects);
             Move(keys, levelObjects);
+            SlowDown();
         }
 
         private void ApplyGravity(List<GameObject> levelObjects)
@@ -63,6 +65,48 @@ namespace TermProject
             if (keys.Contains(Keys.Left) || keys.Contains(Keys.A))
             {
                 Move(Direction.Left);
+            }
+            
+            CheckLateralCollisions(levelObjects);
+            CheckVerticalCollisions(levelObjects);
+        }
+
+        private void CheckVerticalCollisions(List<GameObject> levelObjects)
+        {
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+
+            if (problemTile != null)
+            {
+                this.position.Y = problemTile.BottomRectangle.Bottom;
+                this.velocity.Y = 0;
+            }
+        }
+
+        private void CheckLateralCollisions(List<GameObject> levelObjects)
+        {
+            if (levelObjects.Any(i => this.Rectangle.Intersects(i.Rectangle) && i is SolidTile))
+            {
+                this.position.X -= this.velocity.X;
+                if (this.velocity.X > 0)
+                {
+                    this.velocity.X = Math.Max(this.velocity.X - 2, MIN_BOUNCE_BACK) * -1;
+                }
+                else if (this.velocity.X < 0)
+                {
+                    this.velocity.X = Math.Min(this.velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
+                }
+            }
+        }
+
+        private void SlowDown()
+        {
+            if (this.velocity.X > 0)
+            {
+                this.velocity.X = Math.Max(this.velocity.X - .1f, 0f);
+            }
+            else
+            {
+                this.velocity.X = Math.Min(this.velocity.X + .1f, 0f);
             }
         }
 
