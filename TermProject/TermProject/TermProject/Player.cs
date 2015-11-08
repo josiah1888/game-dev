@@ -72,6 +72,7 @@ namespace TermProject
                 Move(Direction.Left);
             }
 
+            CheckEnemyCollisions(levelObjects);
             CheckViewportCollision(viewPort);
             CheckLateralCollisions(levelObjects);
             CheckVerticalCollisions(levelObjects);
@@ -81,6 +82,16 @@ namespace TermProject
         private void Jump()
         {
             this.Velocity.Y = -10;
+        }
+
+        private void CheckEnemyCollisions(List<GameObject> levelObjects)
+        {
+            levelObjects
+                .Where(i => i is Enemy && i.TopRectangle.Intersects(this.BottomRectangle))
+                .ToList()
+                .ForEach(i => i.Alive = false);
+
+            this.Alive = !levelObjects.Any(i => i.Alive && i is Enemy && i.Rectangle.Intersects(this.Rectangle));
         }
 
         private void CheckViewportCollision(Rectangle viewPort)
@@ -93,7 +104,7 @@ namespace TermProject
 
         private void CheckLateralCollisions(List<GameObject> levelObjects)
         {
-            if (levelObjects.Any(i => this.Rectangle.Intersects(i.Rectangle) && i is SolidTile))
+            if (levelObjects.Any(i => i.Alive && i is SolidTile && this.Rectangle.Intersects(i.Rectangle)))
             {
                 this.Position.X -= this.Velocity.X;
                 if (this.Velocity.X > 0)
@@ -109,7 +120,7 @@ namespace TermProject
 
         private void CheckVerticalCollisions(List<GameObject> levelObjects)
         {
-            GameObject problemTile = levelObjects.FirstOrDefault(i => i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
 
             if (problemTile != null)
             {

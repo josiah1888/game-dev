@@ -51,14 +51,17 @@ namespace TermProject
             this.Sprite = loadedTexture;
             this.Center = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
             this.Velocity = Vector2.Zero;
-            this.Alive = false;
+            this.Alive = true;
             this.ObeysGravity = true;
 
         }
 
         public virtual void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
-            batch.Draw(this.Sprite, new Vector2(this.Position.X - viewPort.X, this.Position.Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+            if (this.Alive)
+            {
+                batch.Draw(this.Sprite, new Vector2(this.Position.X - viewPort.X, this.Position.Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+            }
         }
 
 
@@ -148,7 +151,7 @@ namespace TermProject
 
         public bool IsOnGround(List<GameObject> levelObjects)
         {
-            return this.Velocity.Y >= 0 && levelObjects.Where(i => i is SemiSolidTile || i is SolidTile).Any(i => i.TopRectangle.Intersects(this.BottomRectangle));
+            return this.Velocity.Y >= 0 && levelObjects.Any(i => i.Alive && i is Tile && i.TopRectangle.Intersects(this.BottomRectangle));
         }
 
         #region Legacy GameObject Methods

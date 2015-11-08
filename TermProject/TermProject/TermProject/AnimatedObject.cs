@@ -16,8 +16,6 @@ namespace TermProject
         public float Depth;
 
         protected int FrameCount;
-        private float MaxSpeed;
-        private float _TimePerFrame;
         protected float TimePerFrame
         {
             get
@@ -29,6 +27,9 @@ namespace TermProject
                 _TimePerFrame = value;
             }
         }
+
+        private float MaxSpeed;
+        private float _TimePerFrame;
         private int Frame;
         private double TotalElapsed;
         private bool Paused;
