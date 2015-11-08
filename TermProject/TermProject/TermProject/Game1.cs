@@ -64,7 +64,7 @@ namespace TermProject
 
             if (LevelObjects.Any())
             {
-               // Update_AnimatedObjects(elapsed);
+                Update_AnimatedObjects(elapsed);
 
                 Update_Player(elapsed);
                 Update_Positions();
