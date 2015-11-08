@@ -26,10 +26,10 @@ namespace TermProject
             Right = 1
         }
 
-        public void Update(List<GameObject> levelObjects, Keys[] keys)
+        public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort)
         {
             ApplyGravity(levelObjects);
-            Move(keys, levelObjects);
+            Move(keys, levelObjects, viewPort);
             SlowDown();
         }
 
@@ -50,7 +50,7 @@ namespace TermProject
             return this.velocity.Y >= 0 && levelObjects.Where(i => i is SemiSolidTile || i is SolidTile).Any(i => i.TopRectangle.Intersects(this.BottomRectangle));
         }
 
-        public void Move(Keys[] keys, List<GameObject> levelObjects)
+        public void Move(Keys[] keys, List<GameObject> levelObjects, Rectangle viewPort)
         {
             if (IsOnGround(levelObjects) && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
             {
@@ -66,19 +66,17 @@ namespace TermProject
             {
                 Move(Direction.Left);
             }
-            
+
+            CheckViewportCollision(viewPort);
             CheckLateralCollisions(levelObjects);
             CheckVerticalCollisions(levelObjects);
         }
 
-        private void CheckVerticalCollisions(List<GameObject> levelObjects)
+        private void CheckViewportCollision(Rectangle viewPort)
         {
-            GameObject problemTile = levelObjects.FirstOrDefault(i => i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
-
-            if (problemTile != null)
+            if (this.position.X < viewPort.Left)
             {
-                this.position.Y = problemTile.BottomRectangle.Bottom;
-                this.velocity.Y = 0;
+                CollideLeft();
             }
         }
 
@@ -89,13 +87,39 @@ namespace TermProject
                 this.position.X -= this.velocity.X;
                 if (this.velocity.X > 0)
                 {
-                    this.velocity.X = Math.Max(this.velocity.X - 2, MIN_BOUNCE_BACK) * -1;
+                    CollideRight();
                 }
                 else if (this.velocity.X < 0)
                 {
-                    this.velocity.X = Math.Min(this.velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
+                    CollideLeft();
                 }
             }
+        }
+
+        private void CheckVerticalCollisions(List<GameObject> levelObjects)
+        {
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+
+            if (problemTile != null)
+            {
+                CollideTop(problemTile);
+            }
+        }
+
+        private void CollideRight()
+        {
+            this.velocity.X = Math.Max(this.velocity.X - 2, MIN_BOUNCE_BACK) * -1;
+        }
+
+        private void CollideLeft()
+        {
+            this.velocity.X = Math.Min(this.velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
+        }
+
+        private void CollideTop(GameObject problemTile)
+        {
+            this.position.Y = problemTile.BottomRectangle.Bottom;
+            this.velocity.Y = 0;
         }
 
         private void SlowDown()

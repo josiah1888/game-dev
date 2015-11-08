@@ -20,7 +20,7 @@ namespace TermProject
         public Vector2 center;
         public Vector2 velocity;
         public bool alive;
-        public bool obeysGravity;
+        protected bool ObeysGravity;
         public bool isOnGround;
         public int health;
         protected const int STANDARD_HEALTH = 1000;
@@ -44,7 +44,7 @@ namespace TermProject
             this.center = new Vector2(sprite.Width / 2, sprite.Height / 2);
             this.velocity = Vector2.Zero;
             this.alive = false;
-            this.obeysGravity = false;
+            this.ObeysGravity = true;
             this.isOnGround = true; // ensures vertical velocity 
             this.health = health;
         }
@@ -151,7 +151,7 @@ namespace TermProject
 
         public void ApplyGravity()
         {
-            if (this.obeysGravity && !this.isOnGround)
+            if (this.ObeysGravity && !this.isOnGround)
                 this.velocity.Y += 1;
 
             if (this.isOnGround)

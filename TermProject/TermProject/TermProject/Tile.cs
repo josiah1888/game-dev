@@ -26,6 +26,7 @@ namespace TermProject
         public Tile()
             : base()
         {
+            this.ObeysGravity = false;
         }
 
         public Tile(Texture2D loadedTexture)

@@ -41,7 +41,7 @@ namespace TermProject
 
         public void Update(List<GameObject> levelObjects)
         {
-            if (obeysGravity)
+            if (ObeysGravity)
                 ApplyGravity(levelObjects);
 
             this.Ai(this);
