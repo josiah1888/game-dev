@@ -13,23 +13,46 @@ namespace TermProject
     {
         private const float MIN_BOUNCE_BACK = .8f;
         private const int MAX_SPEED = 4;
+        private const float WALKING_TOLERANCE = .3f;
+
         private enum Direction
         {
             Left = -1,
             Right = 1
         }
 
+        private Texture2D IdleSprite, WalkingSprite;
+
         public Player(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/player-idle"), position, 0f, 1f, 1f, 1, 1)
         {
-
+            this.IdleSprite = content.Load<Texture2D>("sprites/player-idle");
+            this.WalkingSprite = content.Load<Texture2D>("sprites/player-walk");
         }
 
-        public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort)
+        public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort, double elapsed)
         {
+            UpdateSprite();
             ApplyGravity(levelObjects);
             Move(keys, levelObjects, viewPort);
             SlowDown();
+
+            base.Update(elapsed);
+        }
+
+        private void UpdateSprite()
+        {
+            if (Math.Abs(this.Velocity.X) > WALKING_TOLERANCE)
+            {
+                this.TimePerFrame = 50f;
+                this.FrameCount = 4;
+                this.Sprite = WalkingSprite;
+            }
+            else
+            {
+                this.FrameCount = 1;
+                this.Sprite = IdleSprite;
+            }
         }
 
         private void Move(Keys[] keys, List<GameObject> levelObjects, Rectangle viewPort)

@@ -57,7 +57,7 @@ namespace TermProject
 
             if (levelObjects.Any())
             {
-                Update_Player();
+                Update_Player(gameTime.ElapsedGameTime.TotalMilliseconds);
                 Update_Positions();
                 Update_Camera();
             }
@@ -65,10 +65,10 @@ namespace TermProject
         }
 
         #region Update
-        private void Update_Player()
+        private void Update_Player(double elapsed)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            Player.Update(levelObjects, keyboardState.GetPressedKeys(), this.ViewPort);
+            Player.Update(levelObjects, keyboardState.GetPressedKeys(), this.ViewPort, elapsed);
         }
 
         private void Update_Positions()
@@ -102,7 +102,7 @@ namespace TermProject
 
             levelObjects.Where(i => i.Rectangle.Intersects(this.ViewPort)).ToList().ForEach(i =>
             {
-                spriteBatch.Draw(i.Sprite, new Vector2(i.Position.X - this.ViewPort.X, i.Position.Y), null, Color.White, i.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
+                i.Draw(spriteBatch, this.ViewPort, SpriteEffects.None);
             });
 
             spriteBatch.End();

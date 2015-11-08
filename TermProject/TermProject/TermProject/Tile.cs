@@ -43,7 +43,7 @@ namespace TermProject
             this.Type = type;
         }
 
-        private new Rectangle Rectangle
+        public override Rectangle Rectangle
         {
             get
             {

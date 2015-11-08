@@ -15,14 +15,26 @@ namespace TermProject
     {
         public float Depth;
 
-        private int FrameCount;
-        private float TimePerFrame;
+        protected int FrameCount;
+        private float MaxSpeed;
+        private float _TimePerFrame;
+        protected float TimePerFrame
+        {
+            get
+            {
+                return _TimePerFrame * Math.Abs(this.Velocity.X);
+            }
+            set
+            {
+                _TimePerFrame = value;
+            }
+        }
         private int Frame;
-        private float TotalElapsed;
+        private double TotalElapsed;
         private bool Paused;
 
-        public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, int framesPerSec, int health = STANDARD_HEALTH)
-            : base(loadedTexture, position, health)
+        public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, int timePerFrame, float maxSpeed = 5)
+            : base(loadedTexture, position)
         {
             this.Position = position;
             this.Rotation = rotation;
@@ -32,10 +44,11 @@ namespace TermProject
             this.Paused = false;
             this.TotalElapsed = 0;
             this.Frame = 0;
-            this.TimePerFrame = 1.0f / framesPerSec;
+            this.TimePerFrame = timePerFrame;
+            this.MaxSpeed = maxSpeed;
         }
 
-        public void UpdateFrame(float elapsed)
+        public void Update(double elapsed)
         {
             if (!Paused)
             {
@@ -44,7 +57,7 @@ namespace TermProject
                 {
                     Frame++;
                     Frame = Frame % FrameCount;
-                    TotalElapsed -= TimePerFrame;
+                    TotalElapsed = 0;
                 }
             }
         }
@@ -76,19 +89,15 @@ namespace TermProject
             Paused = true;
         }
 
-        private void DrawFrame(SpriteBatch batch, Vector2 screenPos)
+        public override void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
-            DrawFrame(batch, Frame, screenPos);
+            int frameWidth = Sprite.Width / FrameCount;
+            spriteFrame = new Rectangle(frameWidth * this.Frame, 0, frameWidth, this.Rectangle.Height);
+            spriteEffects = this.Velocity.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            base.Draw(batch, viewPort, spriteEffects, spriteFrame);
         }
 
-        private void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos)
-        {
-            int FrameWidth = Sprite.Width / FrameCount;
-            Rectangle sourcerect = new Rectangle(FrameWidth * frame, 0, FrameWidth, Sprite.Height);
-            batch.Draw(Sprite, screenPos, sourcerect, Color.White, Rotation, Position, Scale, SpriteEffects.None, Depth);
-        }
-
-        public new Rectangle Rectangle
+        public override Rectangle Rectangle
         {
             get
             {

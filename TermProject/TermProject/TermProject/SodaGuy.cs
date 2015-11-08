@@ -16,7 +16,7 @@ namespace TermProject
 
         }
 
-        public static Action<Enemy> Ai
+        private static Action<Enemy> Ai
         {
             get
             {

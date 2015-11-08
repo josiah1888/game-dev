@@ -20,11 +20,9 @@ namespace TermProject
         public Vector2 Center;
         public Vector2 Velocity;
         public bool Alive;
-        public int Health;
         public float Scale = 1.0f;
 
         protected bool ObeysGravity;
-        protected const int STANDARD_HEALTH = 1000;
 
         private const float VISION_FIELD = .02f;
         private const int VISION_LENGTH = 350;
@@ -38,15 +36,15 @@ namespace TermProject
 
         public GameObject(Texture2D loadedTexture)
         {
-            Setup(loadedTexture, Vector2.Zero, STANDARD_HEALTH);
+            Setup(loadedTexture, Vector2.Zero);
         }
 
-        public GameObject(Texture2D loadedTexture, Vector2 position, int health = STANDARD_HEALTH)
+        public GameObject(Texture2D loadedTexture, Vector2 position)
         {
-            Setup(loadedTexture, position, health);
+            Setup(loadedTexture, position);
         }
 
-        public void Setup(Texture2D loadedTexture, Vector2 position, int health)
+        public void Setup(Texture2D loadedTexture, Vector2 position)
         {
             this.Rotation = 0.0f;
             this.Position = position;
@@ -55,8 +53,14 @@ namespace TermProject
             this.Velocity = Vector2.Zero;
             this.Alive = false;
             this.ObeysGravity = true;
-            this.Health = health;
+
         }
+
+        public virtual void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        {
+            batch.Draw(this.Sprite, new Vector2(this.Position.X - viewPort.X, this.Position.Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+        }
+
 
         public void Rotate(float rotation = .05f)
         {
@@ -118,7 +122,7 @@ namespace TermProject
             }
         }
 
-        public Rectangle Rectangle
+        public virtual Rectangle Rectangle
         {
             get
             {
