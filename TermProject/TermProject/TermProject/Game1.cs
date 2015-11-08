@@ -55,13 +55,25 @@ namespace TermProject
                 this.Exit();
             }
 
+            double elapsed = gameTime.ElapsedGameTime.TotalMilliseconds;
+
             if (levelObjects.Any())
             {
-                Update_Player(gameTime.ElapsedGameTime.TotalMilliseconds);
+                Update_AnimatedObjects(elapsed);
+
+                Update_Player(elapsed);
                 Update_Positions();
                 Update_Camera();
             }
             base.Update(gameTime);
+        }
+
+        private void Update_AnimatedObjects(double elapsed)
+        {
+            levelObjects
+                .Where(i => i.Alive && i is AnimatedObject)
+                .Select(i => (AnimatedObject)i).ToList()
+                .ForEach(i => i.Update(levelObjects, elapsed));
         }
 
         #region Update

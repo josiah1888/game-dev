@@ -33,8 +33,9 @@ namespace TermProject
         private int Frame;
         private double TotalElapsed;
         private bool Paused;
+        public bool Repeat = true;
 
-        public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, int timePerFrame, float maxSpeed = 5)
+        public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, float timePerFrame, float maxSpeed = 5)
             : base(loadedTexture, position)
         {
             this.Position = position;
@@ -49,15 +50,14 @@ namespace TermProject
             this.MaxSpeed = maxSpeed;
         }
 
-        public void Update(double elapsed)
+        public virtual void Update(List<GameObject> levelObjects, double elapsed)
         {
             if (!Paused)
             {
                 TotalElapsed += elapsed;
                 if (TotalElapsed > TimePerFrame)
                 {
-                    Frame++;
-                    Frame = Frame % FrameCount;
+                    Frame = Repeat ? (Frame + 1) % FrameCount : Math.Min(FrameCount - 1, Frame + 1);
                     TotalElapsed = 0;
                 }
             }

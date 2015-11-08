@@ -37,7 +37,7 @@ namespace TermProject
             Move(keys, levelObjects, viewPort);
             SlowDown();
 
-            base.Update(elapsed);
+            base.Update(levelObjects, elapsed);
         }
 
         private void UpdateSprite()
@@ -160,6 +160,11 @@ namespace TermProject
         private void Move(Direction direction)
         {
             this.Velocity.X = Math.Max(MAX_SPEED * -1, Math.Min(this.Velocity.X + (int)direction, MAX_SPEED));
+        }
+
+        public void Win()
+        {
+            // Win condition here. Go to level select?
         }
     }
 }

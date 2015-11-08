@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedObject.cs" />
+    <Compile Include="Door.cs" />
     <Compile Include="Emu.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Frog.cs" />
