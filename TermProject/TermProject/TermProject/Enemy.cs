@@ -9,18 +9,17 @@ namespace TermProject
 {
     public class Enemy : AnimatedObject
     {
-        private Action<Enemy> Ai;
-        public enum EnemyState { Idle, Attack }
-        public EnemyState state;
-        public const int threshold = 50;
-
+        public const int THRESHHOLD = 50;
         public const int MAX_SPEED = 4;
-        private const int MAX_GRAVITY = 3;
+        public EnemyState State;
 
-        public enum Direction
+        private const int MAX_GRAVITY = 3;
+        private Action<Enemy> Ai;
+
+        public enum EnemyState
         {
-            Left = -1,
-            Right = 1
+            Idle,
+            Attack
         }
 
         public Enemy(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec, Action<Enemy> ai)
@@ -29,39 +28,10 @@ namespace TermProject
             this.Ai = ai;
         }
 
-        public EnemyState getState()
-        {
-            return state;
-        }
-
-        public void setState(EnemyState newState)
-        {
-            state = newState;
-        }
-
         public void Update(List<GameObject> levelObjects)
         {
-            if (ObeysGravity)
-                ApplyGravity(levelObjects);
-
+            ApplyGravity(levelObjects);
             this.Ai(this);
-        }
-
-        public bool IsOnGround(List<GameObject> levelObjects)
-        {
-            return this.velocity.Y >= 0 && levelObjects.Where(i => i is SemiSolidTile || i is SolidTile).Any(i => i.TopRectangle.Intersects(this.BottomRectangle));
-        }
-
-        private void ApplyGravity(List<GameObject> levelObjects)
-        {
-            if (!IsOnGround(levelObjects))
-            {
-                this.velocity.Y = Math.Min(MAX_GRAVITY, this.velocity.Y + 1);
-            }
-            else if (this.velocity.Y > 0)
-            {
-                this.velocity.Y = 0;
-            }
         }
     }
 }

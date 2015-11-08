@@ -4,13 +4,44 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace TermProject
 {
     public class MapMaker
     {
-        public Dictionary<char, Type> Legend;
+
+        private Dictionary<char, GameObjectType> _Legend;
+        private Dictionary<char, GameObjectType> Legend
+        {
+            get
+            {
+                if (_Legend == null)
+                {
+                    _Legend = new Dictionary<char, GameObjectType>();
+                    _Legend.Add('*', GameObjectType.SolidTile);
+                    _Legend.Add('_', GameObjectType.SemiSolidTile);
+                    _Legend.Add('p', GameObjectType.Player);
+                    _Legend.Add('f', GameObjectType.Frog);
+                    _Legend.Add('e', GameObjectType.Emu);
+                    _Legend.Add('s', GameObjectType.SodaGuy);
+                }
+                return _Legend;
+            }
+        }
+
         private ContentManager Content;
+
+        private enum GameObjectType
+        {
+            SolidTile,
+            SemiSolidTile,
+            Player,
+            Frog,
+            Emu,
+            SodaGuy
+        }
 
         public MapMaker(ContentManager content)
         {
@@ -29,19 +60,30 @@ namespace TermProject
                     {
                         if (this.Legend.ContainsKey(lines[x][y]))
                         {
-                            Type gameObjectType = this.Legend[lines[x][y]];
+                            GameObjectType gameObjectType = this.Legend[lines[x].ToLower()[y]];
                             GameObject gameObject = null;
-                            if (gameObjectType == typeof(SemiSolidTile))
+                            switch(gameObjectType)
                             {
-                                gameObject = new SemiSolidTile(this.Content);
+                                default:
+                                case GameObjectType.SolidTile:
+                                    gameObject = new SolidTile(this.Content, GetPosition(x, y));
+                                    break;
+                                case GameObjectType.SemiSolidTile:
+                                    gameObject = new SemiSolidTile(this.Content, GetPosition(x, y));
+                                    break;
+                                case GameObjectType.Player:
+                                    gameObject = new Player(this.Content, GetPosition(x, y));
+                                    break;
+                                case GameObjectType.Frog:
+                                    gameObject = new Frog(this.Content, GetPosition(x, y));
+                                    break;
+                                case GameObjectType.Emu:
+                                    gameObject = new Emu(this.Content, GetPosition(x, y));
+                                    break;
+                                case GameObjectType.SodaGuy:
+                                    gameObject = new SodaGuy(this.Content, GetPosition(x, y));
+                                    break;
                             }
-                            else if (gameObjectType == typeof(SolidTile))
-                            {
-                                gameObject = new SolidTile(this.Content);
-                            }
-
-                            gameObject.position.X = Tile.SIZE * y;
-                            gameObject.position.Y = Tile.SIZE * x;
 
                             if (gameObject != null) mapObjects.Add(gameObject);
                         }
@@ -60,6 +102,11 @@ namespace TermProject
             }
 
             return mapObjects;
+        }
+
+        private Vector2 GetPosition(int x, int y)
+        {
+            return new Vector2(Tile.SIZE * y, Tile.SIZE * x);
         }
     }
 }

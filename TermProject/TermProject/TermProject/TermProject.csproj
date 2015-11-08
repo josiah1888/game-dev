@@ -108,7 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedObject.cs" />
+    <Compile Include="Emu.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="Frog.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="MapMaker.cs" />
     <None Include="maps\level2" />
@@ -117,6 +119,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="SemiSolidTile.cs" />
+    <Compile Include="SodaGuy.cs" />
     <Compile Include="SolidTile.cs" />
     <Compile Include="Tile.cs" />
   </ItemGroup>

@@ -18,46 +18,14 @@ namespace TermProject
 
         Rectangle ViewPort { get; set; }
 
-        private Dictionary<char, Type> _MapLegend;
-        public Dictionary<char, Type> MapLegend
+        List<GameObject> levelObjects;
+
+        Player Player
         {
             get
             {
-                if (_MapLegend == null)
-                {
-                    _MapLegend = new Dictionary<char, Type>();
-                    _MapLegend.Add('*', (new SolidTile()).GetType());
-                    _MapLegend.Add('_', (new SemiSolidTile()).GetType());
-                }
-                return _MapLegend;
+                return (Player)this.levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
             }
-        }
-
-        List<GameObject> levelObjects;
-
-        Player Player;
-        Enemy Frog;
-
-        public Action<Enemy> GetFrogAI()
-        {
-            return (Enemy frog) =>
-            {
-                // do ai logic using this instance of frog
-
-                //if (frog.getState() == Enemy.EnemyState.Idle)
-                //{
-                //    frog.velocity.Y = -10;
-                //    //frog.velocity.X = frog.MAX_SPEED * frog.
-                //}
-            };
-        }
-
-        public Action<Enemy> GetBirdAI()
-        {
-            return (Enemy bird) =>
-            {
-                // logic in here
-            };
         }
 
         public Game1()
@@ -68,44 +36,35 @@ namespace TermProject
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker mapMaker = new MapMaker(Content);
-            mapMaker.Legend = MapLegend;
             levelObjects = mapMaker.ReadMap("maps/level1");
-            Player = new Player(Content.Load<Texture2D>("Sprites/playerIdle"), new Vector2(35, 50), 1, 1);
-            Frog = new Enemy(Content.Load<Texture2D>("Sprites/place-holder"), new Vector2(100, 50), 1, 1, GetFrogAI());
-            levelObjects.Add(Player);
             UpdateViewport(0);
-
-            // TODO: use this.Content to load your game content here
         }
 
-        protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
 
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            {
                 this.Exit();
+            }
 
-            // TODO: Add your update logic here
-            Update_Player();
-            Update_Positions();
-            Update_Camera();
+            if (levelObjects.Any())
+            {
+                Update_Player();
+                Update_Positions();
+                Update_Camera();
+            }
             base.Update(gameTime);
         }
 
+        #region Update
         private void Update_Player()
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -116,14 +75,14 @@ namespace TermProject
         {
             levelObjects.ForEach(i =>
             {
-                i.position.X += i.velocity.X;
-                i.position.Y += i.velocity.Y;
+                i.Position.X += i.Velocity.X;
+                i.Position.Y += i.Velocity.Y;
             });
         }
 
         private void Update_Camera()
         {
-            float distancePlayerIsAhead = Player.position.X + Player.center.X - this.ViewPort.X;
+            float distancePlayerIsAhead = Player.Position.X + Player.Center.X - this.ViewPort.X;
             if (distancePlayerIsAhead > this.ViewPort.Width * (3.0 / 5.0))
             {
                 UpdateViewport(this.ViewPort.X + distancePlayerIsAhead / 150f);
@@ -134,6 +93,7 @@ namespace TermProject
         {
             this.ViewPort = new Rectangle((int)x, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height);
         }
+        #endregion
 
         protected override void Draw(GameTime gameTime)
         {
@@ -142,7 +102,7 @@ namespace TermProject
 
             levelObjects.Where(i => i.Rectangle.Intersects(this.ViewPort)).ToList().ForEach(i =>
             {
-                spriteBatch.Draw(i.sprite, new Vector2(i.position.X - this.ViewPort.X, i.position.Y), null, Color.White, i.rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
+                spriteBatch.Draw(i.Sprite, new Vector2(i.Position.X - this.ViewPort.X, i.Position.Y), null, Color.White, i.Rotation, Vector2.Zero, 1.0f, SpriteEffects.None, 0);
             });
 
             spriteBatch.End();
