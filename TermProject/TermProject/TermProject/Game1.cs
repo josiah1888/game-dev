@@ -13,24 +13,24 @@ namespace TermProject
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        GraphicsDeviceManager Graphics;
+        SpriteBatch SpriteBatch;
 
         Rectangle ViewPort { get; set; }
 
-        List<GameObject> levelObjects;
+        List<GameObject> LevelObjects;
 
         Player Player
         {
             get
             {
-                return (Player)this.levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
+                return (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
             }
         }
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -41,12 +41,17 @@ namespace TermProject
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker mapMaker = new MapMaker(Content);
-            levelObjects = mapMaker.ReadMap("maps/level1");
+            LevelObjects = mapMaker.ReadMap("maps/level1");
+            Door door = (Door)LevelObjects.First(i => i.GetType() == typeof(Door));
+            door.WinAction = (Door d) =>
+            {
+                LevelObjects = d.MapMaker.ReadMap("maps/level2");
+                UpdateViewport(0);
+            };
             UpdateViewport(0);
         }
-
 
         protected override void Update(GameTime gameTime)
         {
@@ -55,11 +60,11 @@ namespace TermProject
                 this.Exit();
             }
 
-            double elapsed = gameTime.ElapsedGameTime.TotalMilliseconds;
+            double elapsed = gameTime.TotalGameTime.TotalMilliseconds;
 
-            if (levelObjects.Any())
+            if (LevelObjects.Any())
             {
-                Update_AnimatedObjects(elapsed);
+               // Update_AnimatedObjects(elapsed);
 
                 Update_Player(elapsed);
                 Update_Positions();
@@ -70,22 +75,22 @@ namespace TermProject
 
         private void Update_AnimatedObjects(double elapsed)
         {
-            levelObjects
-                .Where(i => i.Alive && i is AnimatedObject)
+            LevelObjects
+                .Where(i => i.Alive && i is AnimatedObject && !(i is Player) )
                 .Select(i => (AnimatedObject)i).ToList()
-                .ForEach(i => i.Update(levelObjects, elapsed));
+                .ForEach(i => i.Update(LevelObjects, elapsed));
         }
 
         #region Update
         private void Update_Player(double elapsed)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            Player.Update(levelObjects, keyboardState.GetPressedKeys(), this.ViewPort, elapsed);
+            Player.Update(LevelObjects, keyboardState.GetPressedKeys(), this.ViewPort, elapsed);
         }
 
         private void Update_Positions()
         {
-            levelObjects.ForEach(i =>
+            LevelObjects.ForEach(i =>
             {
                 i.Position.X += i.Velocity.X;
                 i.Position.Y += i.Velocity.Y;
@@ -110,14 +115,14 @@ namespace TermProject
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            SpriteBatch.Begin();
 
-            levelObjects.Where(i => i.Rectangle.Intersects(this.ViewPort)).ToList().ForEach(i =>
+            LevelObjects.Where(i => i.Rectangle.Intersects(this.ViewPort)).ToList().ForEach(i =>
             {
-                i.Draw(spriteBatch, this.ViewPort, SpriteEffects.None);
+                i.Draw(SpriteBatch, this.ViewPort, SpriteEffects.None);
             });
 
-            spriteBatch.End();
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }

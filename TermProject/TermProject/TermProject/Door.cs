@@ -11,11 +11,15 @@ namespace TermProject
     public class Door : AnimatedObject
     {
         double WaitTimer = 0;
+        public Action<Door> WinAction = (Door door) => { };
+        public List<GameObject> LevelObjects;
+        public MapMaker MapMaker;
 
-        public Door(ContentManager content, Vector2 position)
+        public Door(ContentManager content, Vector2 position, List<GameObject> levelObjects, MapMaker mapMaker)
             : base(content.Load<Texture2D>("sprites/place-holder"), position, 0f, 1f, 1f, 1, .8f)
         {
-
+            this.LevelObjects = levelObjects;
+            this.MapMaker = mapMaker;
         }
 
         public override void Update(List<GameObject> levelObjects, double elapsed)
@@ -26,13 +30,13 @@ namespace TermProject
             {
                 player.Pause();
                 OpenDoor();
-                this.WaitTimer = elapsed + 1.5;
+                this.WaitTimer = elapsed + 1500;
             }
             else if (!this.Repeat)
             {
                 if (elapsed > WaitTimer)
                 {
-                    player.Win();
+                    this.WinAction(this);
                 }
             }
 

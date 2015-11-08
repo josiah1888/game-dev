@@ -86,7 +86,7 @@ namespace TermProject
                                     gameObject = new SodaGuy(this.Content, GetPosition(x, y));
                                     break;
                                 case GameObjectType.Door:
-                                    gameObject = new Door(this.Content, GetPosition(x, y));
+                                    gameObject = new Door(this.Content, GetPosition(x, y), mapObjects, this);
                                     break;
                             }
 
