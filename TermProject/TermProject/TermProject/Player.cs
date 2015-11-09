@@ -28,6 +28,7 @@ namespace TermProject
         {
             this.IdleSprite = content.Load<Texture2D>("sprites/player-idle");
             this.WalkingSprite = content.Load<Texture2D>("sprites/player-walk");
+            this.TimePerFrame = 200f;
         }
 
         public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort, double elapsed)
@@ -44,7 +45,6 @@ namespace TermProject
         {
             if (Math.Abs(this.Velocity.X) > WALKING_TOLERANCE)
             {
-                this.TimePerFrame = 50f;
                 this.FrameCount = 4;
                 this.Sprite = WalkingSprite;
             }

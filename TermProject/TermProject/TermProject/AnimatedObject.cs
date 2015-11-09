@@ -16,11 +16,12 @@ namespace TermProject
         public float Depth;
 
         protected int FrameCount;
+        private float _TimePerFrame;
         protected float TimePerFrame
         {
             get
             {
-                return _TimePerFrame * Math.Abs(this.Velocity.X);
+                return _TimePerFrame / Math.Abs(this.Velocity.X);
             }
             set
             {
@@ -29,9 +30,8 @@ namespace TermProject
         }
 
         private float MaxSpeed;
-        private float _TimePerFrame;
         private int Frame;
-        private double TotalElapsed;
+        private double Elapsed;
         private bool Paused;
         public bool Repeat = true;
 
@@ -44,7 +44,7 @@ namespace TermProject
             this.Depth = depth;
             this.FrameCount = frameCount;
             this.Paused = false;
-            this.TotalElapsed = 0;
+            this.Elapsed = 0;
             this.Frame = 0;
             this.TimePerFrame = timePerFrame;
             this.MaxSpeed = maxSpeed;
@@ -52,13 +52,12 @@ namespace TermProject
 
         public virtual void Update(List<GameObject> levelObjects, double elapsed)
         {
-            if (!Paused)
+            if (!Paused && TimePerFrame > 0)
             {
-                TotalElapsed += elapsed;
-                if (TotalElapsed > TimePerFrame)
+                if (elapsed - Elapsed > TimePerFrame)
                 {
                     Frame = Repeat ? (Frame + 1) % FrameCount : Math.Min(FrameCount - 1, Frame + 1);
-                    TotalElapsed = 0;
+                    Elapsed = elapsed;
                 }
             }
         }
@@ -71,7 +70,7 @@ namespace TermProject
         public void Reset()
         {
             Frame = 0;
-            TotalElapsed = 0f;
+            Elapsed = 0f;
         }
 
         public void Stop()
