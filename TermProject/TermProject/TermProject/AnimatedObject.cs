@@ -29,6 +29,23 @@ namespace TermProject
             }
         }
 
+        private SpriteEffects _Effects;
+        private SpriteEffects Effects
+        {
+            get
+            {
+                if (this.Velocity.X > 0)
+                {
+                    _Effects = SpriteEffects.None;
+                }
+                else if (this.Velocity.X < 0)
+                {
+                    _Effects = SpriteEffects.FlipHorizontally;
+                }
+
+                return _Effects;
+            }
+        }
         private float MaxSpeed;
         private int Frame;
         private double Elapsed;
@@ -93,8 +110,7 @@ namespace TermProject
         {
             int frameWidth = Sprite.Width / FrameCount;
             spriteFrame = new Rectangle(frameWidth * this.Frame, 0, frameWidth, this.Rectangle.Height);
-            spriteEffects = this.Velocity.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            base.Draw(batch, viewPort, spriteEffects, spriteFrame);
+            base.Draw(batch, viewPort, Effects, spriteFrame);
         }
 
         public override Rectangle Rectangle
