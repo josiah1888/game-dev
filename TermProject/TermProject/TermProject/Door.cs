@@ -14,7 +14,7 @@ namespace TermProject
         public Action WinAction = () => { };
 
         public Door(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/place-holder"), position, 0f, 1f, 1f, 1, .8f)
+            : base(content.Load<Texture2D>("sprites/door"), position, 0f, 1f, 1f, 1, .8f)
         {
         }
 
