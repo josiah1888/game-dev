@@ -41,17 +41,35 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Compile Include="sprites\semi-solid-tile.png">
-      <Name>semi-solid-tile</Name>
-    </Compile>
-    <Compile Include="sprites\test-platform1-left.png">
-      <Name>test-platform1-left</Name>
+    <Compile Include="sprites\frog-idle.png">
+      <Name>frog-idle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="sprites\test-platform1-right.png">
-      <Name>test-platform1-right</Name>
+    <Compile Include="sprites\frog-jump.png">
+      <Name>frog-jump</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="sprites\place-holder.png">
+      <Name>place-holder</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="sprites\player-idle.png">
+      <Name>player-idle</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="sprites\player-walk.png">
+      <Name>player-walk</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="sprites\semi-solid-tile.png">
+      <Name>semi-solid-tile</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -60,24 +78,13 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="sprites\place-holder.png">
-      <Name>place-holder</Name>
+    <Compile Include="sprites\test-platform1-left.png">
+      <Name>test-platform1-left</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="sprites\player-walk.png">
-      <Name>player-walk</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="sprites\player-idle.png">
-      <Name>player-idle</Name>
+    <Compile Include="sprites\test-platform1-right.png">
+      <Name>test-platform1-right</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
