@@ -47,7 +47,7 @@ namespace TermProject
                         if (Emu.Direction == Enemy.EnemyDirection.Left)
                             Emu.Velocity.X = Enemy.MAX_SPEED * -1;
                         else if (Emu.Direction == Enemy.EnemyDirection.Right)
-                            Emu.Velocity.X = Enemy.MAX_SPEED / 2;
+                            Emu.Velocity.X = Enemy.MAX_SPEED;
                         else
                             Emu.Velocity.X = 0;
                     }
