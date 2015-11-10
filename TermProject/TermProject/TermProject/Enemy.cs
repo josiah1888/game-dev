@@ -43,7 +43,7 @@ namespace TermProject
         public void Update(List<GameObject> levelObjects)
         {
             UpdateSprite();
-            ApplyGravity(levelObjects);
+            ApplyGravity();
             this.Target = (Player)levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
             this.Ai(this);
         }

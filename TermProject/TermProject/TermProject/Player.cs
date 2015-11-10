@@ -34,7 +34,7 @@ namespace TermProject
         public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort, double elapsed)
         {
             UpdateSprite();
-            ApplyGravity(levelObjects);
+            ApplyGravity();
             Move(keys, levelObjects, viewPort);
             SlowDown();
 
@@ -57,7 +57,7 @@ namespace TermProject
 
         private void Move(Keys[] keys, List<GameObject> levelObjects, Rectangle viewPort)
         {
-            if (IsOnGround(levelObjects) && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
+            if (IsOnGround() && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
             {
                 Jump();
             }
