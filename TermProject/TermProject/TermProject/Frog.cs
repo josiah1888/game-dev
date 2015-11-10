@@ -11,9 +11,11 @@ namespace TermProject
     public class Frog : Enemy
     {
         public Frog(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/place-holder"), position, 1, 1, Frog.Ai)
+            : base(content.Load<Texture2D>("sprites/frog-idle"), position, 1, 1, Frog.Ai)
         {
-
+            this.IdleSprite = content.Load<Texture2D>("sprites/frog-idle");
+            this.AttackSprite = content.Load<Texture2D>("sprites/frog-jump");
+            this.TimePerFrame = 200f;
         }
 
         private static Action<Enemy> Ai

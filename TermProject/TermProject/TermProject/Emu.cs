@@ -13,7 +13,7 @@ namespace TermProject
         public Emu(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/place-holder"), position, 1, 1, Emu.Ai)
         {
-
+            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/place-holder");
         }
 
         private static Action<Enemy> Ai

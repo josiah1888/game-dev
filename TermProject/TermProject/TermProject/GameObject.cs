@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +22,7 @@ namespace TermProject
         public bool Alive;
         public float Scale = 1.0f;
         public int Designator;
+        public List<GameObject> LevelObjects;
 
         protected bool ObeysGravity;
 
@@ -111,11 +112,11 @@ namespace TermProject
             }
         }
 
-        protected void ApplyGravity(List<GameObject> levelObjects)
+        protected void ApplyGravity()
         {
             if (this.ObeysGravity)
             {
-                if (!IsOnGround(levelObjects))
+                if (!IsOnGround())
                 {
                     this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + 1);
                 }
@@ -150,9 +151,9 @@ namespace TermProject
             }
         }
 
-        public bool IsOnGround(List<GameObject> levelObjects)
+        public bool IsOnGround()
         {
-            return this.Velocity.Y >= 0 && levelObjects.Any(i => i.Alive && i is Tile && i.TopRectangle.Intersects(this.BottomRectangle));
+            return this.Velocity.Y >= 0 && LevelObjects.Any(i => i.Alive && i is Tile && i.TopRectangle.Intersects(this.BottomRectangle));
         }
 
         #region Legacy GameObject Methods
@@ -185,6 +186,7 @@ namespace TermProject
             return direction;
         }
 
+        [Obsolete("Legacy code from a past game.")]
         public float GetAngle(Vector2 a, Vector2 b)
         {
             double sin = -a.X * b.Y - b.X * a.Y;

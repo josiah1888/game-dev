@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,8 @@ namespace TermProject
         public EnemyState State;
         public EnemyDirection Direction;
         public Player Target;
+
+        protected Texture2D IdleSprite, AttackSprite;
 
         private const int MAX_GRAVITY = 3;
         private Action<Enemy> Ai;
@@ -38,16 +40,25 @@ namespace TermProject
             this.Direction = EnemyDirection.Left;
         }
 
-        public bool IsOnGround()
-        {
-            return true;
-        }
-
         public void Update(List<GameObject> levelObjects)
         {
-            ApplyGravity(levelObjects);
+            UpdateSprite();
+            ApplyGravity();
             this.Target = (Player)levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
             this.Ai(this);
+        }
+
+        private void UpdateSprite()
+        {
+            switch(this.State)
+            {
+                case EnemyState.Idle:
+                    this.Sprite = IdleSprite;
+                    break;
+                case EnemyState.Attack:
+                    this.Sprite = AttackSprite;
+                    break;
+            }
         }
     }
 }
