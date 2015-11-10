@@ -90,7 +90,7 @@ namespace TermProject
             return direction;
         }
 
-        private float GetAngle(Vector2 a, Vector2 b)
+        public float GetAngle(Vector2 a, Vector2 b)
         {
             double sin = -a.X * b.Y - b.X * a.Y;
             double cos = a.X * b.X + a.Y * b.Y;

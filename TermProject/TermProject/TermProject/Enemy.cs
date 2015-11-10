@@ -23,6 +23,8 @@ namespace TermProject
             Right = 1
         }
 
+        public Direction direction;
+
         public Enemy(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec, Action<Enemy> ai)
             : base(loadedTexture, position, 0f, 1f, 1f, frameCount, framesPerSec)
         {
@@ -34,9 +36,19 @@ namespace TermProject
             return state;
         }
 
+        public Direction getDirection()
+        {
+            return direction;
+        }
+
         public void setState(EnemyState newState)
         {
             state = newState;
+        }
+
+        public void setDirection(Direction newDirection)
+        {
+            direction = newDirection;
         }
 
         public void Update(List<GameObject> levelObjects)

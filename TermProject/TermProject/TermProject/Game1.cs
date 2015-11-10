@@ -35,18 +35,65 @@ namespace TermProject
 
         Player Player;
         Enemy Frog;
+        Enemy Bird;
+
+        Enemy.EnemyState idle = Enemy.EnemyState.Idle;
+        Enemy.EnemyState attack = Enemy.EnemyState.Attack;
+        Enemy.Direction left = Enemy.Direction.Left;
+        Enemy.Direction right = Enemy.Direction.Right;
 
         public Action<Enemy> GetFrogAI()
         {
             return (Enemy frog) =>
             {
-                // do ai logic using this instance of frog
+                if (frog.DistanceFrom(Player) > Enemy.threshold)
+                {
+                    frog.setState(idle);
+                }
 
-                //if (frog.getState() == Enemy.EnemyState.Idle)
-                //{
-                //    frog.velocity.Y = -10;
-                //    //frog.velocity.X = frog.MAX_SPEED * frog.
-                //}
+                else
+                {
+                    frog.setState(attack);
+                }    
+
+
+                if (frog.getState() == Enemy.EnemyState.Idle)
+                {
+                    if(frog.IsOnGround(levelObjects))
+                    {
+                        frog.velocity.X = 0;
+                        frog.velocity.Y = -10;
+                    }
+
+                    if(!frog.IsOnGround(levelObjects))
+                    {
+                        if (frog.getDirection() == Enemy.Direction.Left)
+                            frog.velocity.X = (Enemy.MAX_SPEED / 2) * -1;
+                        else if (frog.getDirection() == Enemy.Direction.Right)
+                            frog.velocity.X = (Enemy.MAX_SPEED / 2);
+                        else
+                            frog.velocity.X = 0;
+                    }
+                }
+
+                else if (frog.getState() == Enemy.EnemyState.Attack)
+                {
+                    Vector2 closingVelocity = Player.velocity - frog.velocity;
+                    Vector2 closingRange = Player.position - frog.position;
+                    Vector2 closingTime = new Vector2(Math.Abs(closingVelocity.X) / Math.Abs(closingRange.X), Math.Abs(closingVelocity.Y) / Math.Abs(closingRange.Y));
+
+                    Vector2 frogFuturePosition = Player.position + (Player.velocity * closingTime);
+                    float angle = frog.GetAngle(frog.position, Player.position);
+
+                    if (frog.IsOnGround(levelObjects))
+                    {
+                        frog.velocity.X = 0;
+                        frog.velocity.Y = (float)Math.Cos(angle) * 10.0f;
+                    }
+
+                    if (!frog.IsOnGround(levelObjects))
+                        frog.velocity.X = (float)Math.Sin(angle) * Enemy.MAX_SPEED;
+                }
             };
         }
 
@@ -54,7 +101,46 @@ namespace TermProject
         {
             return (Enemy bird) =>
             {
-                // logic in here
+
+                if (bird.DistanceFrom(Player) > Enemy.threshold)
+                {
+                    bird.setState(idle);
+                }
+
+                else
+                {
+                    bird.setState(attack);
+                }
+    
+                if (bird.getState() == Enemy.EnemyState.Idle)
+                {
+                    if (bird.getDirection() == Enemy.Direction.Left)
+                        bird.velocity.X = (Enemy.MAX_SPEED / 2) * -1;
+                    else if (bird.getDirection() == Enemy.Direction.Right)
+                        bird.velocity.X = (Enemy.MAX_SPEED / 2);
+                    else
+                        bird.velocity.X = 0;
+                }
+
+                else if (bird.getState() == Enemy.EnemyState.Attack)
+                {
+                    if (bird.getDirection() == Enemy.Direction.Left)
+                        bird.velocity.X = Enemy.MAX_SPEED * -1;
+                    else if (bird.getDirection() == Enemy.Direction.Right)
+                        bird.velocity.X = Enemy.MAX_SPEED;
+                    else
+                        bird.velocity.X = 0;
+                }
+
+                if (!bird.IsOnGround(levelObjects) && bird.getDirection() == Enemy.Direction.Left)
+                {
+                    bird.setDirection(right);
+                }
+
+                if (!bird.IsOnGround(levelObjects) && bird.getDirection() == Enemy.Direction.Right)
+                {
+                    bird.setDirection(left);
+                }
             };
         }
 
