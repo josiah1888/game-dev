@@ -17,6 +17,7 @@ namespace TermProject
         SpriteBatch SpriteBatch;
 
         Rectangle ViewPort { get; set; }
+        MapMaker MapMaker;
 
         List<GameObject> LevelObjects;
 
@@ -25,6 +26,42 @@ namespace TermProject
             get
             {
                 return (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
+            }
+        }
+
+        Queue<Action> _WinActions;
+        Queue<Action> WinActions
+        {
+            get
+            {
+                if (_WinActions == null)
+                {
+                    _WinActions = new Queue<Action>();
+                    _WinActions.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.ReadMap("maps/level1");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = WinActions.Dequeue();
+                        UpdateViewport(0);
+                    });
+                    _WinActions.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator == 1)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                            // optionally, add kaboom after a delay
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 2);
+                        door.WinAction = WinActions.Dequeue();
+                        UpdateViewport(0);
+                    });
+                    _WinActions.Enqueue(() =>
+                    {
+                        // Level 2
+                    });
+                }
+                return _WinActions;
             }
         }
 
@@ -42,14 +79,10 @@ namespace TermProject
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            MapMaker mapMaker = new MapMaker(Content);
-            LevelObjects = mapMaker.ReadMap("maps/level1");
-            Door door = (Door)LevelObjects.First(i => i.GetType() == typeof(Door));
-            door.WinAction = (Door d) =>
-            {
-                LevelObjects = d.MapMaker.ReadMap("maps/level2");
-                UpdateViewport(0);
-            };
+            MapMaker = new MapMaker(Content);
+            LevelObjects = MapMaker.ReadMap("maps/level-selection");
+            Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
+            door.WinAction = WinActions.Dequeue();
             UpdateViewport(0);
         }
 
@@ -76,7 +109,7 @@ namespace TermProject
         private void Update_AnimatedObjects(double elapsed)
         {
             LevelObjects
-                .Where(i => i.Alive && i is AnimatedObject && !(i is Player) )
+                .Where(i => i.Alive && i is AnimatedObject && !(i is Player))
                 .Select(i => (AnimatedObject)i).ToList()
                 .ForEach(i => i.Update(LevelObjects, elapsed));
         }

@@ -114,6 +114,7 @@
     <Compile Include="Frog.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="MapMaker.cs" />
+    <None Include="maps\level-selection" />
     <None Include="maps\level2" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

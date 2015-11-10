@@ -21,7 +21,7 @@ namespace TermProject
         {
             get
             {
-                return _TimePerFrame / Math.Abs(this.Velocity.X);
+                return this.Velocity.X == 0 ? 1 : _TimePerFrame / Math.Abs(this.Velocity.X);
             }
             set
             {

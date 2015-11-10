@@ -21,6 +21,7 @@ namespace TermProject
         public Vector2 Velocity;
         public bool Alive;
         public float Scale = 1.0f;
+        public int Designator;
 
         protected bool ObeysGravity;
 

@@ -60,11 +60,13 @@ namespace TermProject
                 {
                     for (int y = 0; y < lines.Min(i => i.Length); y++)
                     {
-                        if (this.Legend.ContainsKey(lines[x][y]))
+                        char mapCode = lines[x][y];
+
+                        if (this.Legend.ContainsKey(mapCode))
                         {
-                            GameObjectType gameObjectType = this.Legend[lines[x].ToLower()[y]];
+                            GameObjectType gameObjectType = this.Legend[char.ToLower(mapCode)];
                             GameObject gameObject = null;
-                            switch(gameObjectType)
+                            switch (gameObjectType)
                             {
                                 default:
                                 case GameObjectType.SolidTile:
@@ -86,16 +88,19 @@ namespace TermProject
                                     gameObject = new SodaGuy(this.Content, GetPosition(x, y));
                                     break;
                                 case GameObjectType.Door:
-                                    gameObject = new Door(this.Content, GetPosition(x, y), mapObjects, this);
+                                    gameObject = new Door(this.Content, GetPosition(x, y));
                                     break;
                             }
 
-                            if (gameObject != null) mapObjects.Add(gameObject);
-                        }
-                        else
-                        {
-                            //throw new Exception("Invalid character found in map");
-                            // for final testing?
+                            if (gameObject != null)
+                            {
+                                if (lines[x].Length > y + 1)
+                                {
+                                    string designator = lines[x][y + 1].ToString();
+                                    int.TryParse(designator, out gameObject.Designator);
+                                }
+                                mapObjects.Add(gameObject);
+                            }
                         }
                     }
                 }
