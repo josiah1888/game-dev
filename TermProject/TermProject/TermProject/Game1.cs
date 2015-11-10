@@ -98,12 +98,21 @@ namespace TermProject
             if (LevelObjects.Any())
             {
                 Update_AnimatedObjects(elapsed);
-
+                Update_Enemies();
                 Update_Player(elapsed);
                 Update_Positions();
                 Update_Camera();
             }
             base.Update(gameTime);
+        }
+
+        #region Update
+        private void Update_Enemies()
+        {
+            this.LevelObjects
+                .Where(i => i.Alive && i is Enemy)
+                .Select(i => (Enemy)i).ToList()
+                .ForEach(i => i.Update(LevelObjects));
         }
 
         private void Update_AnimatedObjects(double elapsed)
@@ -114,7 +123,6 @@ namespace TermProject
                 .ForEach(i => i.Update(LevelObjects, elapsed));
         }
 
-        #region Update
         private void Update_Player(double elapsed)
         {
             KeyboardState keyboardState = Keyboard.GetState();
