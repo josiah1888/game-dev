@@ -9,7 +9,7 @@ namespace TermProject
 {
     public class Enemy : AnimatedObject
     {
-        public const int THRESHHOLD = 50;
+        public const int THRESHHOLD = 100;
         public const int MAX_SPEED = 4;
         public EnemyState State;
         public EnemyDirection Direction;
@@ -36,6 +36,11 @@ namespace TermProject
             this.Ai = ai;
             this.State = EnemyState.Idle;
             this.Direction = EnemyDirection.Left;
+        }
+
+        public bool IsOnGround()
+        {
+            return true;
         }
 
         public void Update(List<GameObject> levelObjects)

@@ -52,16 +52,18 @@ namespace TermProject
                             Emu.Velocity.X = 0;
                     }
 
-                    if (Emu.Velocity.Y == 0)
+                    if (Emu.Velocity.Y > 0)
                     {
-                        if(Emu.Velocity.X < 0)
+                        if (Emu.Velocity.X < 0)
                         {
+                            Emu.Position.Y -= 1;
                             Emu.Direction = EnemyDirection.Right;
                             Emu.Velocity.X *= -1;
                         }
 
                         else
                         {
+                            Emu.Position.Y -= 1;
                             Emu.Direction = EnemyDirection.Left;
                             Emu.Velocity.X *= -1;
                         }
