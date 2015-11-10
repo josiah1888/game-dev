@@ -37,14 +37,13 @@ namespace TermProject
 
                     if (frog.State == Enemy.EnemyState.Idle)
                     {
-
-                        if (frog.Velocity.Y == 0)
+                        if (frog.IsOnGround())
                         {
                             frog.Velocity.X = 0;
                             frog.Velocity.Y = -10;
                         }
 
-                        if (frog.Velocity.Y != 0)
+                        if (!frog.IsOnGround())
                         {
                             if (frog.Direction == Enemy.EnemyDirection.Left)
                                 frog.Velocity.X = (Enemy.MAX_SPEED / 2) * -1;
@@ -64,13 +63,13 @@ namespace TermProject
                         Vector2 frogFuturePosition = frog.Target.Position + (frog.Target.Velocity * closingTime);
                         float angle = frog.GetAngle(frog.Position, frogFuturePosition);
 
-                        if (frog.Velocity.Y == 0)
+                        if (frog.IsOnGround())
                         {
                             frog.Velocity.X = 0;
-                            frog.Velocity.Y = (float)Math.Cos(angle) * 10.0f;
+                            frog.Velocity.Y = MathHelper.Clamp((float)Math.Cos(angle) * 10.0f, -10, 0);
                         }
 
-                        if (frog.Velocity.Y != 0)
+                        if (!frog.IsOnGround())
                             frog.Velocity.X = (float)Math.Sin(angle) * Enemy.MAX_SPEED;
                     }
                 };

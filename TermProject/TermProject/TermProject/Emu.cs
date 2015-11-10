@@ -11,9 +11,9 @@ namespace TermProject
     public class Emu : Enemy
     {
         public Emu(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/place-holder"), position, 1, 1, Emu.Ai)
+            : base(content.Load<Texture2D>("sprites/old-bird"), position, 1, 1, Emu.Ai)
         {
-            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/place-holder");
+            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/old-bird");
         }
 
         private static Action<Enemy> Ai
@@ -47,21 +47,23 @@ namespace TermProject
                         if (Emu.Direction == Enemy.EnemyDirection.Left)
                             Emu.Velocity.X = Enemy.MAX_SPEED * -1;
                         else if (Emu.Direction == Enemy.EnemyDirection.Right)
-                            Emu.Velocity.X = Enemy.MAX_SPEED / 2;
+                            Emu.Velocity.X = Enemy.MAX_SPEED;
                         else
                             Emu.Velocity.X = 0;
                     }
 
-                    if (Emu.Velocity.Y == 0)
+                    if (Emu.Velocity.Y > 0)
                     {
-                        if(Emu.Velocity.X < 0)
+                        if (Emu.Velocity.X < 0)
                         {
+                            Emu.Position.Y -= 1;
                             Emu.Direction = EnemyDirection.Right;
                             Emu.Velocity.X *= -1;
                         }
 
                         else
                         {
+                            Emu.Position.Y -= 1;
                             Emu.Direction = EnemyDirection.Left;
                             Emu.Velocity.X *= -1;
                         }

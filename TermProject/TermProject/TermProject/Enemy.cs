@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +9,7 @@ namespace TermProject
 {
     public class Enemy : AnimatedObject
     {
-        public const int THRESHHOLD = 50;
+        public const int THRESHHOLD = 100;
         public const int MAX_SPEED = 4;
         public EnemyState State;
         public EnemyDirection Direction;
