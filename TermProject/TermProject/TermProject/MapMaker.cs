@@ -111,6 +111,8 @@ namespace TermProject
                 throw e;
             }
 
+            mapObjects.ForEach(i => i.LevelObjects = mapObjects);
+
             return mapObjects;
         }
 
