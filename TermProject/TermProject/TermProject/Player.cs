@@ -5,20 +5,15 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 
 namespace TermProject
 {
-    class Player : AnimatedObject
+    public class Player : AnimatedObject
     {
-        public Player(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec)
-            : base(loadedTexture, position, 0f, 1f, 1f, frameCount, framesPerSec)
-        {
-
-        }
-
-        private const int MAX_SPEED = 4;
-        private const int MAX_GRAVITY = 3;
         private const float MIN_BOUNCE_BACK = .8f;
+        private const int MAX_SPEED = 4;
+        private const float WALKING_TOLERANCE = .3f;
 
         private enum Direction
         {
@@ -26,31 +21,41 @@ namespace TermProject
             Right = 1
         }
 
-        public void Update(List<GameObject> levelObjects, Keys[] keys)
+        private Texture2D IdleSprite, WalkingSprite;
+
+        public Player(ContentManager content, Vector2 position)
+            : base(content.Load<Texture2D>("sprites/player-idle"), position, 0f, 1f, 1f, 1, 1)
         {
+            this.IdleSprite = content.Load<Texture2D>("sprites/player-idle");
+            this.WalkingSprite = content.Load<Texture2D>("sprites/player-walk");
+            this.TimePerFrame = 200f;
+        }
+
+        public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort, double elapsed)
+        {
+            UpdateSprite();
             ApplyGravity(levelObjects);
-            Move(keys, levelObjects);
+            Move(keys, levelObjects, viewPort);
             SlowDown();
+
+            base.Update(levelObjects, elapsed);
         }
 
-        private void ApplyGravity(List<GameObject> levelObjects)
+        private void UpdateSprite()
         {
-            if (!IsOnGround(levelObjects))
+            if (Math.Abs(this.Velocity.X) > WALKING_TOLERANCE)
             {
-                this.velocity.Y = Math.Min(MAX_GRAVITY, this.velocity.Y + 1);
+                this.FrameCount = 4;
+                this.Sprite = WalkingSprite;
             }
-            else if (this.velocity.Y > 0)
+            else
             {
-                this.velocity.Y = 0;
+                this.FrameCount = 1;
+                this.Sprite = IdleSprite;
             }
         }
 
-        public bool IsOnGround(List<GameObject> levelObjects)
-        {
-            return this.velocity.Y >= 0 && levelObjects.Where(i => i is SemiSolidTile || i is SolidTile).Any(i => i.TopRectangle.Intersects(this.BottomRectangle));
-        }
-
-        public void Move(Keys[] keys, List<GameObject> levelObjects)
+        private void Move(Keys[] keys, List<GameObject> levelObjects, Rectangle viewPort)
         {
             if (IsOnGround(levelObjects) && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
             {
@@ -66,58 +71,95 @@ namespace TermProject
             {
                 Move(Direction.Left);
             }
-            
+
+            CheckEnemyCollisions(levelObjects);
+            CheckViewportCollision(viewPort);
             CheckLateralCollisions(levelObjects);
             CheckVerticalCollisions(levelObjects);
         }
 
-        private void CheckVerticalCollisions(List<GameObject> levelObjects)
+        #region Move
+        private void Jump()
         {
-            GameObject problemTile = levelObjects.FirstOrDefault(i => i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+            this.Velocity.Y = -10;
+        }
 
-            if (problemTile != null)
+        private void CheckEnemyCollisions(List<GameObject> levelObjects)
+        {
+            levelObjects
+                .Where(i => i is Enemy && i.TopRectangle.Intersects(this.BottomRectangle))
+                .ToList()
+                .ForEach(i => i.Alive = false);
+
+            this.Alive = !levelObjects.Any(i => i.Alive && i is Enemy && i.Rectangle.Intersects(this.Rectangle));
+        }
+
+        private void CheckViewportCollision(Rectangle viewPort)
+        {
+            if (this.Position.X < viewPort.Left)
             {
-                this.position.Y = problemTile.BottomRectangle.Bottom;
-                this.velocity.Y = 0;
+                CollideLeft();
             }
         }
 
         private void CheckLateralCollisions(List<GameObject> levelObjects)
         {
-            if (levelObjects.Any(i => this.Rectangle.Intersects(i.Rectangle) && i is SolidTile))
+            if (levelObjects.Any(i => i.Alive && i is SolidTile && this.Rectangle.Intersects(i.Rectangle)))
             {
-                this.position.X -= this.velocity.X;
-                if (this.velocity.X > 0)
+                this.Position.X -= this.Velocity.X;
+                if (this.Velocity.X > 0)
                 {
-                    this.velocity.X = Math.Max(this.velocity.X - 2, MIN_BOUNCE_BACK) * -1;
+                    CollideRight();
                 }
-                else if (this.velocity.X < 0)
+                else if (this.Velocity.X < 0)
                 {
-                    this.velocity.X = Math.Min(this.velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
+                    CollideLeft();
                 }
             }
         }
+
+        private void CheckVerticalCollisions(List<GameObject> levelObjects)
+        {
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+
+            if (problemTile != null)
+            {
+                CollideTop(problemTile);
+            }
+        }
+
+        private void CollideRight()
+        {
+            this.Velocity.X = Math.Max(this.Velocity.X - 2, MIN_BOUNCE_BACK) * -1;
+        }
+
+        private void CollideLeft()
+        {
+            this.Velocity.X = Math.Min(this.Velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
+        }
+
+        private void CollideTop(GameObject problemTile)
+        {
+            this.Position.Y = problemTile.BottomRectangle.Bottom;
+            this.Velocity.Y = 0;
+        }
+        #endregion
 
         private void SlowDown()
         {
-            if (this.velocity.X > 0)
+            if (this.Velocity.X > 0)
             {
-                this.velocity.X = Math.Max(this.velocity.X - .1f, 0f);
+                this.Velocity.X = Math.Max(this.Velocity.X - .1f, 0f);
             }
             else
             {
-                this.velocity.X = Math.Min(this.velocity.X + .1f, 0f);
+                this.Velocity.X = Math.Min(this.Velocity.X + .1f, 0f);
             }
-        }
-
-        public void Jump()
-        {
-            this.velocity.Y = -10;
         }
 
         private void Move(Direction direction)
         {
-            this.velocity.X = Math.Max(MAX_SPEED * -1, Math.Min(this.velocity.X + (int)direction, MAX_SPEED));
+            this.Velocity.X = Math.Max(MAX_SPEED * -1, Math.Min(this.Velocity.X + (int)direction, MAX_SPEED));
         }
     }
 }

@@ -13,16 +13,30 @@ namespace TermProject
 {
     public class AnimatedObject : GameObject
     {
-        private int FrameCount;
-        private float TimePerFrame;
-        private int Frame;
-        private float TotalElapsed;
-        private bool Paused;
+        public float Depth;
 
-        public float Rotation, Depth;
-        public Vector2 Position;
-        public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, int framesPerSec, int health = STANDARD_HEALTH)
-            : base(loadedTexture, position, health)
+        protected int FrameCount;
+        private float _TimePerFrame;
+        protected float TimePerFrame
+        {
+            get
+            {
+                return this.Velocity.X == 0 ? 1 : _TimePerFrame / Math.Abs(this.Velocity.X);
+            }
+            set
+            {
+                _TimePerFrame = value;
+            }
+        }
+
+        private float MaxSpeed;
+        private int Frame;
+        private double Elapsed;
+        private bool Paused;
+        public bool Repeat = true;
+
+        public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, float timePerFrame, float maxSpeed = 5)
+            : base(loadedTexture, position)
         {
             this.Position = position;
             this.Rotation = rotation;
@@ -30,68 +44,64 @@ namespace TermProject
             this.Depth = depth;
             this.FrameCount = frameCount;
             this.Paused = false;
-            this.TotalElapsed = 0;
+            this.Elapsed = 0;
             this.Frame = 0;
-            this.TimePerFrame = (float)1.0 / framesPerSec;
+            this.TimePerFrame = timePerFrame;
+            this.MaxSpeed = maxSpeed;
         }
 
-        // class AnimatedTexture
-        public void UpdateFrame(float elapsed)
+        public virtual void Update(List<GameObject> levelObjects, double elapsed)
         {
-            if (Paused)
-                return;
-            TotalElapsed += elapsed;
-            if (TotalElapsed > TimePerFrame)
+            if (!Paused && TimePerFrame > 0)
             {
-                Frame++;
-                // Keep the Frame between 0 and the total frames, minus one.
-                Frame = Frame % FrameCount;
-                TotalElapsed -= TimePerFrame;
+                if (elapsed - Elapsed > TimePerFrame)
+                {
+                    Frame = Repeat ? (Frame + 1) % FrameCount : Math.Min(FrameCount - 1, Frame + 1);
+                    Elapsed = elapsed;
+                }
             }
-        }
-
-        // class AnimatedTexture
-        public void DrawFrame(SpriteBatch batch, Vector2 screenPos)
-        {
-            DrawFrame(batch, Frame, screenPos);
-        }
-        public void DrawFrame(SpriteBatch batch, int frame, Vector2 screenPos)
-        {
-            int FrameWidth = sprite.Width / FrameCount;
-            Rectangle sourcerect = new Rectangle(FrameWidth * frame, 0,
-                FrameWidth, sprite.Height);
-            batch.Draw(sprite, screenPos, sourcerect, Color.White,
-                Rotation, Position, Scale, SpriteEffects.None, Depth);
         }
 
         public bool IsPaused
         {
             get { return Paused; }
         }
+
         public void Reset()
         {
             Frame = 0;
-            TotalElapsed = 0f;
+            Elapsed = 0f;
         }
+
         public void Stop()
         {
             Pause();
             Reset();
         }
+
         public void Play()
         {
             Paused = false;
         }
+
         public void Pause()
         {
             Paused = true;
         }
 
-        public new Rectangle Rectangle
+        public override void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        {
+            int frameWidth = Sprite.Width / FrameCount;
+            spriteFrame = new Rectangle(frameWidth * this.Frame, 0, frameWidth, this.Rectangle.Height);
+            spriteEffects = this.Velocity.X < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            base.Draw(batch, viewPort, spriteEffects, spriteFrame);
+        }
+
+        public override Rectangle Rectangle
         {
             get
             {
-                return new Rectangle((int)this.position.X, (int)this.position.Y, (int)(this.sprite.Width * Scale / this.FrameCount), (int)(this.sprite.Height * Scale));
+                return new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)(this.Sprite.Width * Scale / this.FrameCount), (int)(this.Sprite.Height * Scale));
             }
         }
     }

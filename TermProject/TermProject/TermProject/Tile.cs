@@ -15,23 +15,26 @@ namespace TermProject
     public class Tile : GameObject
     {
         public const int SIZE = 32;
+        public TileType Type;
+        
+        protected new bool ObeysGravity = false;
+
         public enum TileType
         {
             SemiSolid,
             Solid
         }
 
-        public TileType Type;
-
         public Tile()
             : base()
         {
+
         }
 
         public Tile(Texture2D loadedTexture)
             : base(loadedTexture)
         {
-
+            
         }
 
         public Tile(Texture2D loadedTexture, Vector2 position, TileType type)
@@ -40,11 +43,11 @@ namespace TermProject
             this.Type = type;
         }
 
-        private new Rectangle Rectangle
+        public override Rectangle Rectangle
         {
             get
             {
-                return new Rectangle((int)this.position.X, (int)this.position.Y, SIZE, SIZE);
+                return new Rectangle((int)this.Position.X, (int)this.Position.Y, SIZE, SIZE);
             }
         }
     }

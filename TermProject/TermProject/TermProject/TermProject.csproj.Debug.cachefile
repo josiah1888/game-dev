@@ -1,7 +1,7 @@
-Content\Sprites\test_platform1_left.xnb
-Content\Sprites\test_platform1_right.xnb
-Content\Sprites\solid-tile.xnb
 Content\Sprites\semi-solid-tile.xnb
+Content\Sprites\solid-tile.xnb
 Content\Sprites\place-holder.xnb
-Content\Sprites\playerWalk.xnb
-Content\Sprites\playerIdle.xnb
+Content\sprites\test-platform1-left.xnb
+Content\sprites\test-platform1-right.xnb
+Content\sprites\player-walk.xnb
+Content\sprites\player-idle.xnb

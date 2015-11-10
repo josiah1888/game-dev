@@ -14,40 +14,21 @@ namespace TermProject
 {
     public class GameObject
     {
-        public Texture2D sprite;
-        public Vector2 position;
-        public float rotation;
-        public Vector2 center;
-        public Vector2 velocity;
-        public bool alive;
-        public bool obeysGravity;
-        public bool isOnGround;
-        public int health;
-        protected const int STANDARD_HEALTH = 1000;
+        public Texture2D Sprite;
+        public Vector2 Position;
+        public float Rotation;
+        public Vector2 Center;
+        public Vector2 Velocity;
+        public bool Alive;
+        public float Scale = 1.0f;
+        public int Designator;
+
+        protected bool ObeysGravity;
+
         private const float VISION_FIELD = .02f;
         private const int VISION_LENGTH = 350;
-        public float Scale = 1.0f;
+        private const int MAX_GRAVITY = 3;
 
-        public Rectangle Rectangle
-        {
-            get
-            {
-                return new Rectangle((int)this.position.X, (int)this.position.Y, (int)(this.sprite.Width * Scale), (int)(this.sprite.Height * Scale));
-            }
-        }
-
-        public void setup(Texture2D loadedTexture, Vector2 position, int health)
-        {
-            this.rotation = 0.0f;
-            this.position = position;
-            this.sprite = loadedTexture;
-            this.center = new Vector2(sprite.Width / 2, sprite.Height / 2);
-            this.velocity = Vector2.Zero;
-            this.alive = false;
-            this.obeysGravity = false;
-            this.isOnGround = true; // ensures vertical velocity 
-            this.health = health;
-        }
 
         public GameObject()
         {
@@ -56,106 +37,101 @@ namespace TermProject
 
         public GameObject(Texture2D loadedTexture)
         {
-            setup(loadedTexture, Vector2.Zero, STANDARD_HEALTH);
+            Setup(loadedTexture, Vector2.Zero);
         }
 
-        public GameObject(Texture2D loadedTexture, Vector2 position, int health = STANDARD_HEALTH)
+        public GameObject(Texture2D loadedTexture, Vector2 position)
         {
-            setup(loadedTexture, position, health);
+            Setup(loadedTexture, position);
         }
 
-        public double DistanceFrom(GameObject otherGuy)
+        public void Setup(Texture2D loadedTexture, Vector2 position)
         {
-            double deltaX = otherGuy.position.X - this.position.X;
-            deltaX *= deltaX;
-            double deltaY = otherGuy.position.Y - this.position.Y;
-            deltaY *= deltaY;
+            this.Rotation = 0.0f;
+            this.Position = position;
+            this.Sprite = loadedTexture;
+            this.Center = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
+            this.Velocity = Vector2.Zero;
+            this.Alive = true;
+            this.ObeysGravity = true;
 
-            return Math.Sqrt(deltaX + deltaY);
         }
 
-        public void MoveTowards(GameObject otherGuy)
+        public virtual void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
-            Vector2 direction = GetDirection(otherGuy);
-            this.position.X += direction.X * this.velocity.X;
-            this.position.Y += direction.Y * this.velocity.Y;
-
-            this.rotation = GetAngle(direction, Vector2.UnitY);
+            if (this.Alive)
+            {
+                batch.Draw(this.Sprite, new Vector2(this.Position.X - viewPort.X, this.Position.Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+            }
         }
 
-        private Vector2 GetDirection(GameObject otherGuy)
-        {
-            Vector2 direction = new Vector2(otherGuy.position.X - this.position.X, otherGuy.position.Y - this.position.Y);
-            direction.Normalize();
-            return direction;
-        }
-
-        public float GetAngle(Vector2 a, Vector2 b)
-        {
-            double sin = -a.X * b.Y - b.X * a.Y;
-            double cos = a.X * b.X + a.Y * b.Y;
-
-            return (float) (Math.Atan2(sin, cos) + Math.PI);
-        }
 
         public void Rotate(float rotation = .05f)
         {
-            this.rotation += rotation;
+            this.Rotation += rotation;
         }
 
         public void Move(Keys[] keys)
         {
             if (keys.Contains(Keys.Up) && keys.Contains(Keys.Right))
             {
-                this.position.Y -= this.velocity.Y / 2;
-                this.position.X += this.velocity.X / 2;
+                this.Position.Y -= this.Velocity.Y / 2;
+                this.Position.X += this.Velocity.X / 2;
             }
             else if (keys.Contains(Keys.Right) && keys.Contains(Keys.Down))
             {
-                this.position.Y += this.velocity.Y / 2;
-                this.position.X += this.velocity.X / 2;
+                this.Position.Y += this.Velocity.Y / 2;
+                this.Position.X += this.Velocity.X / 2;
             }
             else if (keys.Contains(Keys.Down) && keys.Contains(Keys.Left))
             {
-                this.position.Y += this.velocity.Y / 2;
-                this.position.X -= this.velocity.X / 2;
+                this.Position.Y += this.Velocity.Y / 2;
+                this.Position.X -= this.Velocity.X / 2;
             }
             else if (keys.Contains(Keys.Left) && keys.Contains(Keys.Up))
             {
-                this.position.Y -= this.velocity.Y / 2;
-                this.position.X -= this.velocity.X / 2;
+                this.Position.Y -= this.Velocity.Y / 2;
+                this.Position.X -= this.Velocity.X / 2;
             }
             else if (keys.Contains(Keys.Left))
             {
-                this.position.X -= this.velocity.X;
+                this.Position.X -= this.Velocity.X;
             }
             else if (keys.Contains(Keys.Up))
             {
-                this.position.Y -= this.velocity.Y;
+                this.Position.Y -= this.Velocity.Y;
             }
             else if (keys.Contains(Keys.Down))
             {
-                this.position.Y += this.velocity.Y;
+                this.Position.Y += this.Velocity.Y;
             }
             else if (keys.Contains(Keys.Right))
             {
-                this.position.X += this.velocity.X;
+                this.Position.X += this.Velocity.X;
             }
         }
 
-        public bool CanSee(GameObject otherGuy)
+        protected void ApplyGravity(List<GameObject> levelObjects)
         {
-            return GetAngle(GetDirection(otherGuy), Vector2.UnitY) - rotation < VISION_FIELD
-                && DistanceFrom(otherGuy) < VISION_LENGTH;
+            if (this.ObeysGravity)
+            {
+                if (!IsOnGround(levelObjects))
+                {
+                    this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + 1);
+                }
+                else if (this.Velocity.Y > 0)
+                {
+                    this.Velocity.Y = 0;
+                }
+            }
         }
 
-        public void ApplyGravity()
+        public virtual Rectangle Rectangle
         {
-            if (this.obeysGravity && !this.isOnGround)
-                this.velocity.Y += 1;
-
-            if (this.isOnGround)
-                this.velocity.Y = 0;
+            get
+            {
+                return new Rectangle((int)this.Position.X, (int)this.Position.Y, (int)(this.Sprite.Width * Scale), (int)(this.Sprite.Height * Scale));
+            }
         }
 
         public Rectangle TopRectangle
@@ -173,5 +149,57 @@ namespace TermProject
                 return new Rectangle(this.Rectangle.X, this.Rectangle.Y + this.Rectangle.Height, this.Rectangle.Width, 4);
             }
         }
+
+        public bool IsOnGround(List<GameObject> levelObjects)
+        {
+            return this.Velocity.Y >= 0 && levelObjects.Any(i => i.Alive && i is Tile && i.TopRectangle.Intersects(this.BottomRectangle));
+        }
+
+        #region Legacy GameObject Methods
+        [Obsolete("Legacy code from a past game.")]
+        public double DistanceFrom(GameObject otherGuy)
+        {
+            double deltaX = otherGuy.Position.X - this.Position.X;
+            deltaX *= deltaX;
+            double deltaY = otherGuy.Position.Y - this.Position.Y;
+            deltaY *= deltaY;
+
+            return Math.Sqrt(deltaX + deltaY);
+        }
+
+        [Obsolete("Legacy code from a past game.")]
+        public void MoveTowards(GameObject otherGuy)
+        {
+            Vector2 direction = GetDirection(otherGuy);
+            this.Position.X += direction.X * this.Velocity.X;
+            this.Position.Y += direction.Y * this.Velocity.Y;
+
+            this.Rotation = GetAngle(direction, Vector2.UnitY);
+        }
+
+        [Obsolete("Legacy code from a past game.")]
+        private Vector2 GetDirection(GameObject otherGuy)
+        {
+            Vector2 direction = new Vector2(otherGuy.Position.X - this.Position.X, otherGuy.Position.Y - this.Position.Y);
+            direction.Normalize();
+            return direction;
+        }
+
+        [Obsolete("Legacy code from a past game.")]
+        public float GetAngle(Vector2 a, Vector2 b)
+        {
+            double sin = -a.X * b.Y - b.X * a.Y;
+            double cos = a.X * b.X + a.Y * b.Y;
+
+            return (float)(Math.Atan2(sin, cos) + Math.PI);
+        }
+
+        [Obsolete("Legacy code from a past game.")]
+        public bool CanSee(GameObject otherGuy)
+        {
+            return GetAngle(GetDirection(otherGuy), Vector2.UnitY) - Rotation < VISION_FIELD
+                && DistanceFrom(otherGuy) < VISION_LENGTH;
+        }
+        #endregion
     }
 }
