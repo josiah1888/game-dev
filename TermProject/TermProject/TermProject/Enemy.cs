@@ -14,6 +14,7 @@ namespace TermProject
         public EnemyState State;
         public EnemyDirection Direction;
         public Player Target;
+        public DateTime elapsed;
 
         protected Texture2D IdleSprite, AttackSprite;
 

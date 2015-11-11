@@ -10,12 +10,16 @@ namespace TermProject
 {
     public class Frog : Enemy
     {
+        const int delay = 2000;
+        Random random = new Random();
+
         public Frog(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/frog-idle"), position, 1, 1, Frog.Ai)
         {
             this.IdleSprite = content.Load<Texture2D>("sprites/frog-idle");
             this.AttackSprite = content.Load<Texture2D>("sprites/frog-jump");
             this.TimePerFrame = 200f;
+            this.elapsed = DateTime.Now;
         }
 
         private static Action<Enemy> Ai
@@ -24,6 +28,8 @@ namespace TermProject
             {
                 return (Enemy frog) =>
                 {
+                    Random random = new Random();
+
                     if (Vector2.Distance(frog.Position, frog.Target.Position) > Enemy.THRESHHOLD)
                     {
                         frog.State = Enemy.EnemyState.Idle;
@@ -40,7 +46,12 @@ namespace TermProject
                         if (frog.IsOnGround())
                         {
                             frog.Velocity.X = 0;
-                            frog.Velocity.Y = -10;
+                            if (DateTime.Now > frog.elapsed)
+                            {
+                                frog.Velocity.Y = -10;
+                                frog.Direction = (Enemy.EnemyDirection) ((int)Math.Ceiling(random.NextDouble() * 2) - 1);
+                                frog.elapsed = DateTime.Now.AddMilliseconds(delay);
+                            }
                         }
 
                         if (!frog.IsOnGround())
@@ -61,6 +72,7 @@ namespace TermProject
                         Vector2 closingTime = new Vector2(Math.Abs(closingVelocity.X) / Math.Abs(closingRange.X), Math.Abs(closingVelocity.Y) / Math.Abs(closingRange.Y));
 
                         Vector2 frogFuturePosition = frog.Target.Position + (frog.Target.Velocity * closingTime);
+                        
                         float angle = frog.GetAngle(frog.Position, frogFuturePosition);
 
                         if (frog.IsOnGround())
