@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TermProject.Particles;
 
 namespace TermProject
 {
@@ -16,15 +17,32 @@ namespace TermProject
     {
         public Texture2D Sprite;
         public Vector2 Position;
-        public float Rotation;
+        public float Rotation = 0f;
         public Vector2 Center;
         public Vector2 Velocity;
-        public bool Alive;
+        public Action<GameObject> DeathAction = (GameObject gameObject) => { };
+
+        private bool _Alive = true;
+        public bool Alive
+        {
+            get
+            {
+                return _Alive;
+            }
+            set
+            {
+                if (value == false)
+                {
+                    DeathAction(this);
+                }
+                _Alive = value;
+            }
+        }
         public float Scale = 1.0f;
         public int Designator;
         public List<GameObject> LevelObjects;
 
-        protected bool ObeysGravity;
+        protected bool ObeysGravity = true;
 
         private const float VISION_FIELD = .02f;
         private const int VISION_LENGTH = 350;
@@ -48,21 +66,17 @@ namespace TermProject
 
         public void Setup(Texture2D loadedTexture, Vector2 position)
         {
-            this.Rotation = 0.0f;
             this.Position = position;
             this.Sprite = loadedTexture;
             this.Center = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
             this.Velocity = Vector2.Zero;
-            this.Alive = true;
-            this.ObeysGravity = true;
-
         }
 
-        public virtual void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        public virtual void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
             if (this.Alive)
             {
-                batch.Draw(this.Sprite, new Vector2(this.Position.X - viewPort.X, this.Position.Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+                batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
             }
         }
 

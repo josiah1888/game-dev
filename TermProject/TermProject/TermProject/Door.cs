@@ -13,9 +13,12 @@ namespace TermProject
         double WaitTimer = 0;
         public Action WinAction = () => { };
 
+        private Texture2D SwingingSprite;
+
         public Door(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/door"), position, 0f, 1f, 1f, 1, .8f)
         {
+            this.SwingingSprite = content.Load<Texture2D>("sprites/door-swing");
         }
 
         public override void Update(List<GameObject> levelObjects, double elapsed)
@@ -24,7 +27,7 @@ namespace TermProject
 
             if (this.Rectangle.Intersects(player.Rectangle) && this.Repeat)
             {
-                player.Pause();
+                player.Stop();
                 OpenDoor();
                 this.WaitTimer = elapsed + 1500;
             }
@@ -43,7 +46,9 @@ namespace TermProject
         {
             this.Reset();
             this.Repeat = false;
-            this.FrameCount = 1; // todo make/implement door opening sprite
+            this.TimePerFrame = 100f;
+            this.FrameCount = 5;
+            this.Sprite = this.SwingingSprite;
         }
     }
 }

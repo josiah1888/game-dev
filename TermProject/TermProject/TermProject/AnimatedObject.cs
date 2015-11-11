@@ -21,7 +21,7 @@ namespace TermProject
         {
             get
             {
-                return this.Velocity.X == 0 ? 1 : _TimePerFrame / Math.Abs(this.Velocity.X);
+                return this.Velocity.X == 0 ? _TimePerFrame : _TimePerFrame / Math.Abs(this.Velocity.X);
             }
             set
             {
@@ -49,8 +49,8 @@ namespace TermProject
         private float MaxSpeed;
         private int Frame;
         private double Elapsed;
-        private bool Paused;
         public bool Repeat = true;
+        public bool IsPaused = false;
 
         public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, float timePerFrame, float maxSpeed = 5)
             : base(loadedTexture, position)
@@ -60,7 +60,6 @@ namespace TermProject
             this.Scale = scale;
             this.Depth = depth;
             this.FrameCount = frameCount;
-            this.Paused = false;
             this.Elapsed = 0;
             this.Frame = 0;
             this.TimePerFrame = timePerFrame;
@@ -69,7 +68,7 @@ namespace TermProject
 
         public virtual void Update(List<GameObject> levelObjects, double elapsed)
         {
-            if (!Paused && TimePerFrame > 0)
+            if (!IsPaused && TimePerFrame > 0)
             {
                 if (elapsed - Elapsed > TimePerFrame)
                 {
@@ -77,11 +76,6 @@ namespace TermProject
                     Elapsed = elapsed;
                 }
             }
-        }
-
-        public bool IsPaused
-        {
-            get { return Paused; }
         }
 
         public void Reset()
@@ -98,19 +92,19 @@ namespace TermProject
 
         public void Play()
         {
-            Paused = false;
+            IsPaused = false;
         }
 
         public void Pause()
         {
-            Paused = true;
+            IsPaused = true;
         }
 
-        public override void Draw(SpriteBatch batch, Rectangle viewPort, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
             int frameWidth = Sprite.Width / FrameCount;
             spriteFrame = new Rectangle(frameWidth * this.Frame, 0, frameWidth, this.Rectangle.Height);
-            base.Draw(batch, viewPort, Effects, spriteFrame);
+            base.Draw(batch, position, Effects, spriteFrame);
         }
 
         public override Rectangle Rectangle

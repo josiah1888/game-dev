@@ -8,16 +8,20 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using TermProject.Particles;
 
 namespace TermProject
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager Graphics;
-        SpriteBatch SpriteBatch;
+        public GraphicsDeviceManager Graphics;
+        public SpriteBatch SpriteBatch;
 
         Rectangle ViewPort { get; set; }
         MapMaker MapMaker;
+
+        ExplosionParticleSystem Explosion;
+        ExplosionSmokeParticleSystem Smoke;
 
         List<GameObject> LevelObjects;
 
@@ -46,6 +50,7 @@ namespace TermProject
                     });
                     _WinActions.Enqueue(() =>
                     {
+                        UpdateViewport(0);
                         LevelObjects = MapMaker.ReadMap("maps/level-selection");
                         LevelObjects
                             .Where(i => i.Designator == 1)
@@ -54,7 +59,6 @@ namespace TermProject
                         // optionally, add kaboom after a delay
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 2);
                         door.WinAction = WinActions.Dequeue();
-                        UpdateViewport(0);
                     });
                     _WinActions.Enqueue(() =>
                     {
@@ -69,21 +73,40 @@ namespace TermProject
         {
             Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            Explosion = new ExplosionParticleSystem(this, 1, "sprites/explosion");
+            Components.Add(Explosion);
+
+            Smoke = new ExplosionSmokeParticleSystem(this, 2, "sprites/smoke");
+            Components.Add(Smoke);
         }
 
         protected override void Initialize()
         {
+            Graphics.PreferredBackBufferHeight = 608; // 19 Tiles
+            Graphics.PreferredBackBufferWidth = 1024; // 32 Tiles
+            Graphics.ApplyChanges();
+            
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            MapMaker = new MapMaker(Content);
+            MapMaker = new MapMaker(this.Content, GetDeathAction());
             LevelObjects = MapMaker.ReadMap("maps/level-selection");
             Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
             door.WinAction = WinActions.Dequeue();
             UpdateViewport(0);
+        }
+
+        private Action<GameObject> GetDeathAction()
+        {
+            return (GameObject gameObject) =>
+            {
+                Smoke.AddParticles(gameObject.Position.GetDrawablePosition(this.ViewPort));
+                Explosion.AddParticles(gameObject.Position.GetDrawablePosition(this.ViewPort));
+            };
         }
 
         protected override void Update(GameTime gameTime)
@@ -158,9 +181,14 @@ namespace TermProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
             SpriteBatch.Begin();
 
-            LevelObjects.Where(i => i.Rectangle.Intersects(this.ViewPort)).ToList().ForEach(i =>
+            LevelObjects
+                .Where(i => i.Rectangle.Intersects(this.ViewPort))
+                .OrderBy(i => i is Player)
+                .ThenBy(i => i is Enemy)
+                .ThenBy(i => i is Tile)
+                .ToList().ForEach(i =>
             {
-                i.Draw(SpriteBatch, this.ViewPort, SpriteEffects.None);
+                i.Draw(SpriteBatch, i.Position.GetDrawablePosition(this.ViewPort), SpriteEffects.None);
             });
 
             SpriteBatch.End();
