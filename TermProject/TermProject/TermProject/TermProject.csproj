@@ -111,11 +111,16 @@
     <Compile Include="Door.cs" />
     <Compile Include="Emu.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Frog.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="MapMaker.cs" />
     <None Include="maps\level-selection" />
     <None Include="maps\level2" />
+    <Compile Include="Particles\ExplosionParticleSystem.cs" />
+    <Compile Include="Particles\ExplosionSmokeParticleSystem.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\ParticleSystem.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

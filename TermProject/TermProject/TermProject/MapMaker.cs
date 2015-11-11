@@ -6,6 +6,7 @@ using System.IO;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using TermProject.Particles;
 
 namespace TermProject
 {
@@ -33,6 +34,7 @@ namespace TermProject
         }
 
         private ContentManager Content;
+        private Action<GameObject> DeathAction;
 
         private enum GameObjectType
         {
@@ -45,9 +47,10 @@ namespace TermProject
             Door
         }
 
-        public MapMaker(ContentManager content)
+        public MapMaker(ContentManager content, Action<GameObject> deathAction)
         {
             this.Content = content;
+            this.DeathAction = deathAction;
         }
 
         public List<GameObject> ReadMap(string asset)
@@ -111,7 +114,10 @@ namespace TermProject
                 throw e;
             }
 
-            mapObjects.ForEach(i => i.LevelObjects = mapObjects);
+            mapObjects.ForEach(i => {
+                i.LevelObjects = mapObjects;
+                i.DeathAction = this.DeathAction;
+            });
 
             return mapObjects;
         }

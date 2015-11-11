@@ -57,19 +57,23 @@ namespace TermProject
 
         private void Move(Keys[] keys, List<GameObject> levelObjects, Rectangle viewPort)
         {
-            if (IsOnGround() && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
+            if (!this.IsPaused)
             {
-                Jump();
-            }
 
-            if (keys.Contains(Keys.Right) || keys.Contains(Keys.D))
-            {
-                Move(Direction.Right);
-            }
+                if (IsOnGround() && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
+                {
+                    Jump();
+                }
 
-            if (keys.Contains(Keys.Left) || keys.Contains(Keys.A))
-            {
-                Move(Direction.Left);
+                if (keys.Contains(Keys.Right) || keys.Contains(Keys.D))
+                {
+                    Move(Direction.Right);
+                }
+
+                if (keys.Contains(Keys.Left) || keys.Contains(Keys.A))
+                {
+                    Move(Direction.Left);
+                }
             }
 
             CheckEnemyCollisions(levelObjects);
@@ -91,7 +95,15 @@ namespace TermProject
                 .ToList()
                 .ForEach(i => i.Alive = false);
 
-            this.Alive = !levelObjects.Any(i => i.Alive && i is Enemy && i.Rectangle.Intersects(this.Rectangle));
+            if ( ShouldDie(levelObjects) ^ this.Alive)
+            {
+                this.Alive = ShouldDie(levelObjects);
+            }
+        }
+
+        private bool ShouldDie(List<GameObject> levelObjects)
+        {
+            return !levelObjects.Any(i => i.Alive && i is Enemy && i.Rectangle.Intersects(this.Rectangle));
         }
 
         private void CheckViewportCollision(Rectangle viewPort)
