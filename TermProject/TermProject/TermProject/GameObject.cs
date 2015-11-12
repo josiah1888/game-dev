@@ -168,56 +168,59 @@ namespace TermProject
 
         public bool IsOnGround()
         {
-            return this.Velocity.Y >= 0 && LevelObjects.Any(i => i.Alive && i is Tile && i.TopRectangle.Intersects(this.BottomRectangle));
+            return this.Velocity.Y >= 0 && LevelObjects.Any(i => i.Alive && i.TopRectangle.Intersects(this.BottomRectangle));
         }
 
         protected bool CheckLateralCollisions(List<GameObject> levelObjects)
         {
             bool hasCollided = false;
-            if (levelObjects.Any(i => i.Alive && i is SolidTile && this.Rectangle.Intersects(i.Rectangle)))
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.Rectangle.Intersects(i.Rectangle));
+            if (problemTile != null)
             {
                 this.Position.X -= this.Velocity.X;
                 if (this.Velocity.X > 0)
                 {
                     hasCollided = true;
-                    CollideRight();
+                    CollideRight(problemTile);
                 }
                 else if (this.Velocity.X < 0)
                 {
                     hasCollided = true;
-                    CollideLeft();
+                    CollideLeft(problemTile);
                 }
             }
             return hasCollided;
         }
 
-        protected bool CheckVerticalCollisions(List<GameObject> levelObjects)
+        protected void CollideRight(GameObject problemTile)
         {
-            bool hasCollided = false;
-            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
-
-            if (problemTile != null)
-            {
-                hasCollided = true;
-                CollideTop(problemTile);
-            }
-            return hasCollided;
-        }
-
-        protected void CollideRight()
-        {
+            this.Position.X = problemTile.Rectangle.Right - this.Velocity.X - 1;
             this.Velocity.X = Math.Max(this.Velocity.X - 2, MIN_BOUNCE_BACK) * -1;
         }
 
-        protected void CollideLeft()
+        protected void CollideLeft(GameObject problemTile)
         {
+            this.Position.X = problemTile.Rectangle.Right - this.Velocity.X + 1;
             this.Velocity.X = Math.Min(this.Velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
         }
 
-        protected void CollideTop(GameObject problemTile)
+        protected bool HasVerticalCollisions(List<GameObject> levelObjects)
         {
-            this.Position.Y = problemTile.BottomRectangle.Bottom;
-            this.Velocity.Y = 0;
+            GameObject problemTile = GetTopProblemTile(levelObjects);
+            return problemTile != null && !this.IsOnGround();
+        }
+
+        private GameObject GetTopProblemTile(List<GameObject> levelObjects)
+        {
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+            return problemTile;
+        }
+
+        protected void CollideTop(List<GameObject> levelObjects)
+        {
+            GameObject problemTile = GetTopProblemTile(levelObjects);
+            this.Position.Y = problemTile.BottomRectangle.Bottom - this.Velocity.Y + 1;
+            //this.Velocity.Y = 0;
         }
 
         #region Legacy GameObject Methods

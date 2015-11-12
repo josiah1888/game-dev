@@ -77,8 +77,11 @@ namespace TermProject
 
             CheckEnemyCollisions(levelObjects);
             CheckViewportCollision(viewPort);
+            if (HasVerticalCollisions(levelObjects))
+            {
+                CollideTop(levelObjects);
+            }
             CheckLateralCollisions(levelObjects);
-            CheckVerticalCollisions(levelObjects);
         }
 
         #region Move
@@ -94,7 +97,7 @@ namespace TermProject
                 .ToList()
                 .ForEach(i => i.Alive = false);
 
-            if ( ShouldDie(levelObjects) ^ this.Alive)
+            if (ShouldDie(levelObjects) ^ this.Alive)
             {
                 this.Alive = ShouldDie(levelObjects);
             }
@@ -109,7 +112,7 @@ namespace TermProject
         {
             if (this.Position.X < viewPort.Left)
             {
-                CollideLeft();
+                //CollideLeft();
             }
         }
         #endregion
