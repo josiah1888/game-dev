@@ -11,9 +11,9 @@ namespace TermProject
     public class SodaGuy : Enemy
     {
         public SodaGuy(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/place-holder"), position, 1, 1, SodaGuy.Ai)
+            : base(content.Load<Texture2D>("sprites/sodaguy-idle"), position, 1, 1, SodaGuy.Ai)
         {
-            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/place-holder");
+            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/sodaguy-throw");
         }
 
         private static Action<Enemy> Ai
