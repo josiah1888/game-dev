@@ -10,25 +10,44 @@ namespace TermProject
 {
     public class SodaGuy : Enemy
     {
+        const int drinkingTime = 2000;
+        public ContentManager Content;
+
         public SodaGuy(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/place-holder"), position, 1, 1, SodaGuy.Ai)
         {
             this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/place-holder");
+            this.elapsed = DateTime.Now.AddMilliseconds(drinkingTime);
+            this.Content = content;
         }
 
         private static Action<Enemy> Ai
         {
             get
             {
-                return (Enemy SodaGuy) =>
+                return (Enemy sodaGuy) =>
                 {
-                    // do ai logic using this instance of SodaGuy
+                    if (sodaGuy.Target.Position.X > sodaGuy.Position.X)
+                        sodaGuy.Direction = EnemyDirection.Right;
 
-                    //if (SodaGuy.getState() == Enemy.EnemyState.Idle)
-                    //{
-                    //    SodaGuy.velocity.Y = -10;
-                    //    //SodaGuy.velocity.X = SodaGuy.MAX_SPEED * SodaGuy.
-                    //}
+                    if (sodaGuy.Target.Position.X < sodaGuy.Position.X)
+                        sodaGuy.Direction = EnemyDirection.Left;
+
+                    if (sodaGuy.State == EnemyState.Idle && DateTime.Now > sodaGuy.elapsed)
+                        sodaGuy.State = EnemyState.Attack;
+
+                    if (sodaGuy.State == EnemyState.Attack)
+                    {
+                        SodaCan can = new SodaCan(((SodaGuy)sodaGuy).Content, sodaGuy.Position + sodaGuy.Center);
+                        can.Velocity.Y = -10;
+                        can.Direction = sodaGuy.Direction;
+                        can.LevelObjects = sodaGuy.LevelObjects;
+
+                        sodaGuy.LevelObjects.Add(can);
+
+                        sodaGuy.elapsed = DateTime.Now.AddMilliseconds(drinkingTime);
+                        sodaGuy.State = EnemyState.Idle;
+                    }
                 };
             }
         }
