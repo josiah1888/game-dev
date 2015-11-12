@@ -32,18 +32,18 @@ namespace TermProject
                 {
                     Random random = new Random();
 
-                    if (Vector2.Distance(frog.Position, frog.Target.Position) > Enemy.THRESHHOLD || frog.Target.IsOnGround() || (frog.State == Enemy.EnemyState.Idle && !frog.IsOnGround()))
+                    if (Vector2.Distance(frog.Position, frog.Target.Position) > THRESHHOLD || frog.Target.IsOnGround() || (frog.State == EnemyState.Idle && !frog.IsOnGround()))
                     {
-                        frog.State = Enemy.EnemyState.Idle;
+                        frog.State = EnemyState.Idle;
                     }
 
                     else
                     {
-                        frog.State = Enemy.EnemyState.Attack;
+                        frog.State = EnemyState.Attack;
                     }
 
 
-                    if (frog.State == Enemy.EnemyState.Idle)
+                    if (frog.State == EnemyState.Idle)
                     {
                         if (frog.IsOnGround())
                         {
@@ -51,23 +51,23 @@ namespace TermProject
                             if (DateTime.Now > frog.elapsed)
                             {
                                 frog.Velocity.Y = -10;
-                                frog.Direction = (Enemy.EnemyDirection) ((int)Math.Ceiling(random.NextDouble() * 2) - 1);
+                                frog.Direction = (EnemyDirection) ((int)Math.Ceiling(random.NextDouble() * 2) - 1);
                                 frog.elapsed = DateTime.Now.AddMilliseconds(delay);
                             }
                         }
 
                         if (!frog.IsOnGround())
                         {
-                            if (frog.Direction == Enemy.EnemyDirection.Left)
-                                frog.Velocity.X = (Enemy.MAX_SPEED / 2) * -1;
-                            else if (frog.Direction == Enemy.EnemyDirection.Right)
-                                frog.Velocity.X = (Enemy.MAX_SPEED / 2);
+                            if (frog.Direction == EnemyDirection.Left)
+                                frog.Velocity.X = (MAX_SPEED / 2) * -1;
+                            else if (frog.Direction == EnemyDirection.Right)
+                                frog.Velocity.X = (MAX_SPEED / 2);
                             else
                                 frog.Velocity.X = 0;
                         }
                     }
 
-                    else if (frog.State == Enemy.EnemyState.Attack)
+                    else if (frog.State == EnemyState.Attack)
                     {
                         Vector2 closingVelocity = Vector2.Zero;
                         closingVelocity.X = frog.Target.Velocity.X - frog.Velocity.X;
@@ -84,7 +84,7 @@ namespace TermProject
                             frog.Velocity.Y = -10;
 
                         if (!frog.IsOnGround())
-                            frog.Velocity.X = (float)Math.Cos(angle) * Enemy.MAX_SPEED / 1.5f;
+                            frog.Velocity.X = (float)Math.Cos(angle) * MAX_SPEED / 1.5f;
                     }
                 };
             }

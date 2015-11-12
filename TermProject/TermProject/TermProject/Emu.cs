@@ -22,35 +22,35 @@ namespace TermProject
             {
                 return (Enemy Emu) =>
                 {
-                    if (Vector2.Distance(Emu.Position + Emu.Center, Emu.Target.Position + Emu.Target.Center) > Enemy.THRESHHOLD || Math.Abs(Emu.Target.Position.Y - Emu.Position.Y) > 50)
+                    if (Vector2.Distance(Emu.Position + Emu.Center, Emu.Target.Position + Emu.Target.Center) > THRESHHOLD || Math.Abs(Emu.Target.Position.Y - Emu.Position.Y) > 50)
                     {
-                        Emu.State = Enemy.EnemyState.Idle;
+                        Emu.State = EnemyState.Idle;
                     }
 
                     else if ((Emu.Target.Position.X <= Emu.Position.X && Emu.Direction == EnemyDirection.Right) || (Emu.Target.Position.X >= Emu.Position.X && Emu.Direction == EnemyDirection.Left))
-                        Emu.State = Enemy.EnemyState.Idle;
+                        Emu.State = EnemyState.Idle;
 
                     else
                     {
-                        Emu.State = Enemy.EnemyState.Attack;
+                        Emu.State = EnemyState.Attack;
                     }
 
-                    if (Emu.State == Enemy.EnemyState.Idle)
+                    if (Emu.State == EnemyState.Idle)
                     {
-                        if (Emu.Direction == Enemy.EnemyDirection.Left)
-                            Emu.Velocity.X = (Enemy.MAX_SPEED / 2) * -1;
-                        else if (Emu.Direction == Enemy.EnemyDirection.Right)
-                            Emu.Velocity.X = (Enemy.MAX_SPEED / 2);
+                        if (Emu.Direction == EnemyDirection.Left)
+                            Emu.Velocity.X = (MAX_SPEED / 2) * -1;
+                        else if (Emu.Direction == EnemyDirection.Right)
+                            Emu.Velocity.X = (MAX_SPEED / 2);
                         else
                             Emu.Velocity.X = 0;
                     }
 
-                    else if (Emu.State == Enemy.EnemyState.Attack)
+                    else if (Emu.State == EnemyState.Attack)
                     {
-                        if (Emu.Direction == Enemy.EnemyDirection.Left)
-                            Emu.Velocity.X = Enemy.MAX_SPEED * -1;
-                        else if (Emu.Direction == Enemy.EnemyDirection.Right)
-                            Emu.Velocity.X = Enemy.MAX_SPEED;
+                        if (Emu.Direction == EnemyDirection.Left)
+                            Emu.Velocity.X = MAX_SPEED * -1;
+                        else if (Emu.Direction == EnemyDirection.Right)
+                            Emu.Velocity.X = MAX_SPEED;
                         else
                             Emu.Velocity.X = 0;
                     }

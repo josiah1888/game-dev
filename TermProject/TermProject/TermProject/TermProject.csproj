@@ -126,6 +126,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="SemiSolidTile.cs" />
+    <Compile Include="SodaCan.cs" />
     <Compile Include="SodaGuy.cs" />
     <Compile Include="SolidTile.cs" />
     <Compile Include="Tile.cs" />
