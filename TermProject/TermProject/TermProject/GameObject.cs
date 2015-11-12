@@ -43,6 +43,7 @@ namespace TermProject
         public List<GameObject> LevelObjects;
 
         protected bool ObeysGravity = true;
+        private const float MIN_BOUNCE_BACK = .8f;
 
         private const float VISION_FIELD = .02f;
         private const int VISION_LENGTH = 350;
@@ -168,6 +169,55 @@ namespace TermProject
         public bool IsOnGround()
         {
             return this.Velocity.Y >= 0 && LevelObjects.Any(i => i.Alive && i is Tile && i.TopRectangle.Intersects(this.BottomRectangle));
+        }
+
+        protected bool CheckLateralCollisions(List<GameObject> levelObjects)
+        {
+            bool hasCollided = false;
+            if (levelObjects.Any(i => i.Alive && i is SolidTile && this.Rectangle.Intersects(i.Rectangle)))
+            {
+                this.Position.X -= this.Velocity.X;
+                if (this.Velocity.X > 0)
+                {
+                    hasCollided = true;
+                    CollideRight();
+                }
+                else if (this.Velocity.X < 0)
+                {
+                    hasCollided = true;
+                    CollideLeft();
+                }
+            }
+            return hasCollided;
+        }
+
+        protected bool CheckVerticalCollisions(List<GameObject> levelObjects)
+        {
+            bool hasCollided = false;
+            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
+
+            if (problemTile != null)
+            {
+                hasCollided = true;
+                CollideTop(problemTile);
+            }
+            return hasCollided;
+        }
+
+        protected void CollideRight()
+        {
+            this.Velocity.X = Math.Max(this.Velocity.X - 2, MIN_BOUNCE_BACK) * -1;
+        }
+
+        protected void CollideLeft()
+        {
+            this.Velocity.X = Math.Min(this.Velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
+        }
+
+        protected void CollideTop(GameObject problemTile)
+        {
+            this.Position.Y = problemTile.BottomRectangle.Bottom;
+            this.Velocity.Y = 0;
         }
 
         #region Legacy GameObject Methods

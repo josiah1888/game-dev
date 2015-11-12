@@ -11,7 +11,6 @@ namespace TermProject
 {
     public class Player : AnimatedObject
     {
-        private const float MIN_BOUNCE_BACK = .8f;
         private const int MAX_SPEED = 4;
         private const float WALKING_TOLERANCE = .3f;
 
@@ -112,48 +111,6 @@ namespace TermProject
             {
                 CollideLeft();
             }
-        }
-
-        private void CheckLateralCollisions(List<GameObject> levelObjects)
-        {
-            if (levelObjects.Any(i => i.Alive && i is SolidTile && this.Rectangle.Intersects(i.Rectangle)))
-            {
-                this.Position.X -= this.Velocity.X;
-                if (this.Velocity.X > 0)
-                {
-                    CollideRight();
-                }
-                else if (this.Velocity.X < 0)
-                {
-                    CollideLeft();
-                }
-            }
-        }
-
-        private void CheckVerticalCollisions(List<GameObject> levelObjects)
-        {
-            GameObject problemTile = levelObjects.FirstOrDefault(i => i.Alive && i is SolidTile && this.TopRectangle.Intersects(i.Rectangle));
-
-            if (problemTile != null)
-            {
-                CollideTop(problemTile);
-            }
-        }
-
-        private void CollideRight()
-        {
-            this.Velocity.X = Math.Max(this.Velocity.X - 2, MIN_BOUNCE_BACK) * -1;
-        }
-
-        private void CollideLeft()
-        {
-            this.Velocity.X = Math.Min(this.Velocity.X + 2, -MIN_BOUNCE_BACK) * -1;
-        }
-
-        private void CollideTop(GameObject problemTile)
-        {
-            this.Position.Y = problemTile.BottomRectangle.Bottom;
-            this.Velocity.Y = 0;
         }
         #endregion
 

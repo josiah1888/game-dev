@@ -45,6 +45,12 @@ namespace TermProject
         {
             UpdateSprite();
             ApplyGravity();
+            if (CheckLateralCollisions(levelObjects))
+            {
+                this.Velocity.X = -this.Velocity.X;
+                this.Direction = (EnemyDirection)((int)(this.Direction + 1) % 2);
+            }
+            CheckVerticalCollisions(levelObjects);
             this.Target = (Player)levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
             this.Ai(this);
         }
