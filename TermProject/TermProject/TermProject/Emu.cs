@@ -22,13 +22,13 @@ namespace TermProject
             {
                 return (Enemy Emu) =>
                 {
-                    if (Vector2.Distance(Emu.Position, Emu.Target.Position) > Enemy.THRESHHOLD || Math.Abs(Emu.Target.Position.Y - Emu.Position.Y) > 50)
+                    if (Vector2.Distance(Emu.Position + Emu.Center, Emu.Target.Position + Emu.Target.Center) > Enemy.THRESHHOLD || Math.Abs(Emu.Target.Position.Y - Emu.Position.Y) > 50)
                     {
                         Emu.State = Enemy.EnemyState.Idle;
                     }
 
                     else if ((Emu.Target.Position.X <= Emu.Position.X && Emu.Direction == EnemyDirection.Right) || (Emu.Target.Position.X >= Emu.Position.X && Emu.Direction == EnemyDirection.Left))
-                        Emu.State = EnemyState.Idle;
+                        Emu.State = Enemy.EnemyState.Idle;
 
                     else
                     {
@@ -64,7 +64,7 @@ namespace TermProject
                             Emu.Velocity.X *= -1;
                         }
 
-                        else
+                        else if (Emu.Velocity.X > 0)
                         {
                             Emu.Position.Y -= 1;
                             Emu.Direction = EnemyDirection.Left;

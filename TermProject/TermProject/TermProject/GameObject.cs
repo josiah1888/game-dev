@@ -203,10 +203,10 @@ namespace TermProject
         [Obsolete("Legacy code from a past game.")]
         public float GetAngle(Vector2 a, Vector2 b)
         {
-            double sin = -a.X * b.Y - b.X * a.Y;
-            double cos = a.X * b.X + a.Y * b.Y;
+            float deltaX = b.X - a.X;
+            float deltaY = b.Y - a.Y;
 
-            return (float)(Math.Atan2(sin, cos) + Math.PI);
+            return (float)Math.Atan2(deltaY, deltaX);
         }
 
         [Obsolete("Legacy code from a past game.")]
