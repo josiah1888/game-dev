@@ -108,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedObject.cs" />
+    <Compile Include="Background\Background.cs" />
+    <Compile Include="Background\Cloud.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="Emu.cs" />
     <Compile Include="Enemy.cs" />

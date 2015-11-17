@@ -81,6 +81,11 @@ namespace TermProject
             }
         }
 
+        public void Update()
+        {
+            this.Position.X += this.Velocity.X;
+            this.Position.Y += this.Velocity.Y;
+        }
 
         public void Rotate(float rotation = .05f)
         {
