@@ -18,7 +18,7 @@ namespace TermProject
 
         protected Texture2D IdleSprite, AttackSprite;
 
-        private const int MAX_GRAVITY = 3;
+        public const int MAX_GRAVITY = 3;
         private Action<Enemy> Ai;
 
         public enum EnemyState
