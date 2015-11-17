@@ -10,24 +10,53 @@ namespace TermProject
 {
     public class SodaCan : Enemy
     {
+        public float speed = MAX_SPEED;
+        public float jumpHeight = -10;
+        const float jumpHeightIncrease = .05f;
+        const float friction = .02f;
+        const float bounce = 1.3f;
+
         public SodaCan(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/place-holder"), position, 1, 1, SodaCan.Ai)
+            : base(content.Load<Texture2D>("sprites/can"), position, 1, 1, SodaCan.Ai)
         {
-            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/place-holder");
+            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/can");
         }
 
         private static Action<Enemy> Ai
         {
             get
             {
-                return (Enemy SodaCan) =>
+                return (Enemy sodaCan) =>
                 {
-                    if (SodaCan.Direction == EnemyDirection.Left)
-                        SodaCan.Velocity.X = MAX_SPEED * -1;
-                    else if (SodaCan.Direction == EnemyDirection.Right)
-                        SodaCan.Velocity.X = MAX_SPEED;
-                    else
-                        SodaCan.Velocity.X = 0;
+                    if (sodaCan.IsOnGround())
+                    {
+                        if (((SodaCan)sodaCan).jumpHeight < 0)
+                        {
+                            ((SodaCan)sodaCan).jumpHeight = (int)Math.Ceiling(((SodaCan)sodaCan).jumpHeight / bounce);
+                            sodaCan.Velocity.Y = ((SodaCan)sodaCan).jumpHeight;
+                        }
+
+                        if (sodaCan.Velocity.Y == Enemy.MAX_GRAVITY && ((SodaCan)sodaCan).jumpHeight > -10)
+                        {
+                            ((SodaCan)sodaCan).jumpHeight -= jumpHeightIncrease;
+                        }
+                    }
+
+                    if (((SodaCan)sodaCan).speed <= 0)
+                        sodaCan.Alive = false;
+
+                    if (sodaCan.Alive == true)
+                    {
+                        if (sodaCan.Direction == EnemyDirection.Left)
+                            sodaCan.Velocity.X = ((SodaCan)sodaCan).speed * -1;
+                        else if (sodaCan.Direction == EnemyDirection.Right)
+                            sodaCan.Velocity.X = ((SodaCan)sodaCan).speed;
+                        else
+                            sodaCan.Velocity.X = 0;
+                    }
+
+                    if (sodaCan.IsOnGround())
+                        ((SodaCan)sodaCan).speed -= friction;
                 };
             }
         }
