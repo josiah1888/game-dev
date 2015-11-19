@@ -78,7 +78,12 @@ namespace TermProject
         {
             if (this.Alive)
             {
-                batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+                if (this is Player && ((Player)this).invincible)
+                {
+                    batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.5f, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+                }
+                else
+                    batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
             }
         }
 
