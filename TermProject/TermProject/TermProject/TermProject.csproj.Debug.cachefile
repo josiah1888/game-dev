@@ -22,3 +22,5 @@ Content\sprites\cloud.xnb
 Content\sounds\enemydeath.xnb
 Content\sounds\explosion.xnb
 Content\sounds\jump.xnb
+Content\sprites\emu-idle.xnb
+Content\sprites\emu-walk.xnb

@@ -11,9 +11,9 @@ namespace TermProject
     public class Emu : Enemy
     {
         public Emu(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/old-bird"), position, 1, 1, Emu.Ai)
+            : base(content.Load<Texture2D>("sprites/emu-idle"), position, 6, 1, Emu.Ai)
         {
-            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/old-bird");
+            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/emu-walk");
         }
 
         private static Action<Enemy> Ai
