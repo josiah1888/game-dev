@@ -26,8 +26,8 @@ namespace TermProject
 
         private static Vector2 GetRandomCloudVelocity()
         {
-            double randomDouble = Rand.NextDouble();
-            return new Vector2((float)(MAX_CLOUD_SPEED * randomDouble * (Rand.Next(2) - 1)), 0f);
+            double randomSpeed = (Rand.NextDouble() + 1) * MAX_CLOUD_SPEED;
+            return new Vector2((float)(randomSpeed * Math.Sin(10 * randomSpeed)), 0f);
         }
     }
 }

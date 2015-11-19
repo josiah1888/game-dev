@@ -108,30 +108,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnimatedObject.cs" />
-    <Compile Include="Background\Background.cs" />
-    <Compile Include="Background\Cloud.cs" />
+    <Compile Include="background\Background.cs" />
+    <Compile Include="background\Cloud.cs" />
     <Compile Include="Door.cs" />
-    <Compile Include="Emu.cs" />
-    <Compile Include="Enemy.cs" />
+    <Compile Include="enemies\Emu.cs" />
+    <Compile Include="enemies\Enemy.cs" />
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="Frog.cs" />
+    <Compile Include="enemies\Frog.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="MapMaker.cs" />
     <None Include="maps\level-selection" />
     <None Include="maps\level2" />
-    <Compile Include="Particles\ExplosionParticleSystem.cs" />
-    <Compile Include="Particles\ExplosionSmokeParticleSystem.cs" />
-    <Compile Include="Particles\Particle.cs" />
-    <Compile Include="Particles\ParticleSystem.cs" />
+    <Compile Include="particles\ExplosionParticleSystem.cs" />
+    <Compile Include="particles\ExplosionSmokeParticleSystem.cs" />
+    <Compile Include="particles\Particle.cs" />
+    <Compile Include="particles\ParticleSystem.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="SemiSolidTile.cs" />
-    <Compile Include="SodaCan.cs" />
-    <Compile Include="SodaGuy.cs" />
-    <Compile Include="SolidTile.cs" />
-    <Compile Include="Tile.cs" />
+    <Compile Include="tiles\SemiSolidTile.cs" />
+    <Compile Include="enemies\SodaCan.cs" />
+    <Compile Include="enemies\SodaGuy.cs" />
+    <Compile Include="tiles\SolidTile.cs" />
+    <Compile Include="tiles\Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
