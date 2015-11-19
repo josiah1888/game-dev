@@ -160,6 +160,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
 	</Compile>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="sounds\enemydeath.wav">
       <Name>enemydeath</Name>
