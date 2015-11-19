@@ -23,6 +23,10 @@ namespace TermProject
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
 
+        //SpriteFont font;
+        Vector2 instructionsDrawPoint = new Vector2(0.1f, 0.1f);
+        Rectangle viewportRect;
+
         List<GameObject> LevelObjects;
 
         Player Player
@@ -95,6 +99,8 @@ namespace TermProject
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker = new MapMaker(this.Content, GetDeathAction());
             LevelObjects = MapMaker.ReadMap("maps/level-selection");
+            //font = Content.Load<SpriteFont>("Fonts\\GameFont");
+            viewportRect = new Rectangle(0, 0, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
             Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
             door.WinAction = WinActions.Dequeue();
             UpdateViewport(0);
@@ -190,6 +196,14 @@ namespace TermProject
             {
                 i.Draw(SpriteBatch, i.Position.GetDrawablePosition(this.ViewPort), SpriteEffects.None);
             });
+
+            /*
+            for (int i = 0; i < LevelObjects.Count; ++i)
+            {
+                if (LevelObjects[i] is Player)
+                    SpriteBatch.DrawString(font, "Health: " + ((Player)LevelObjects[i]).currentHealth, new Vector2(instructionsDrawPoint.X * viewportRect.Width, instructionsDrawPoint.Y * viewportRect.Height), Color.Black);
+            }
+            */
 
             SpriteBatch.End();
 

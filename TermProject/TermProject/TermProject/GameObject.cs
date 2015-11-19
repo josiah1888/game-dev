@@ -21,6 +21,7 @@ namespace TermProject
         public Vector2 Center;
         public Vector2 Velocity;
         public Action<GameObject> DeathAction = (GameObject gameObject) => { };
+        public DateTime elapsed;
 
         private bool _Alive = true;
         public bool Alive
@@ -154,7 +155,7 @@ namespace TermProject
         {
             get
             {
-                return new Rectangle(this.Rectangle.X, this.Rectangle.Y, this.Rectangle.Width, 4);
+                return new Rectangle(this.Rectangle.X, this.Rectangle.Y, this.Rectangle.Width, 8);
             }
         }
 
@@ -162,7 +163,7 @@ namespace TermProject
         {
             get
             {
-                return new Rectangle(this.Rectangle.X, this.Rectangle.Y + this.Rectangle.Height, this.Rectangle.Width, 4);
+                return new Rectangle(this.Rectangle.X, this.Rectangle.Y + this.Rectangle.Height - 4, this.Rectangle.Width, 8);
             }
         }
 

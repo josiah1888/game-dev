@@ -12,9 +12,10 @@ namespace TermProject
     {
         public float speed = MAX_SPEED;
         public float jumpHeight = -10;
-        const float jumpHeightIncrease = .05f;
-        const float friction = .02f;
-        const float bounce = 1.3f;
+
+        const float JUMP_HEIGHT_INCREASE = .05f;
+        const float FRICTION = .02f;
+        const float BOUNCE = 1.3f;
 
         public SodaCan(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/can"), position, 1, 1, SodaCan.Ai)
@@ -32,13 +33,13 @@ namespace TermProject
                     {
                         if (((SodaCan)sodaCan).jumpHeight < 0)
                         {
-                            ((SodaCan)sodaCan).jumpHeight = (int)Math.Ceiling(((SodaCan)sodaCan).jumpHeight / bounce);
+                            ((SodaCan)sodaCan).jumpHeight = (int)Math.Ceiling(((SodaCan)sodaCan).jumpHeight / BOUNCE);
                             sodaCan.Velocity.Y = ((SodaCan)sodaCan).jumpHeight;
                         }
 
                         if (sodaCan.Velocity.Y == Enemy.MAX_GRAVITY && ((SodaCan)sodaCan).jumpHeight > -10)
                         {
-                            ((SodaCan)sodaCan).jumpHeight -= jumpHeightIncrease;
+                            ((SodaCan)sodaCan).jumpHeight -= JUMP_HEIGHT_INCREASE;
                         }
                     }
 
@@ -56,7 +57,7 @@ namespace TermProject
                     }
 
                     if (sodaCan.IsOnGround())
-                        ((SodaCan)sodaCan).speed -= friction;
+                        ((SodaCan)sodaCan).speed -= FRICTION;
                 };
             }
         }

@@ -13,6 +13,11 @@ namespace TermProject
     {
         private const int MAX_SPEED = 4;
         private const float WALKING_TOLERANCE = .3f;
+        public const int MAX_HEALTH = 3;
+        public const int MERCY_INVINCIBILITY_TIME = 2000;
+
+        public int currentHealth = MAX_HEALTH;
+        public bool invincible = false;
 
         private enum Direction
         {
@@ -79,6 +84,8 @@ namespace TermProject
             CheckViewportCollision(viewPort);
             CheckLateralCollisions(levelObjects);
             CheckVerticalCollisions(levelObjects);
+            CheckInvincibilty();
+            CheckHealth();
         }
 
         #region Move
@@ -93,6 +100,19 @@ namespace TermProject
                 .Where(i => i is Enemy && i.TopRectangle.Intersects(this.BottomRectangle))
                 .ToList()
                 .ForEach(i => i.Alive = false);
+
+            for (int i = 0; i < levelObjects.Count; ++i)
+            {
+                if (levelObjects[i] is Enemy && levelObjects[i].Rectangle.Intersects(this.Rectangle) && !invincible && levelObjects[i].Alive)
+                {
+                    if (!levelObjects[i].TopRectangle.Intersects(this.BottomRectangle))
+                    {
+                        invincible = true;
+                        currentHealth -= 1;
+                        this.elapsed = DateTime.Now;
+                    }
+                }
+            }
 
             if ( ShouldDie(levelObjects) ^ this.Alive)
             {
@@ -129,6 +149,18 @@ namespace TermProject
         private void Move(Direction direction)
         {
             this.Velocity.X = Math.Max(MAX_SPEED * -1, Math.Min(this.Velocity.X + (int)direction, MAX_SPEED));
+        }
+
+        private void CheckInvincibilty()
+        {
+            if (DateTime.Now > this.elapsed.AddMilliseconds(MERCY_INVINCIBILITY_TIME))
+                invincible = false;
+        }
+
+        private void CheckHealth()
+        {
+            if (currentHealth <= 0)
+                this.Alive = false;
         }
     }
 }
