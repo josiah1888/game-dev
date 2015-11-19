@@ -1,4 +1,4 @@
-﻿﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +14,7 @@ namespace TermProject
         public EnemyState State;
         public EnemyDirection Direction;
         public Player Target;
+        public DateTime elapsed;
 
         protected Texture2D IdleSprite, AttackSprite;
 
@@ -56,7 +57,7 @@ namespace TermProject
 
         private void UpdateSprite()
         {
-            switch(this.State)
+            switch (this.State)
             {
                 case EnemyState.Idle:
                     this.Sprite = IdleSprite;

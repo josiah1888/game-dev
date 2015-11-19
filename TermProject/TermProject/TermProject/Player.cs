@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 
@@ -27,12 +28,16 @@ namespace TermProject
 
         private Texture2D IdleSprite, WalkingSprite;
 
+        private SoundEffect jumpSound;
+
+
         public Player(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/player-idle"), position, 0f, 1f, 1f, 1, 1)
         {
             this.IdleSprite = content.Load<Texture2D>("sprites/player-idle");
             this.WalkingSprite = content.Load<Texture2D>("sprites/player-walk");
             this.TimePerFrame = 200f;
+            this.jumpSound = content.Load<SoundEffect>("sounds/jump");
         }
 
         public void Update(List<GameObject> levelObjects, Keys[] keys, Rectangle viewPort, double elapsed)
@@ -92,6 +97,7 @@ namespace TermProject
         private void Jump()
         {
             this.Velocity.Y = -10;
+            jumpSound.Play();
         }
 
         private void CheckEnemyCollisions(List<GameObject> levelObjects)

@@ -14,8 +14,11 @@ Content\sprites\explosion.xnb
 Content\sprites\smoke.xnb
 Content\sprites\sodaguy-idle.xnb
 Content\sprites\sodaguy-throw.xnb
-Content\sprites\badCloud(replace).xnb
 Content\sprites\can.xnb
 Content\sprites\door-open.xnb
 Content\sprites\tempsun.xnb
 Content\Fonts\GameFont.xnb
+Content\sprites\cloud.xnb
+Content\sounds\enemydeath.xnb
+Content\sounds\explosion.xnb
+Content\sounds\jump.xnb

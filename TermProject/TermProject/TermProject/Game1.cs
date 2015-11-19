@@ -19,6 +19,7 @@ namespace TermProject
 
         Rectangle ViewPort { get; set; }
         MapMaker MapMaker;
+        Background Background;
 
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
@@ -28,6 +29,7 @@ namespace TermProject
         Rectangle viewportRect;
 
         List<GameObject> LevelObjects;
+        List<GameObject> BackgroundObjects;
 
         Player Player
         {
@@ -103,6 +105,7 @@ namespace TermProject
             viewportRect = new Rectangle(0, 0, this.GraphicsDevice.Viewport.Width, this.GraphicsDevice.Viewport.Height);
             Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
             door.WinAction = WinActions.Dequeue();
+            Background = new TermProject.Background(this.Content);
             UpdateViewport(0);
         }
 
@@ -132,6 +135,8 @@ namespace TermProject
                 Update_Positions();
                 Update_Camera();
             }
+
+            Background.Update();
             base.Update(gameTime);
         }
 
@@ -160,11 +165,7 @@ namespace TermProject
 
         private void Update_Positions()
         {
-            LevelObjects.ForEach(i =>
-            {
-                i.Position.X += i.Velocity.X;
-                i.Position.Y += i.Velocity.Y;
-            });
+            LevelObjects.ForEach(i => i.Update());
         }
 
         private void Update_Camera()
@@ -188,10 +189,12 @@ namespace TermProject
             SpriteBatch.Begin();
 
             LevelObjects
+                .Union(Background.Clouds)
                 .Where(i => i.Rectangle.Intersects(this.ViewPort))
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Tile)
+                .ThenBy(i => i is Cloud)
                 .ToList().ForEach(i =>
             {
                 i.Draw(SpriteBatch, i.Position.GetDrawablePosition(this.ViewPort), SpriteEffects.None);
