@@ -118,7 +118,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="MapMaker.cs" />
     <None Include="maps\level-selection" />
-    <None Include="maps\level2" />
+    <None Include="maps\level1--intro" />
     <Compile Include="particles\ExplosionParticleSystem.cs" />
     <Compile Include="particles\ExplosionSmokeParticleSystem.cs" />
     <Compile Include="particles\Particle.cs" />

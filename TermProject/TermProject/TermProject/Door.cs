@@ -24,8 +24,8 @@ namespace TermProject
         public override void Update(List<GameObject> levelObjects, double elapsed)
         {
             Player player = (Player)levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
-
-            if (this.Rectangle.Intersects(player.Rectangle) && this.Repeat)
+            
+            if (player != null && this.Rectangle.Intersects(player.Rectangle) && this.Repeat)
             {
                 player.Stop();
                 OpenDoor();

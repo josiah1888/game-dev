@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TermProject.Particles;
+using System.Timers;
 
 namespace TermProject
 {
@@ -25,7 +26,6 @@ namespace TermProject
         ExplosionSmokeParticleSystem Smoke;
 
         List<GameObject> LevelObjects;
-        List<GameObject> BackgroundObjects;
 
         Player Player
         {
@@ -35,6 +35,14 @@ namespace TermProject
             }
         }
 
+        enum GameStates
+        {
+            Playing,
+            Transition
+        }
+
+        GameStates GameState;
+
         Queue<Action> _WinActions;
         Queue<Action> WinActions
         {
@@ -43,6 +51,12 @@ namespace TermProject
                 if (_WinActions == null)
                 {
                     _WinActions = new Queue<Action>();
+                    _WinActions.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.ReadMap("maps/level1--intro");
+                        UpdateViewport(0);
+                        this.GameState = GameStates.Transition;
+                    });
                     _WinActions.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level1");
@@ -195,8 +209,13 @@ namespace TermProject
             });
 
             SpriteBatch.End();
-
             base.Draw(gameTime);
+            if (this.GameState == GameStates.Transition)
+            {
+                System.Threading.Thread.Sleep(3000);
+                this.GameState = GameStates.Playing;
+                this.WinActions.Dequeue()();
+            }
         }
     }
 }
