@@ -117,6 +117,7 @@
     <Compile Include="enemies\Frog.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="MapMaker.cs" />
+    <Compile Include="Timer.cs" />
     <None Include="maps\level-selection" />
     <None Include="maps\level1--intro" />
     <Compile Include="particles\ExplosionParticleSystem.cs" />

@@ -10,10 +10,12 @@ namespace TermProject
 {
     public class Door : AnimatedObject
     {
-        double WaitTimer = 0;
         public Action WinAction = () => { };
 
         private Texture2D SwingingSprite;
+        private bool IsOpen = false;
+        private object DoorDelayLock = new object();
+        private const double DOOR_DELAY_TIME = 1500;
 
         public Door(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/door"), position, 0f, 1f, 1f, 1, .8f)
@@ -24,19 +26,15 @@ namespace TermProject
         public override void Update(List<GameObject> levelObjects, double elapsed)
         {
             Player player = (Player)levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
-            
-            if (player != null && this.Rectangle.Intersects(player.Rectangle) && this.Repeat)
+
+            if (player != null && this.Rectangle.Intersects(player.Rectangle) && !this.IsOpen)
             {
                 player.Stop();
                 OpenDoor();
-                this.WaitTimer = elapsed + 1500;
             }
-            else if (!this.Repeat)
+            else if (this.IsOpen && Timer.IsTimeYet(DoorDelayLock, elapsed, DOOR_DELAY_TIME))
             {
-                if (elapsed > WaitTimer)
-                {
-                    this.WinAction();
-                }
+                this.WinAction();
             }
 
             base.Update(levelObjects, elapsed);
@@ -49,6 +47,7 @@ namespace TermProject
             this.TimePerFrame = 100f;
             this.FrameCount = 5;
             this.Sprite = this.SwingingSprite;
+            this.IsOpen = true;
         }
     }
 }

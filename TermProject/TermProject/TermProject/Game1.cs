@@ -85,6 +85,9 @@ namespace TermProject
             }
         }
 
+        private object TransitionDrawLock = new object();
+        private const double TRANSITION_DELAY_TIME = 3000;
+
         public Game1()
         {
             Graphics = new GraphicsDeviceManager(this);
@@ -208,14 +211,14 @@ namespace TermProject
                 i.Draw(SpriteBatch, i.Position.GetDrawablePosition(this.ViewPort), SpriteEffects.None);
             });
 
-            SpriteBatch.End();
-            base.Draw(gameTime);
-            if (this.GameState == GameStates.Transition)
+            if (this.GameState == GameStates.Transition && Timer.IsTimeYet(TransitionDrawLock, gameTime.TotalGameTime.TotalMilliseconds, TRANSITION_DELAY_TIME))
             {
-                System.Threading.Thread.Sleep(3000);
                 this.GameState = GameStates.Playing;
                 this.WinActions.Dequeue()();
             }
+
+            SpriteBatch.End();
+            base.Draw(gameTime);
         }
     }
 }
