@@ -14,7 +14,6 @@ namespace TermProject
 
         private Texture2D SwingingSprite;
         private bool IsOpen = false;
-        private object DoorDelayLock = new object();
         private const double DOOR_DELAY_TIME = 1500;
 
         public Door(ContentManager content, Vector2 position)
@@ -32,7 +31,7 @@ namespace TermProject
                 player.Stop();
                 OpenDoor();
             }
-            else if (this.IsOpen && Timer.IsTimeYet(DoorDelayLock, elapsed, DOOR_DELAY_TIME))
+            else if (this.IsOpen && Timer.IsTimeYet(this, elapsed, DOOR_DELAY_TIME))
             {
                 this.WinAction();
             }

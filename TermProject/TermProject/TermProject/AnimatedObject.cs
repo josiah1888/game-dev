@@ -76,6 +76,8 @@ namespace TermProject
                     Elapsed = elapsed;
                 }
             }
+
+            base.Update();
         }
 
         public void Reset()

@@ -10,53 +10,57 @@ namespace TermProject
 {
     public class SodaCan : Enemy
     {
-        public float speed = MAX_SPEED;
-        public float jumpHeight = -10;
-        const float jumpHeightIncrease = .05f;
-        const float friction = .02f;
-        const float bounce = 1.3f;
+        private float JumpHeight = -10;
 
-        public SodaCan(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/can"), position, 1, 1, SodaCan.Ai)
+        private const float ACCERLATION = .05f;
+        private const float FRICTION = .02f;
+        private const float BOUNCE = 1.3f;
+
+        private float Speed = MAX_SPEED;
+
+        public SodaCan(SodaGuy sodaGuy)
+            : base(sodaGuy.Content.Load<Texture2D>("sprites/can"), sodaGuy.Position + sodaGuy.Center, 1, 1, SodaCan.Ai)
         {
-            this.AttackSprite = this.IdleSprite = content.Load<Texture2D>("sprites/can");
+            this.AttackSprite = this.IdleSprite = sodaGuy.Content.Load<Texture2D>("sprites/can");
+            this.Velocity.Y = JumpHeight;
+            this.Direction = sodaGuy.Direction;
+            this.LevelObjects = sodaGuy.LevelObjects;
+            sodaGuy.LevelObjects.Add(this);
         }
 
-        private static Action<Enemy> Ai
+        private static Action<Enemy, double> Ai
         {
             get
             {
-                return (Enemy sodaCan) =>
+                return (Enemy sodaCanEnemy, double elapsed) =>
                 {
+                    SodaCan sodaCan = (SodaCan)sodaCanEnemy;
+
                     if (sodaCan.IsOnGround())
                     {
-                        if (((SodaCan)sodaCan).jumpHeight < 0)
+                        if (sodaCan.JumpHeight < 0)
                         {
-                            ((SodaCan)sodaCan).jumpHeight = (int)Math.Ceiling(((SodaCan)sodaCan).jumpHeight / bounce);
-                            sodaCan.Velocity.Y = ((SodaCan)sodaCan).jumpHeight;
+                            sodaCan.JumpHeight = (int)Math.Ceiling(sodaCan.JumpHeight / BOUNCE);
+                            sodaCan.Velocity.Y = (sodaCan).JumpHeight;
                         }
 
-                        if (sodaCan.Velocity.Y == Enemy.MAX_GRAVITY && ((SodaCan)sodaCan).jumpHeight > -10)
+                        if (sodaCan.Velocity.Y == MAX_GRAVITY && sodaCan.JumpHeight > -10)
                         {
-                            ((SodaCan)sodaCan).jumpHeight -= jumpHeightIncrease;
+                            sodaCan.JumpHeight -= ACCERLATION;
                         }
+
+                        sodaCan.Speed -= FRICTION;
                     }
 
-                    if (((SodaCan)sodaCan).speed <= 0)
+                    if (sodaCan.Speed <= 0)
+                    {
                         sodaCan.Alive = false;
-
-                    if (sodaCan.Alive == true)
-                    {
-                        if (sodaCan.Direction == EnemyDirection.Left)
-                            sodaCan.Velocity.X = ((SodaCan)sodaCan).speed * -1;
-                        else if (sodaCan.Direction == EnemyDirection.Right)
-                            sodaCan.Velocity.X = ((SodaCan)sodaCan).speed;
-                        else
-                            sodaCan.Velocity.X = 0;
                     }
 
-                    if (sodaCan.IsOnGround())
-                        ((SodaCan)sodaCan).speed -= friction;
+                    if (sodaCan.Alive)
+                    {
+                        sodaCan.Velocity.X = sodaCan.Speed * sodaCan.Direction.GetLateralDirectionSign();
+                    }
                 };
             }
         }

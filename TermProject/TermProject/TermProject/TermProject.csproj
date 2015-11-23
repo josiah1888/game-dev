@@ -137,6 +137,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <None Include="maps\level2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TermProjectContent\TermProjectContent.contentproj">

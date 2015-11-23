@@ -10,10 +10,8 @@ namespace TermProject
 {
     public class Frog : Enemy
     {
-        const int delay = 2000;
-        const int predictFrames = 3;
-        
-        Random random = new Random();
+        private const int JUMP_DELAY_TIME = 2000;
+        private const int PREDICT_FRAMES = 3;
 
         public Frog(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/frog-idle"), position, 1, 1, Frog.Ai)
@@ -21,49 +19,39 @@ namespace TermProject
             this.IdleSprite = content.Load<Texture2D>("sprites/frog-idle");
             this.AttackSprite = content.Load<Texture2D>("sprites/frog-jump");
             this.TimePerFrame = 200f;
-            this.elapsed = DateTime.Now;
         }
 
-        private static Action<Enemy> Ai
+        private static Action<Enemy, double> Ai
         {
             get
             {
-                return (Enemy frog) =>
+                return (Enemy enemyFrog, double elapsed) =>
                 {
-                    Random random = new Random();
+                    Frog frog = (Frog)enemyFrog;
 
                     if (Vector2.Distance(frog.Position, frog.Target.Position) > THRESHHOLD || frog.Target.IsOnGround() || (frog.State == EnemyState.Idle && !frog.IsOnGround()))
                     {
                         frog.State = EnemyState.Idle;
                     }
-
                     else
                     {
                         frog.State = EnemyState.Attack;
                     }
-
 
                     if (frog.State == EnemyState.Idle)
                     {
                         if (frog.IsOnGround())
                         {
                             frog.Velocity.X = 0;
-                            if (DateTime.Now > frog.elapsed)
+                            if (Timer.IsTimeYet(frog, elapsed, JUMP_DELAY_TIME))
                             {
                                 frog.Velocity.Y = -10;
-                                frog.Direction = (EnemyDirection) ((int)Math.Ceiling(random.NextDouble() * 2) - 1);
-                                frog.elapsed = DateTime.Now.AddMilliseconds(delay);
+                                frog.Direction = (new List<Directions>() { Directions.Left, Directions.Right }[Rand.Next(2)]);
                             }
                         }
-
-                        if (!frog.IsOnGround())
+                        else
                         {
-                            if (frog.Direction == EnemyDirection.Left)
-                                frog.Velocity.X = (MAX_SPEED / 2) * -1;
-                            else if (frog.Direction == EnemyDirection.Right)
-                                frog.Velocity.X = (MAX_SPEED / 2);
-                            else
-                                frog.Velocity.X = 0;
+                            frog.Velocity.X = (MAX_SPEED / 2) * frog.Direction.GetLateralDirectionSign();
                         }
                     }
 

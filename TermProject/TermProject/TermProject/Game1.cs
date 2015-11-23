@@ -17,14 +17,11 @@ namespace TermProject
     {
         public GraphicsDeviceManager Graphics;
         public SpriteBatch SpriteBatch;
-
         Rectangle ViewPort { get; set; }
         MapMaker MapMaker;
         Background Background;
-
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
-
         List<GameObject> LevelObjects;
 
         Player Player
@@ -53,6 +50,13 @@ namespace TermProject
                     _WinActions = new Queue<Action>();
                     _WinActions.Enqueue(() =>
                     {
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
+                        door.WinAction = WinActions.Dequeue();
+                        UpdateViewport(0);
+                    });
+                    _WinActions.Enqueue(() =>
+                    {
                         LevelObjects = MapMaker.ReadMap("maps/level1--intro");
                         UpdateViewport(0);
                         this.GameState = GameStates.Transition;
@@ -72,13 +76,19 @@ namespace TermProject
                             .Where(i => i.Designator == 1)
                             .ToList()
                             .ForEach(i => i.Alive = false);
-                        // optionally, add kaboom after a delay
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 2);
                         door.WinAction = WinActions.Dequeue();
                     });
                     _WinActions.Enqueue(() =>
                     {
-                        // Level 2
+                        LevelObjects = MapMaker.ReadMap("maps/level2");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = WinActions.Dequeue();
+                        UpdateViewport(0);
+                    });
+                    _WinActions.Enqueue(() =>
+                    {
+
                     });
                 }
                 return _WinActions;
@@ -105,7 +115,7 @@ namespace TermProject
             Graphics.PreferredBackBufferHeight = 608; // 19 Tiles
             Graphics.PreferredBackBufferWidth = 1024; // 32 Tiles
             Graphics.ApplyChanges();
-            
+
             base.Initialize();
         }
 
@@ -113,11 +123,8 @@ namespace TermProject
         {
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker = new MapMaker(this.Content, GetDeathAction());
-            LevelObjects = MapMaker.ReadMap("maps/level-selection");
-            Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
-            door.WinAction = WinActions.Dequeue();
-            Background = new TermProject.Background(this.Content);
-            UpdateViewport(0);
+            Background = new Background(this.Content);
+            WinActions.Dequeue()();
         }
 
         private Action<GameObject> GetDeathAction()
@@ -141,9 +148,7 @@ namespace TermProject
             if (LevelObjects.Any())
             {
                 Update_AnimatedObjects(elapsed);
-                Update_Enemies();
                 Update_Player(elapsed);
-                Update_Positions();
                 Update_Camera();
             }
 
@@ -152,17 +157,9 @@ namespace TermProject
         }
 
         #region Update
-        private void Update_Enemies()
-        {
-            this.LevelObjects
-                .Where(i => i.Alive && i is Enemy)
-                .Select(i => (Enemy)i).ToList()
-                .ForEach(i => i.Update(LevelObjects));
-        }
-
         private void Update_AnimatedObjects(double elapsed)
         {
-            LevelObjects
+            this.LevelObjects
                 .Where(i => i.Alive && i is AnimatedObject && !(i is Player))
                 .Select(i => (AnimatedObject)i).ToList()
                 .ForEach(i => i.Update(LevelObjects, elapsed));
@@ -171,12 +168,7 @@ namespace TermProject
         private void Update_Player(double elapsed)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            Player.Update(LevelObjects, keyboardState.GetPressedKeys(), this.ViewPort, elapsed);
-        }
-
-        private void Update_Positions()
-        {
-            LevelObjects.ForEach(i => i.Update());
+            Player.Update(LevelObjects, keyboardState.GetPressedKeys(), elapsed);
         }
 
         private void Update_Camera()
@@ -190,6 +182,7 @@ namespace TermProject
 
         private void UpdateViewport(double x)
         {
+            // todo: Allowplayer to move left also
             this.ViewPort = new Rectangle((int)x, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height);
         }
         #endregion

@@ -12,5 +12,19 @@ namespace TermProject
         {
             return new Vector2(position.X - viewport.X, position.Y);
         }
+
+        public static int GetLateralDirectionSign(this GameObject.Directions direction)
+        {
+            int lateralDirection = 0;
+            if (direction.HasFlag(GameObject.Directions.Right))
+            {
+                lateralDirection++;
+            }
+            if (direction.HasFlag(GameObject.Directions.Left))
+            {
+                lateralDirection--;
+            }
+            return lateralDirection;
+        }
     }
 }

@@ -12,8 +12,9 @@ using Microsoft.Xna.Framework.Media;
 
 namespace TermProject
 {
-    public class Tile : GameObject
+    public abstract class Tile : GameObject
     {
+        // todo: possibly refactor as abstract class with abstract/virtual methods
         public const int SIZE = 32;
         public TileType Type;
         
