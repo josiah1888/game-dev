@@ -20,6 +20,7 @@ namespace TermProject
             : base(content.Load<Texture2D>("sprites/door"), position, 0f, 1f, 1f, 1, .8f)
         {
             this.SwingingSprite = content.Load<Texture2D>("sprites/door-swing");
+            this.ObeysGravity = false;
         }
 
         public override void Update(List<GameObject> levelObjects, double elapsed)
