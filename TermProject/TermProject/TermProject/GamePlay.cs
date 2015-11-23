@@ -65,6 +65,12 @@ namespace TermProject
                     });
                     _LevelCreators.Enqueue(() =>
                     {
+                        LevelObjects = MapMaker.ReadMap("maps/level2--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
                         LevelObjects = MapMaker.ReadMap("maps/level2");
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
                         door.WinAction = LevelCreators.Dequeue();
