@@ -22,14 +22,11 @@ namespace TermProject
         private const float FRICTION = .25F;
         private const float ACCELERATION = .4f;
 
-        private Texture2D IdleSprite, WalkingSprite;
         private SoundEffect JumpSound;
 
         public Player(ContentManager content, Vector2 position)
-            : base(content.Load<Texture2D>("sprites/player-idle"), position, 0f, 1f, 1f, 1, 1)
+            : base(content.Load<Texture2D>("sprites/player-walk"), position, 0f, 1f, 1f, 4, 200f)
         {
-            this.IdleSprite = content.Load<Texture2D>("sprites/player-idle");
-            this.WalkingSprite = content.Load<Texture2D>("sprites/player-walk");
             this.TimePerFrame = 200f;
             this.JumpSound = content.Load<SoundEffect>("sounds/jump");
         }
@@ -51,41 +48,36 @@ namespace TermProject
 
         private void UpdateSprite()
         {
-            if (Math.Abs(this.Velocity.X) > WALKING_TOLERANCE)
+            if (Math.Abs(this.Velocity.X) > WALKING_TOLERANCE && this.IsPaused)
             {
-                this.FrameCount = 4;
-                this.Sprite = WalkingSprite;
+                this.Restart();
             }
-            else
+            else if (Math.Abs(this.Velocity.X) <= WALKING_TOLERANCE)
             {
-                this.FrameCount = 1;
-                this.Sprite = IdleSprite;
+                this.Stop();
             }
         }
 
         private void Move(Keys[] keys)
         {
-            if (!this.IsPaused)
+            if (IsOnGround() && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
             {
-                if (IsOnGround() && (keys.Contains(Keys.Space) || keys.Contains(Keys.Up) || keys.Contains(Keys.W)))
-                {
-                    Jump();
-                }
-
-                Directions lateralDirection = Directions.None;
-
-                if (keys.Contains(Keys.Right) || keys.Contains(Keys.D))
-                {
-                    lateralDirection |= Directions.Right;
-                }
-
-                if (keys.Contains(Keys.Left) || keys.Contains(Keys.A))
-                {
-                    lateralDirection |= Directions.Left;
-                }
-
-                Move(lateralDirection);
+                Jump();
             }
+
+            Directions lateralDirection = Directions.None;
+
+            if (keys.Contains(Keys.Right) || keys.Contains(Keys.D))
+            {
+                lateralDirection |= Directions.Right;
+            }
+
+            if (keys.Contains(Keys.Left) || keys.Contains(Keys.A))
+            {
+                lateralDirection |= Directions.Left;
+            }
+
+            Move(lateralDirection);
         }
 
         private void Jump()
