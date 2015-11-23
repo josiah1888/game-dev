@@ -116,6 +116,7 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="enemies\Frog.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GamePlay.cs" />
     <Compile Include="MapMaker.cs" />
     <Compile Include="Timer.cs" />
     <None Include="maps\level-selection" />

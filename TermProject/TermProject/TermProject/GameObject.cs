@@ -231,6 +231,15 @@ namespace TermProject
             return hasCollided;
         }
 
+        protected void CheckBoundsCollisions()
+        {
+            if(this.Position.X < 0)
+            {
+                this.Velocity.X = Math.Abs(this.Velocity.X);
+                this.Position.X = 0;
+            }
+        }
+
         protected void CollideRight()
         {
             this.Velocity.X = Math.Max(this.Velocity.X - 2, MIN_BOUNCE_BACK) * -1;

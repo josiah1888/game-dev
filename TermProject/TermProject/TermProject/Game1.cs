@@ -17,85 +17,20 @@ namespace TermProject
     {
         public GraphicsDeviceManager Graphics;
         public SpriteBatch SpriteBatch;
-        Rectangle ViewPort { get; set; }
         MapMaker MapMaker;
         Background Background;
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
-        List<GameObject> LevelObjects;
+        GamePlay GamePlay;
 
         Player Player
         {
             get
             {
-                return (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
+                return (Player)GamePlay.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
             }
         }
 
-        enum GameStates
-        {
-            Playing,
-            Transition
-        }
-
-        GameStates GameState;
-
-        Queue<Action> _WinActions;
-        Queue<Action> WinActions
-        {
-            get
-            {
-                if (_WinActions == null)
-                {
-                    _WinActions = new Queue<Action>();
-                    _WinActions.Enqueue(() =>
-                    {
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
-                        door.WinAction = WinActions.Dequeue();
-                        UpdateViewport(0);
-                    });
-                    _WinActions.Enqueue(() =>
-                    {
-                        LevelObjects = MapMaker.ReadMap("maps/level1--intro");
-                        UpdateViewport(0);
-                        this.GameState = GameStates.Transition;
-                    });
-                    _WinActions.Enqueue(() =>
-                    {
-                        LevelObjects = MapMaker.ReadMap("maps/level1");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = WinActions.Dequeue();
-                        UpdateViewport(0);
-                    });
-                    _WinActions.Enqueue(() =>
-                    {
-                        UpdateViewport(0);
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator == 1)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 2);
-                        door.WinAction = WinActions.Dequeue();
-                    });
-                    _WinActions.Enqueue(() =>
-                    {
-                        LevelObjects = MapMaker.ReadMap("maps/level2");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = WinActions.Dequeue();
-                        UpdateViewport(0);
-                    });
-                    _WinActions.Enqueue(() =>
-                    {
-
-                    });
-                }
-                return _WinActions;
-            }
-        }
-
-        private object TransitionDrawLock = new object();
         private const double TRANSITION_DELAY_TIME = 3000;
 
         public Game1()
@@ -124,15 +59,15 @@ namespace TermProject
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             MapMaker = new MapMaker(this.Content, GetDeathAction());
             Background = new Background(this.Content);
-            WinActions.Dequeue()();
+            GamePlay = new GamePlay(MapMaker, Window);
         }
 
         private Action<GameObject> GetDeathAction()
         {
             return (GameObject gameObject) =>
             {
-                Smoke.AddParticles(gameObject.Position.GetDrawablePosition(this.ViewPort));
-                Explosion.AddParticles(gameObject.Position.GetDrawablePosition(this.ViewPort));
+                Smoke.AddParticles(gameObject.Position.GetDrawablePosition(GamePlay.ViewPort));
+                Explosion.AddParticles(gameObject.Position.GetDrawablePosition(GamePlay.ViewPort));
             };
         }
 
@@ -145,45 +80,30 @@ namespace TermProject
 
             double elapsed = gameTime.TotalGameTime.TotalMilliseconds;
 
-            if (LevelObjects.Any())
+            if (GamePlay.LevelObjects.Any())
             {
                 Update_AnimatedObjects(elapsed);
                 Update_Player(elapsed);
-                Update_Camera();
             }
 
             Background.Update();
+            GamePlay.Update(elapsed);
             base.Update(gameTime);
         }
 
         #region Update
         private void Update_AnimatedObjects(double elapsed)
         {
-            this.LevelObjects
+            GamePlay.LevelObjects
                 .Where(i => i.Alive && i is AnimatedObject && !(i is Player))
                 .Select(i => (AnimatedObject)i).ToList()
-                .ForEach(i => i.Update(LevelObjects, elapsed));
+                .ForEach(i => i.Update(GamePlay.LevelObjects, elapsed));
         }
 
         private void Update_Player(double elapsed)
         {
             KeyboardState keyboardState = Keyboard.GetState();
-            Player.Update(LevelObjects, keyboardState.GetPressedKeys(), elapsed);
-        }
-
-        private void Update_Camera()
-        {
-            float distancePlayerIsAhead = Player.Position.X + Player.Center.X - this.ViewPort.X;
-            if (distancePlayerIsAhead > this.ViewPort.Width * (3.0 / 5.0))
-            {
-                UpdateViewport(this.ViewPort.X + distancePlayerIsAhead / 150f);
-            }
-        }
-
-        private void UpdateViewport(double x)
-        {
-            // todo: Allowplayer to move left also
-            this.ViewPort = new Rectangle((int)x, 0, this.Window.ClientBounds.Width, this.Window.ClientBounds.Height);
+            Player.Update(GamePlay.LevelObjects, keyboardState.GetPressedKeys(), elapsed);
         }
         #endregion
 
@@ -192,23 +112,17 @@ namespace TermProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
             SpriteBatch.Begin();
 
-            LevelObjects
+            GamePlay.LevelObjects
                 .Union(Background.Clouds)
-                .Where(i => i.Rectangle.Intersects(this.ViewPort))
+                .Where(i => i.Rectangle.Intersects(GamePlay.ViewPort))
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Tile)
                 .ThenBy(i => i is Cloud)
                 .ToList().ForEach(i =>
             {
-                i.Draw(SpriteBatch, i.Position.GetDrawablePosition(this.ViewPort), SpriteEffects.None);
+                i.Draw(SpriteBatch, i.Position.GetDrawablePosition(GamePlay.ViewPort), SpriteEffects.None);
             });
-
-            if (this.GameState == GameStates.Transition && Timer.IsTimeYet(TransitionDrawLock, gameTime.TotalGameTime.TotalMilliseconds, TRANSITION_DELAY_TIME))
-            {
-                this.GameState = GameStates.Playing;
-                this.WinActions.Dequeue()();
-            }
 
             SpriteBatch.End();
             base.Draw(gameTime);

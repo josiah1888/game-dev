@@ -41,6 +41,7 @@ namespace TermProject
             CheckEnemyCollisions(levelObjects);
             CheckLateralCollisions(levelObjects);
             CheckVerticalCollisions(levelObjects);
+            CheckBoundsCollisions();
             UpdateInvincibilty(elapsed);
             Fly(keys);
             SlowDown();
