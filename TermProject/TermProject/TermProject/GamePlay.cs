@@ -112,10 +112,20 @@ namespace TermProject
             if (distancePlayerIsAhead > this.ViewPort.Width * (3.0 / 5.0))
             {
                 UpdateViewport(this.ViewPort.X + distancePlayerIsAhead / CAMERA_SCROLL_SMOOTHNESS);
+
+                for (int i = 0; i < Player.MAX_HEALTH; i++)
+                {
+                    player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
+                }
             }
             else if (distancePlayerIsAhead < this.ViewPort.Width * (1.0 / 5.0))
             {
                 UpdateViewport(this.ViewPort.X - CAMERA_SCROLL_SMOOTHNESS / distancePlayerIsAhead);
+
+                for (int i = 0; i < Player.MAX_HEALTH; i++)
+                {
+                    player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
+                }
             }
         }
 

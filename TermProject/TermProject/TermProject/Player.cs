@@ -17,6 +17,9 @@ namespace TermProject
         public bool IsInvincible = false;
         public const int MERCY_INVINCIBILITY_TIME = 2000;
 
+        public GameObject[] HealthIcons;
+        private bool iconsAdded = false;
+
         private const int MAX_SPEED = 6;
         private const float WALKING_TOLERANCE = .3f;
         private const float FRICTION = .25F;
@@ -29,6 +32,13 @@ namespace TermProject
         {
             this.TimePerFrame = 200f;
             this.JumpSound = content.Load<SoundEffect>("sounds/jump");
+            HealthIcons = new GameObject[MAX_HEALTH];
+
+            for (int i = 0; i < MAX_HEALTH; i++)
+            {
+                HealthIcons[i] = new GameObject(content.Load<Texture2D>("sprites/health-icon"), new Vector2(32 + 32 * i, 32));
+                HealthIcons[i].Alive = true;
+            }
         }
 
         public void Update(List<GameObject> levelObjects, Keys[] keys, double elapsed)
@@ -39,6 +49,7 @@ namespace TermProject
             CheckLateralCollisions(levelObjects);
             CheckVerticalCollisions(levelObjects);
             CheckBoundsCollisions();
+            UpdateHealthIcons(levelObjects);
             UpdateInvincibilty(elapsed);
             Fly(keys);
             SlowDown();
@@ -113,6 +124,22 @@ namespace TermProject
         {
             this.Health--;
             this.IsInvincible = true;
+        }
+
+        private void UpdateHealthIcons(List<GameObject> levelObjects)
+        {
+            for (int i = 0; i < HealthIcons.Length; ++i)
+            {
+                if (!iconsAdded)
+                {
+                    HealthIcons[i].LevelObjects = levelObjects;
+                    levelObjects.Add(HealthIcons[i]);
+                }
+
+                if (Health <= i)
+                    HealthIcons[i].Alive = false;
+            }
+            iconsAdded = true;
         }
 
         private bool HasEnemyCollision(List<GameObject> levelObjects)
