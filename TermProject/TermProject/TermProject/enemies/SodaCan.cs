@@ -56,8 +56,14 @@ namespace TermProject
                             sodaCan.Velocity.X = 0;
                     }
 
-                    if (sodaCan.IsOnGround())
+                    if (sodaCan.IsOnGround() && ((SodaCan)sodaCan).jumpHeight == 0)
+                    {
+                        ((SodaCan)sodaCan).Rotation = 0;
                         ((SodaCan)sodaCan).speed -= FRICTION;
+                    }
+                    else
+                    {
+                        ((SodaCan)sodaCan).Rotate(.1f + (.1f * -((SodaCan)sodaCan).jumpHeight));                    }
                 };
             }
         }

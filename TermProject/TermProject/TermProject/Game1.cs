@@ -25,7 +25,7 @@ namespace TermProject
         ExplosionSmokeParticleSystem Smoke;
 
         //SpriteFont font;
-        Vector2 instructionsDrawPoint = new Vector2(0.1f, 0.1f);
+        //Vector2 instructionsDrawPoint = new Vector2(0.1f, 0.1f);
         Rectangle viewportRect;
 
         List<GameObject> LevelObjects;
@@ -193,6 +193,7 @@ namespace TermProject
                 .Where(i => i.Rectangle.Intersects(this.ViewPort))
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
+                .ThenBy(i => i is Door)
                 .ThenBy(i => i is Tile)
                 .ThenBy(i => i is Cloud)
                 .ToList().ForEach(i =>
