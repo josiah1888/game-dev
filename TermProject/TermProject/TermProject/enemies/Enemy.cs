@@ -12,14 +12,12 @@ namespace TermProject
         public const int THRESHHOLD = 100;
         public const int MAX_SPEED = 4;
         public EnemyState State;
-        public EnemyDirection Direction;
         public Player Target;
-        public DateTime elapsed;
 
         protected Texture2D IdleSprite, AttackSprite;
 
         public const int MAX_GRAVITY = 3;
-        private Action<Enemy> Ai;
+        private Action<Enemy, double> Ai;
 
         public enum EnemyState
         {
@@ -27,32 +25,27 @@ namespace TermProject
             Attack
         }
 
-        public enum EnemyDirection
-        {
-            Left,
-            Right
-        }
-
-        public Enemy(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec, Action<Enemy> ai)
+        public Enemy(Texture2D loadedTexture, Vector2 position, int frameCount, int framesPerSec, Action<Enemy, double> ai)
             : base(loadedTexture, position, 0f, 1f, 1f, frameCount, framesPerSec)
         {
             this.Ai = ai;
             this.State = EnemyState.Idle;
-            this.Direction = EnemyDirection.Left;
+            this.Direction = Directions.Left;
         }
 
-        public void Update(List<GameObject> levelObjects)
+        public override void Update(List<GameObject> levelObjects, double elapsed)
         {
             UpdateSprite();
-            ApplyGravity();
             if (CheckLateralCollisions(levelObjects))
             {
                 this.Velocity.X = -this.Velocity.X;
-                this.Direction = (EnemyDirection)((int)(this.Direction + 1) % 2);
+                this.Direction = this.Direction.HasFlag(Directions.Left) ? Directions.Right : Directions.Left;
             }
             CheckVerticalCollisions(levelObjects);
             this.Target = (Player)levelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
-            this.Ai(this);
+            this.Ai(this, elapsed);
+
+            base.Update(levelObjects, elapsed);
         }
 
         private void UpdateSprite()

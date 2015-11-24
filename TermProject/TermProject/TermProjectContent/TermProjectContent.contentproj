@@ -155,13 +155,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="Fonts\GameFont.spritefont">
-      <Name>GameFont</Name>
-      <Importer>FontDescriptionImporter</Importer>
-      <Processor>FontDescriptionProcessor</Processor>
-	</Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="sounds\enemydeath.wav">
       <Name>enemydeath</Name>
       <Importer>WavImporter</Importer>

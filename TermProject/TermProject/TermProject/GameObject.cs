@@ -15,13 +15,13 @@ namespace TermProject
 {
     public class GameObject
     {
+        public static Random Rand = new Random();
         public Texture2D Sprite;
         public Vector2 Position;
         public float Rotation = 0f;
         public Vector2 Center;
         public Vector2 Velocity;
         public Action<GameObject> DeathAction = (GameObject gameObject) => { };
-        public DateTime elapsed;
 
         private bool _Alive = true;
         public bool Alive
@@ -43,13 +43,25 @@ namespace TermProject
         public int Designator;
         public List<GameObject> LevelObjects;
 
-        protected bool ObeysGravity = true;
-        private const float MIN_BOUNCE_BACK = .8f;
+        [Flags]
+        public enum Directions
+        {
+            None = 0,
+            Up = 1,
+            Right = 2,
+            Down = 4,
+            Left = 8
+        }
 
+        public Directions Direction;
+        protected bool ObeysGravity = true;
+
+        private const float MIN_BOUNCE_BACK = .8f;
         private const float VISION_FIELD = .02f;
         private const int VISION_LENGTH = 350;
         private const int MAX_GRAVITY = 3;
 
+        private Vector2 FlightSpeeds = new Vector2(10, 10);
 
         public GameObject()
         {
@@ -78,7 +90,7 @@ namespace TermProject
         {
             if (this.Alive)
             {
-                if (this is Player && ((Player)this).invincible)
+                if (this is Player && ((Player)this).IsInvincible)
                 {
                     batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.5f, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
                 }
@@ -93,6 +105,7 @@ namespace TermProject
         {
             this.Position.X += this.Velocity.X;
             this.Position.Y += this.Velocity.Y;
+            ApplyGravity();
         }
 
         public void Rotate(float rotation = .05f)
@@ -100,47 +113,50 @@ namespace TermProject
             this.Rotation += rotation;
         }
 
-        public void Move(Keys[] keys)
+        public void Fly(Keys[] keys)
         {
-            if (keys.Contains(Keys.Up) && keys.Contains(Keys.Right))
+            if (keys.Contains(Keys.Tab))
             {
-                this.Position.Y -= this.Velocity.Y / 2;
-                this.Position.X += this.Velocity.X / 2;
-            }
-            else if (keys.Contains(Keys.Right) && keys.Contains(Keys.Down))
-            {
-                this.Position.Y += this.Velocity.Y / 2;
-                this.Position.X += this.Velocity.X / 2;
-            }
-            else if (keys.Contains(Keys.Down) && keys.Contains(Keys.Left))
-            {
-                this.Position.Y += this.Velocity.Y / 2;
-                this.Position.X -= this.Velocity.X / 2;
-            }
-            else if (keys.Contains(Keys.Left) && keys.Contains(Keys.Up))
-            {
-                this.Position.Y -= this.Velocity.Y / 2;
-                this.Position.X -= this.Velocity.X / 2;
-            }
-            else if (keys.Contains(Keys.Left))
-            {
-                this.Position.X -= this.Velocity.X;
-            }
-            else if (keys.Contains(Keys.Up))
-            {
-                this.Position.Y -= this.Velocity.Y;
-            }
-            else if (keys.Contains(Keys.Down))
-            {
-                this.Position.Y += this.Velocity.Y;
-            }
-            else if (keys.Contains(Keys.Right))
-            {
-                this.Position.X += this.Velocity.X;
+                if (keys.Contains(Keys.Up) && keys.Contains(Keys.Right))
+                {
+                    this.Position.Y -= this.FlightSpeeds.Y / 2;
+                    this.Position.X += this.FlightSpeeds.X / 2;
+                }
+                else if (keys.Contains(Keys.Right) && keys.Contains(Keys.Down))
+                {
+                    this.Position.Y += this.FlightSpeeds.Y / 2;
+                    this.Position.X += this.FlightSpeeds.X / 2;
+                }
+                else if (keys.Contains(Keys.Down) && keys.Contains(Keys.Left))
+                {
+                    this.Position.Y += this.FlightSpeeds.Y / 2;
+                    this.Position.X -= this.FlightSpeeds.X / 2;
+                }
+                else if (keys.Contains(Keys.Left) && keys.Contains(Keys.Up))
+                {
+                    this.Position.Y -= this.FlightSpeeds.Y / 2;
+                    this.Position.X -= this.FlightSpeeds.X / 2;
+                }
+                else if (keys.Contains(Keys.Left))
+                {
+                    this.Position.X -= this.FlightSpeeds.X;
+                }
+                else if (keys.Contains(Keys.Up))
+                {
+                    this.Position.Y -= this.FlightSpeeds.Y;
+                }
+                else if (keys.Contains(Keys.Down))
+                {
+                    this.Position.Y += this.FlightSpeeds.Y;
+                }
+                else if (keys.Contains(Keys.Right))
+                {
+                    this.Position.X += this.FlightSpeeds.X;
+                }
             }
         }
 
-        protected void ApplyGravity()
+        private void ApplyGravity()
         {
             if (this.ObeysGravity)
             {
@@ -217,6 +233,15 @@ namespace TermProject
             return hasCollided;
         }
 
+        protected void CheckBoundsCollisions()
+        {
+            if(this.Position.X < 0)
+            {
+                this.Velocity.X = Math.Abs(this.Velocity.X);
+                this.Position.X = 0;
+            }
+        }
+
         protected void CollideRight()
         {
             this.Velocity.X = Math.Max(this.Velocity.X - 2, MIN_BOUNCE_BACK) * -1;
@@ -231,6 +256,14 @@ namespace TermProject
         {
             this.Position.Y = problemTile.BottomRectangle.Bottom;
             this.Velocity.Y = 0;
+        }
+
+        public float GetAngle(Vector2 a, Vector2 b)
+        {
+            float deltaX = b.X - a.X;
+            float deltaY = b.Y - a.Y;
+
+            return (float)Math.Atan2(deltaY, deltaX);
         }
 
         #region Legacy GameObject Methods
@@ -261,15 +294,6 @@ namespace TermProject
             Vector2 direction = new Vector2(otherGuy.Position.X - this.Position.X, otherGuy.Position.Y - this.Position.Y);
             direction.Normalize();
             return direction;
-        }
-
-        [Obsolete("Legacy code from a past game.")]
-        public float GetAngle(Vector2 a, Vector2 b)
-        {
-            float deltaX = b.X - a.X;
-            float deltaY = b.Y - a.Y;
-
-            return (float)Math.Atan2(deltaY, deltaX);
         }
 
         [Obsolete("Legacy code from a past game.")]

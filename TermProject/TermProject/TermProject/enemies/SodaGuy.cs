@@ -10,53 +10,53 @@ namespace TermProject
 {
     public class SodaGuy : Enemy
     {
-        const int drinkingTime = 2000;
         public ContentManager Content;
-        public bool thrownCan = false;
+        private const int IDLE_TIME = 2000;
+        private const int ATTACK_TIME = 1000;
 
         public SodaGuy(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/sodaguy-idle"), position, 1, 1, SodaGuy.Ai)
         {
-            this.IdleSprite = content.Load<Texture2D>("sprites/sodaguy-idle");
-            this.elapsed = DateTime.Now.AddMilliseconds(drinkingTime);
             this.Content = content;
+            this.IdleSprite = content.Load<Texture2D>("sprites/sodaguy-idle");
             this.AttackSprite = content.Load<Texture2D>("sprites/sodaguy-throw");
         }
 
-        private static Action<Enemy> Ai
+        private static Action<Enemy, double> Ai
         {
             get
             {
-                return (Enemy sodaGuy) =>
+                return (Enemy sodaGuyEnemy, double elapsed) =>
                 {
-                    if (sodaGuy.State == EnemyState.Idle && DateTime.Now > sodaGuy.elapsed)
-                        sodaGuy.State = EnemyState.Attack;
+                    SodaGuy sodaGuy = (SodaGuy)sodaGuyEnemy;
 
-                    if (sodaGuy.State == EnemyState.Attack)
+                    switch (sodaGuy.State)
                     {
-                        if (((SodaGuy)sodaGuy).thrownCan == false)
-                        {
-                            SodaCan can = new SodaCan(((SodaGuy)sodaGuy).Content, sodaGuy.Position + sodaGuy.Center);
-                            can.Velocity.Y = -10;
-                            can.Direction = sodaGuy.Direction;
-                            can.LevelObjects = sodaGuy.LevelObjects;
-
-                            sodaGuy.LevelObjects.Add(can);
-                            ((SodaGuy)sodaGuy).thrownCan = true;
-                        }
-
-                        if (DateTime.Now > sodaGuy.elapsed.AddMilliseconds(drinkingTime * 5 / 8))
-                        {
-                            sodaGuy.elapsed = DateTime.Now.AddMilliseconds(drinkingTime);
-                            sodaGuy.State = EnemyState.Idle;
-                        }
-                    }
-
-                    else
-                    {
-                        ((SodaGuy)sodaGuy).thrownCan = false;
+                        case EnemyState.Idle:
+                            Ai_Idle(sodaGuy, elapsed);
+                            break;
+                        case EnemyState.Attack:
+                            Ai_Attack(sodaGuy, elapsed);
+                            break;
                     }
                 };
+            }
+        }
+
+        private static void Ai_Idle(SodaGuy sodaGuy, double elapsed)
+        {
+            if (Timer.IsTimeYet(sodaGuy, elapsed, IDLE_TIME))
+            {
+                sodaGuy.State = EnemyState.Attack;
+                SodaCan can = new SodaCan(sodaGuy);
+            }
+        }
+
+        private static void Ai_Attack(SodaGuy sodaGuy, double elapsed)
+        {
+            if (Timer.IsTimeYet(sodaGuy, elapsed, ATTACK_TIME))
+            {
+                sodaGuy.State = EnemyState.Idle;
             }
         }
     }

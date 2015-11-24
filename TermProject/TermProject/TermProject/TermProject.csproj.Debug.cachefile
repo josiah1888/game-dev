@@ -3,7 +3,6 @@ Content\sprites\old-bird.xnb
 Content\sprites\frog-idle.xnb
 Content\sprites\frog-jump.xnb
 Content\sprites\place-holder.xnb
-Content\sprites\player-idle.xnb
 Content\sprites\player-walk.xnb
 Content\sprites\semi-solid-tile.xnb
 Content\sprites\solid-tile.xnb
@@ -24,3 +23,9 @@ Content\Fonts\GameFont.xnb
 Content\sounds\enemydeath.xnb
 Content\sounds\explosion.xnb
 Content\sounds\jump.xnb
+Content\sounds\enemydeath.xnb
+Content\sounds\explosion.xnb
+Content\sounds\jump.xnb
+Content\sprites\emu-idle.xnb
+Content\sprites\emu-walk.xnb
+Content\sprites\player-idle.xnb

@@ -8,9 +8,9 @@ namespace TermProject
 {
     public class Background
     {
-        private const int MAX_CLOUDS = 20;
-
         public List<GameObject> Clouds = new List<GameObject>();
+
+        private const int MAX_CLOUDS = 20;
 
         public Background(ContentManager content)
         {

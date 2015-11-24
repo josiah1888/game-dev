@@ -116,9 +116,12 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="enemies\Frog.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="GamePlay.cs" />
     <Compile Include="MapMaker.cs" />
+    <None Include="maps\level2--intro" />
+    <Compile Include="Timer.cs" />
     <None Include="maps\level-selection" />
-    <None Include="maps\level2" />
+    <None Include="maps\level1--intro" />
     <Compile Include="particles\ExplosionParticleSystem.cs" />
     <Compile Include="particles\ExplosionSmokeParticleSystem.cs" />
     <Compile Include="particles\Particle.cs" />
@@ -136,6 +139,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <None Include="maps\level2" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TermProjectContent\TermProjectContent.contentproj">
