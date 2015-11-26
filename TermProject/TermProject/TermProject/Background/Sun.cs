@@ -11,7 +11,7 @@ namespace TermProject
     public class Sun : GameObject
     {
         public Sun(ContentManager content)
-            : base(content.Load<Texture2D>("sprites/tempsun"), new Vector2(500, 700))
+            : base(content.Load<Texture2D>("sprites/tempsun"), new Vector2(0, 0))
         {
             this.Velocity.X = 0f;
             this.Velocity.Y = 0f;
