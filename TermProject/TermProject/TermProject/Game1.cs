@@ -126,7 +126,9 @@ namespace TermProject
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
                 .ThenBy(i => i is Tile)
-                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud))
+                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
+                .ThenBy(i => i is Sun)
+                .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)
                 .ToList().ForEach(i =>
             {

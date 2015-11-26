@@ -28,6 +28,8 @@ namespace TermProject
                     _Legend.Add('e', GameObjectType.Emu);
                     _Legend.Add('s', GameObjectType.SodaGuy);
                     _Legend.Add('d', GameObjectType.Door);
+                    _Legend.Add('h', GameObjectType.Hill);
+                    _Legend.Add('5', GameObjectType.Sun);
                 }
                 return _Legend;
             }
@@ -44,7 +46,9 @@ namespace TermProject
             Frog,
             Emu,
             SodaGuy,
-            Door
+            Door,
+            Hill,
+            Sun
         }
 
         public MapMaker(ContentManager content, Action<GameObject> deathAction)
@@ -92,6 +96,12 @@ namespace TermProject
                                     break;
                                 case GameObjectType.Door:
                                     gameObject = new Door(this.Content, GetPosition(x, y));
+                                    break;
+                                case GameObjectType.Hill:
+                                    gameObject = new Hill(this.Content);
+                                    break;
+                                case GameObjectType.Sun:
+                                    gameObject = new Sun(this.Content);
                                     break;
                             }
 

@@ -110,6 +110,8 @@
     <Compile Include="AnimatedObject.cs" />
     <Compile Include="background\Background.cs" />
     <Compile Include="background\Cloud.cs" />
+    <Compile Include="background\Hill.cs" />
+    <Compile Include="background\Sun.cs" />
     <Compile Include="Door.cs" />
     <Compile Include="enemies\Emu.cs" />
     <Compile Include="enemies\Enemy.cs" />

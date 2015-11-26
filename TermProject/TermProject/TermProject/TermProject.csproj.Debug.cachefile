@@ -18,9 +18,11 @@ Content\sprites\cloud.xnb
 Content\sprites\can.xnb
 Content\sprites\door-open.xnb
 Content\sprites\tempsun.xnb
+Content\sprites\health-icon.xnb
 Content\sprites\emu-idle.xnb
 Content\sprites\emu-walk.xnb
 Content\sounds\enemydeath.xnb
 Content\sounds\explosion.xnb
 Content\sounds\jump.xnb
-Content\sprites\health-icon.xnb
+Content\sprites\bg-hill.xnb
+Content\sprites\lazyhill.xnb

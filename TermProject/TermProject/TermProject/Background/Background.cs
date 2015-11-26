@@ -9,6 +9,7 @@ namespace TermProject
     public class Background
     {
         public List<GameObject> Clouds = new List<GameObject>();
+        
 
         private const int MAX_CLOUDS = 20;
 
@@ -17,12 +18,16 @@ namespace TermProject
             for (int i = 0; i < MAX_CLOUDS; i++)
             {
                 Clouds.Add(new Cloud(content));
+               
             }
+
+
         }
 
         public void Update()
         {
             this.Clouds.ForEach(i => i.Update());
+         
         }
     }
 }

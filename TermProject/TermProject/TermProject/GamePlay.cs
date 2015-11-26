@@ -16,6 +16,7 @@ namespace TermProject
 
         public GameStates GameState;
         public Rectangle ViewPort;
+        public static Vector2 vpCoords;
 
         public List<GameObject> LevelObjects;
         private MapMaker MapMaker;
@@ -127,6 +128,8 @@ namespace TermProject
                     player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
                 }
             }
+            vpCoords.X = this.ViewPort.X;
+            vpCoords.Y = this.ViewPort.Y;
         }
 
         private void UpdateViewport(double x)
