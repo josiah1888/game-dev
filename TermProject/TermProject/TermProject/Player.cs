@@ -138,6 +138,11 @@ namespace TermProject
                     HealthIcons[i].LevelObjects = levelObjects;
                     levelObjects.Add(HealthIcons[i]);
                 }
+
+                if (Health <= i)
+                {
+                    HealthIcons[i].Alive = false;
+                }
             }
             iconsAdded = true;
         }

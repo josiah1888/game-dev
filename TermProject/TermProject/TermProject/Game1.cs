@@ -21,7 +21,10 @@ namespace TermProject
         Background Background;
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
+        SoundEffect explosionSound;
         GamePlay GamePlay;
+
+        SpriteFont Font;
 
         Player Player
         {
@@ -60,6 +63,8 @@ namespace TermProject
             MapMaker = new MapMaker(this.Content, GetDeathAction());
             Background = new Background(this.Content);
             GamePlay = new GamePlay(MapMaker, Window);
+            Font = Content.Load<SpriteFont>("fonts\\font");
+            explosionSound = Content.Load<SoundEffect>("sounds\\explosion");
         }
 
         private Action<GameObject> GetDeathAction()
@@ -68,6 +73,7 @@ namespace TermProject
             {
                 Smoke.AddParticles(gameObject.Position.GetDrawablePosition(GamePlay.ViewPort));
                 Explosion.AddParticles(gameObject.Position.GetDrawablePosition(GamePlay.ViewPort));
+                explosionSound.Play();
             };
         }
 
@@ -122,7 +128,7 @@ namespace TermProject
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
                 .ThenBy(i => i is Tile)
-                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
+                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun)) // Player life icons
                 .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)
                 .ThenBy(i => i is Sun)

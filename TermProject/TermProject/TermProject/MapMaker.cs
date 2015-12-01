@@ -131,6 +131,11 @@ namespace TermProject
             return mapObjects;
         }
 
+        public List<GameObject> MakeSplashScreen(string asset)
+        {
+            return new List<GameObject>() { new GameObject(this.Content.Load<Texture2D>(asset), Vector2.Zero) };
+        }
+
         private Vector2 GetPosition(int x, int y)
         {
             return new Vector2(Tile.SIZE * y, Tile.SIZE * x);
