@@ -21,13 +21,6 @@ namespace TermProject
         Background Background;
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
-
-        //SpriteFont font;
-        //Vector2 instructionsDrawPoint = new Vector2(0.1f, 0.1f);
-        Rectangle viewportRect;
-
-        List<GameObject> LevelObjects;
-        List<GameObject> BackgroundObjects;
         GamePlay GamePlay;
 
         Player Player
@@ -119,8 +112,11 @@ namespace TermProject
             GraphicsDevice.Clear(Color.CornflowerBlue);
             SpriteBatch.Begin();
 
-            GamePlay.LevelObjects
-                .Union(Background.Clouds)
+            IEnumerable<GameObject> drawableObjects = GamePlay.GameState == TermProject.GamePlay.GameStates.Playing
+                ? GamePlay.LevelObjects.Union(Background.BackgroundObjects)
+                : GamePlay.LevelObjects;
+
+            drawableObjects
                 .Where(i => i.Rectangle.Intersects(GamePlay.ViewPort))
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)

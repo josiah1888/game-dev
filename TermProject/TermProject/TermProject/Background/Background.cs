@@ -8,26 +8,23 @@ namespace TermProject
 {
     public class Background
     {
-        public List<GameObject> Clouds = new List<GameObject>();
+        public List<GameObject> BackgroundObjects = new List<GameObject>();
         
-
         private const int MAX_CLOUDS = 20;
 
         public Background(ContentManager content)
         {
             for (int i = 0; i < MAX_CLOUDS; i++)
             {
-                Clouds.Add(new Cloud(content));
-               
+                BackgroundObjects.Add(new Cloud(content));
             }
 
-
+            BackgroundObjects.Add(new Hill(content));
         }
 
         public void Update()
         {
-            this.Clouds.ForEach(i => i.Update());
-         
+            this.BackgroundObjects.ForEach(i => i.Update());
         }
     }
 }

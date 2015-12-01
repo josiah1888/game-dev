@@ -10,15 +10,16 @@ namespace TermProject
 {
     public class Hill : GameObject
     {
-    public Hill(ContentManager content)
-            : base(content.Load<Texture2D>("sprites/lazyhill"), new Vector2(0, 40))
+        public Hill(ContentManager content)
+            : base(content.Load<Texture2D>("sprites/lazyhill"), GetRandomHillPosition())
         {
-            this.Velocity.X = 0f;
-            this.Velocity.Y = 0f;
+            this.Velocity = Vector2.Zero;
             this.ObeysGravity = false;
         }
 
-        
-
+        private static Vector2 GetRandomHillPosition()
+        {
+            return new Vector2(Rand.Next(-100, 0), Rand.Next(75, 150));
+        }
     }
 }
