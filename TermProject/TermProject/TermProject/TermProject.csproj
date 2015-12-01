@@ -123,7 +123,6 @@
     <None Include="maps\level2--intro" />
     <None Include="maps\level2" />
     <None Include="maps\level3--intro" />
-    <Compile Include="splash-screens\logo.cs" />
     <Compile Include="Timer.cs" />
     <None Include="maps\level-selection" />
     <None Include="maps\level1--intro" />

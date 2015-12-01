@@ -11,7 +11,8 @@ namespace TermProject
         public enum GameStates
         {
             Playing,
-            Transition
+            Transition,
+            SplashScreens
         }
 
         public GameStates GameState;
@@ -33,6 +34,36 @@ namespace TermProject
                 if (_LevelCreators == null)
                 {
                     _LevelCreators = new Queue<Action>();
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        // todo: add timer event for GameStates.SplashScreen
+
+                        LevelObjects = MapMaker.MakeSplashScreen("splash-screens/logo");
+                        /*
+                         * includes team name/logo, and team member names(Game designers and model designers)
+                        */
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.MakeSplashScreen("splash-screens/contributors");
+                        /*
+                         * includes pictures of each team member and his/her contributions such as team leader, game designer, model designer, etc
+                        */
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.MakeSplashScreen("splash-screens/splash-screen");
+                        /*
+                         * includes a title screen for the game and audio introduction for the game background
+                        */
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.MakeSplashScreen("splash-screens/menu");
+                        /*
+                         * includes a menu for how to play the game
+                        */
+                    });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level-selection");
