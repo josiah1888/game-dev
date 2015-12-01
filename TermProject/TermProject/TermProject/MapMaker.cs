@@ -29,7 +29,6 @@ namespace TermProject
                     _Legend.Add('s', GameObjectType.SodaGuy);
                     _Legend.Add('d', GameObjectType.Door);
                     _Legend.Add('h', GameObjectType.Hill);
-                    _Legend.Add('5', GameObjectType.Sun);
                 }
                 return _Legend;
             }
