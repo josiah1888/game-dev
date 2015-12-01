@@ -23,8 +23,8 @@ Content\sprites\emu-idle.xnb
 Content\sprites\emu-walk.xnb
 Content\sprites\bg-hill.xnb
 Content\sprites\lazyhill.xnb
-Content\sprites\sun.xnb
 Content\sounds\enemydeath.xnb
 Content\sounds\explosion.xnb
 Content\sounds\jump.xnb
 Content\fonts\font.xnb
+Content\sprites\sun.xnb
