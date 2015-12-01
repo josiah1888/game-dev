@@ -23,6 +23,8 @@ namespace TermProject
         ExplosionSmokeParticleSystem Smoke;
         GamePlay GamePlay;
 
+        SpriteFont Font;
+
         Player Player
         {
             get
@@ -60,6 +62,7 @@ namespace TermProject
             MapMaker = new MapMaker(this.Content, GetDeathAction());
             Background = new Background(this.Content);
             GamePlay = new GamePlay(MapMaker, Window);
+            Font = Content.Load<SpriteFont>("fonts\\font");
         }
 
         private Action<GameObject> GetDeathAction()
@@ -122,7 +125,7 @@ namespace TermProject
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
                 .ThenBy(i => i is Tile)
-                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
+                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun)) // Player life icons
                 .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)
                 .ThenBy(i => i is Sun)
