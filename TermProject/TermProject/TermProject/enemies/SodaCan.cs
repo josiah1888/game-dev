@@ -10,7 +10,7 @@ namespace TermProject
 {
     public class SodaCan : Enemy
     {
-        private float JumpHeight = -10;
+        public float JumpHeight = -10;
 
         private const float ACCERLATION = .05f;
         private const float FRICTION = .02f;
