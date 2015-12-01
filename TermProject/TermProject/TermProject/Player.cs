@@ -124,6 +124,9 @@ namespace TermProject
         {
             this.Health--;
             this.IsInvincible = true;
+
+            if (this.Health <= 0)
+                this.Alive = false;
         }
 
         private void UpdateHealthIcons(List<GameObject> levelObjects)
@@ -135,9 +138,6 @@ namespace TermProject
                     HealthIcons[i].LevelObjects = levelObjects;
                     levelObjects.Add(HealthIcons[i]);
                 }
-
-                if (Health <= i)
-                    HealthIcons[i].Alive = false;
             }
             iconsAdded = true;
         }

@@ -120,6 +120,7 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GamePlay.cs" />
     <Compile Include="MapMaker.cs" />
+    <None Include="maps\game-over" />
     <None Include="maps\level2--intro" />
     <None Include="maps\level2" />
     <None Include="maps\level3--intro" />

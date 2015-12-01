@@ -17,6 +17,8 @@ namespace TermProject
         public GameStates GameState;
         public Rectangle ViewPort;
         public static Vector2 vpCoords;
+        public string reserveMap;
+        bool isGameOver = false;
 
         public List<GameObject> LevelObjects;
         private MapMaker MapMaker;
@@ -36,21 +38,24 @@ namespace TermProject
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        reserveMap = "maps/level-selection";
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
-                        door.WinAction = LevelCreators.Dequeue();
+                        door.WinAction = LevelCreators.Peek();
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level1--intro");
+                        reserveMap = "maps/level1--intro";
                         this.GameState = GameStates.Transition;
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level1");
+                        reserveMap = "maps/level1";
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Dequeue();
+                        door.WinAction = LevelCreators.Peek();
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
@@ -60,45 +65,51 @@ namespace TermProject
                             .Where(i => i.Designator == 1)
                             .ToList()
                             .ForEach(i => i.Alive = false);
+                        reserveMap = "maps/level-selection";
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 2);
-                        door.WinAction = LevelCreators.Dequeue();
+                        door.WinAction = LevelCreators.Peek();
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level2--intro");
+                        reserveMap = "maps/level2--intro";
                         this.GameState = GameStates.Transition;
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level2");
+                        reserveMap = "maps/level2";
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Dequeue();
+                        door.WinAction = LevelCreators.Peek();
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        reserveMap = "maps/level-selection";
                         LevelObjects
                             .Where(i => i.Designator > 0 && i.Designator < 3)
                             .ToList()
                             .ForEach(i => i.Alive = false);
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 3);
-                        door.WinAction = LevelCreators.Dequeue();
+                        door.WinAction = LevelCreators.Peek();
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level3--intro");
+                        reserveMap = "maps/level3--intro";
                         this.GameState = GameStates.Transition;
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
                         LevelObjects = MapMaker.ReadMap("maps/level3");
+                        reserveMap = "maps/level3";
                         Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Dequeue();
+                        door.WinAction = LevelCreators.Peek();
                         UpdateViewport(0);
                     });
                     _LevelCreators.Enqueue(() =>
@@ -122,10 +133,40 @@ namespace TermProject
         {
             UpdateCamera();
 
+            for (int i = 0; i < LevelObjects.Count; i++)
+            {
+                if (LevelObjects[i] is Door)
+                    if (((Door)LevelObjects[i]).IsOpen && Timer.IsTimeYet(this, elapsed, Door.DOOR_DELAY_TIME))
+                        LevelCreators.Dequeue();
+            }
+
+            Player player = (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
+
             if (this.GameState == GameStates.Transition && Timer.IsTimeYet(this, elapsed, TRANSITION_DELAY_TIME))
             {
                 this.GameState = GameStates.Playing;
-                this.LevelCreators.Dequeue()();
+                LevelCreators.Dequeue()();
+            }
+
+            if (!player.Alive || isGameOver)
+            {
+                if (!isGameOver)
+                {
+                    isGameOver = true;
+                    LevelObjects = MapMaker.ReadMap("maps/game-over");
+                    UpdateViewport(0);
+                }
+
+                if (Timer.IsTimeYet(this, elapsed, TRANSITION_DELAY_TIME))
+                {
+                    LevelObjects = MapMaker.ReadMap(reserveMap);
+                    Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                    door.WinAction = LevelCreators.Peek();
+
+                    player.Health = Player.MAX_HEALTH;
+                    player.Alive = true;
+                    isGameOver = false;
+                }
             }
         }
 
