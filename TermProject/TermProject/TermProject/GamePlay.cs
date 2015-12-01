@@ -79,6 +79,30 @@ namespace TermProject
                     });
                     _LevelCreators.Enqueue(() =>
                     {
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 3)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 3);
+                        door.WinAction = LevelCreators.Dequeue();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.ReadMap("maps/level3--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelObjects = MapMaker.ReadMap("maps/level3");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Dequeue();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
 
                     });
                 }

@@ -121,6 +121,8 @@
     <Compile Include="GamePlay.cs" />
     <Compile Include="MapMaker.cs" />
     <None Include="maps\level2--intro" />
+    <None Include="maps\level2" />
+    <None Include="maps\level3--intro" />
     <Compile Include="Timer.cs" />
     <None Include="maps\level-selection" />
     <None Include="maps\level1--intro" />
@@ -141,7 +143,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <None Include="maps\level2" />
+    <None Include="maps\level3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TermProjectContent\TermProjectContent.contentproj">
