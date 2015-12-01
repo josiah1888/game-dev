@@ -20,6 +20,7 @@ namespace TermProject
             }
 
             BackgroundObjects.Add(new Hill(content));
+            BackgroundObjects.Add(new Sun(content));
         }
 
         public void Update()

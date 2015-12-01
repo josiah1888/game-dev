@@ -10,19 +10,22 @@ namespace TermProject
 {
     public class Sun : GameObject
     {
+        private const float SUN_POSITION_X = 150;
+        private const float SUN_POSITION_Y = 100;
+
         public Sun(ContentManager content)
-            : base(content.Load<Texture2D>("sprites/tempsun"), new Vector2(0, 0))
+            : base(content.Load<Texture2D>("sprites/tempsun"), new Vector2(SUN_POSITION_X, SUN_POSITION_Y))
         {
-            this.Velocity.X = 0f;
-            this.Velocity.Y = 0f;
+            this.Velocity = Vector2.Zero;
             this.ObeysGravity = false;
         }
 
-        public void UpdateSun()
+        public override void Update()
         {
-            this.Position.X = GamePlay.vpCoords.X - 500;
-            this.Position.Y = GamePlay.vpCoords.Y - 700;
-        }
+            this.Position.X = GamePlay.vpCoords.X + SUN_POSITION_X;
+            this.Position.Y = GamePlay.vpCoords.Y + SUN_POSITION_Y;
 
+            base.Update();
+        }
     }
 }
