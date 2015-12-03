@@ -18,14 +18,12 @@ namespace TermProject
         {
             this.Velocity = Vector2.Zero;
             this.ObeysGravity = false;
+            this.AlwaysDraw = true;
         }
 
-        public override void Update()
+        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
-            this.Position.X = GamePlay.vpCoords.X + SUN_POSITION_X;
-            this.Position.Y = GamePlay.vpCoords.Y + SUN_POSITION_Y;
-
-            base.Update();
+            batch.Draw(this.Sprite, new Vector2(SUN_POSITION_X, SUN_POSITION_Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
         }
     }
 }

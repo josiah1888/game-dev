@@ -126,7 +126,7 @@ namespace TermProject
                 : GamePlay.LevelObjects;
 
             drawableObjects
-                .Where(i => i.Rectangle.Intersects(GamePlay.ViewPort))
+                .Where(i => i.Rectangle.Intersects(GamePlay.ViewPort) || i.AlwaysDraw)
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)

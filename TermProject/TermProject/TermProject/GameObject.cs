@@ -22,6 +22,7 @@ namespace TermProject
         public Vector2 Center;
         public Vector2 Velocity;
         public Action<GameObject> DeathAction = (GameObject gameObject) => { };
+        public bool AlwaysDraw = false;
 
         private bool _Alive = true;
         public bool Alive

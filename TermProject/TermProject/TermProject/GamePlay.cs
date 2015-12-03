@@ -17,7 +17,6 @@ namespace TermProject
 
         public GameStates GameState;
         public Rectangle ViewPort;
-        public static Vector2 vpCoords;
         bool isGameOver = false;
 
         public List<GameObject> LevelObjects;
@@ -197,20 +196,20 @@ namespace TermProject
 
                 for (int i = 0; i < Player.MAX_HEALTH; i++)
                 {
+                    // todo refactor into PlayerLife class
                     player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
                 }
             }
             else if (distancePlayerIsAhead < this.ViewPort.Width * (2.0 / 5.0))
             {
-                UpdateViewport(this.ViewPort.X - (distancePlayerIsAhead / CAMERA_SCROLL_SMOOTHNESS));
+                UpdateViewport(this.ViewPort.X - ((this.ViewPort.Width - distancePlayerIsAhead) / CAMERA_SCROLL_SMOOTHNESS));
 
                 for (int i = 0; i < Player.MAX_HEALTH; i++)
                 {
+                    // todo refactor into PlayerLife class
                     player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
                 }
             }
-            vpCoords.X = this.ViewPort.X;
-            vpCoords.Y = this.ViewPort.Y;
         }
 
         private void UpdateViewport(double x)
