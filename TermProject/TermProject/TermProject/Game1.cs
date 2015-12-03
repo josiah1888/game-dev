@@ -127,8 +127,12 @@ namespace TermProject
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
+                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
+                    /*
+                     * Player life icons 
+                     * todo: refactor into its own class
+                     */
                 .ThenBy(i => i is Tile)
-                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun)) // Player life icons
                 .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)
                 .ThenBy(i => i is Sun)
