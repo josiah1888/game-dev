@@ -11,7 +11,7 @@ namespace TermProject
     public class SodaGuy : Enemy
     {
         public ContentManager Content;
-        private const int IDLE_TIME = 2000;
+        private const int IDLE_TIME = 1000;
         private const int ATTACK_TIME = 1000;
 
         public SodaGuy(ContentManager content, Vector2 position)
