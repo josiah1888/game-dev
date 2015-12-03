@@ -21,10 +21,11 @@ namespace TermProject
         Background Background;
         ExplosionParticleSystem Explosion;
         ExplosionSmokeParticleSystem Smoke;
-        SoundEffect explosionSound;
+        SoundEffect ExplosionSound;
         GamePlay GamePlay;
 
-        SpriteFont Font;
+        Song BackgroundMusic;
+
 
         Player Player
         {
@@ -63,8 +64,11 @@ namespace TermProject
             MapMaker = new MapMaker(this.Content, GetDeathAction());
             Background = new Background(this.Content);
             GamePlay = new GamePlay(MapMaker, Window);
-            Font = Content.Load<SpriteFont>("fonts\\font");
-            explosionSound = Content.Load<SoundEffect>("sounds\\explosion");
+            ExplosionSound = Content.Load<SoundEffect>("sounds/explosion");
+            BackgroundMusic = Content.Load<Song>("sounds/groove");
+
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(BackgroundMusic);
         }
 
         private Action<GameObject> GetDeathAction()
@@ -73,7 +77,7 @@ namespace TermProject
             {
                 Smoke.AddParticles(gameObject.Position.GetDrawablePosition(GamePlay.ViewPort));
                 Explosion.AddParticles(gameObject.Position.GetDrawablePosition(GamePlay.ViewPort));
-                explosionSound.Play();
+                ExplosionSound.Play();
             };
         }
 
