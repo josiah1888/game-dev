@@ -47,12 +47,25 @@ namespace TermProject
 
                     else if (Emu.State == EnemyState.Attack)
                     {
-                        if (Emu.Direction == Directions.Left)
-                            Emu.Velocity.X = MAX_SPEED * -1;
-                        else if (Emu.Direction == Directions.Right)
-                            Emu.Velocity.X = MAX_SPEED;
+                        if (!Emu.Target.IsOnGround())
+                        {
+                            if (Emu.Position.X > Emu.Target.Position.X - 10 && Emu.Direction == Directions.Right)
+                                Emu.Velocity.X = MAX_SPEED * -1;
+                            else if (Emu.Position.X < Emu.Target.Position.X + 10 && Emu.Direction == Directions.Left)
+                                Emu.Velocity.X = MAX_SPEED;
+                            else
+                                Emu.Velocity.X = 0;
+                        }
+
                         else
-                            Emu.Velocity.X = 0;
+                        {
+                            if (Emu.Direction == Directions.Left)
+                                Emu.Velocity.X = MAX_SPEED * -1;
+                            else if (Emu.Direction == Directions.Right)
+                                Emu.Velocity.X = MAX_SPEED;
+                            else
+                                Emu.Velocity.X = 0;
+                        }
                     }
 
                     if (Emu.Velocity.Y > 0)

@@ -66,7 +66,6 @@ namespace TermProject
             GamePlay = new GamePlay(MapMaker, Window);
             ExplosionSound = Content.Load<SoundEffect>("sounds/explosion");
             BackgroundMusic = Content.Load<Song>("sounds/groove");
-
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(BackgroundMusic);
         }

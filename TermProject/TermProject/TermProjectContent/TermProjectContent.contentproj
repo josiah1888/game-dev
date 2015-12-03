@@ -161,11 +161,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sounds\enemydeath.wav">
-      <Name>enemydeath</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
     <Compile Include="sounds\explosion.wav">
       <Name>explosion</Name>
       <Importer>WavImporter</Importer>
