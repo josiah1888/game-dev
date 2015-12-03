@@ -7,6 +7,8 @@ namespace TermProject
 {
     public static class Timer
     {
+        // todo: can't be a static class, double binding to the same object is happening
+
         private static Dictionary<object, double> Times = new Dictionary<object, double>();
 
         /// <summary>
