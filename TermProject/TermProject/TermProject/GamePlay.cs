@@ -141,6 +141,168 @@ namespace TermProject
                     });
                     _LevelCreators.Enqueue(() =>
                     {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 4)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 4);
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level4--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level4");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 5)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 5);
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level5--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level5");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 6)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 6);
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level6--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level6");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 7)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 7);
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level7--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level7");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 8)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 8);
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level8--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level8");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
+                        LevelObjects
+                            .Where(i => i.Designator > 0 && i.Designator < 9)
+                            .ToList()
+                            .ForEach(i => i.Alive = false);
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 9);
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level9--intro");
+                        this.GameState = GameStates.Transition;
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        LevelCreators.Dequeue();
+                        LevelObjects = MapMaker.ReadMap("maps/level9");
+                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
+                        door.WinAction = LevelCreators.Skip(1).First();
+                        UpdateViewport(0);
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
 
                     });
                 }
