@@ -104,9 +104,12 @@ namespace TermProject
 
         public virtual void Update()
         {
-            this.Position.X += this.Velocity.X;
-            this.Position.Y += this.Velocity.Y;
-            ApplyGravity();
+            if (Alive)
+            {
+                this.Position.X += this.Velocity.X;
+                this.Position.Y += this.Velocity.Y;
+                ApplyGravity();
+            }
         }
 
         public void Rotate(float rotation = .05f)

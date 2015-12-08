@@ -19,13 +19,27 @@ namespace TermProject
         private float Speed = MAX_SPEED;
 
         public SodaCan(SodaGuy sodaGuy)
-            : base(sodaGuy.Content.Load<Texture2D>("sprites/can"), sodaGuy.Position + sodaGuy.Center, 1, 1, SodaCan.Ai)
+            : base(sodaGuy.SodaCanSprite, sodaGuy.Position + sodaGuy.Center, 1, 1, SodaCan.Ai)
         {
-            this.AttackSprite = this.IdleSprite = sodaGuy.Content.Load<Texture2D>("sprites/can");
-            this.Velocity.Y = JumpHeight;
-            this.Direction = sodaGuy.Direction;
-            this.LevelObjects = sodaGuy.LevelObjects;
-            sodaGuy.LevelObjects.Add(this);
+            SodaCan recycledCan = (SodaCan)sodaGuy.LevelObjects.FirstOrDefault(i => i is SodaCan && !i.Alive) ?? this;
+
+            if (sodaGuy.LevelObjects.Any(i => i is SodaCan && !i.Alive))
+            {
+
+            }
+
+            recycledCan.Position = sodaGuy.Position + sodaGuy.Center;
+            recycledCan.Alive = true;
+            recycledCan.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
+            recycledCan.Velocity.Y = JumpHeight;
+            recycledCan.Direction = sodaGuy.Direction;
+            recycledCan.LevelObjects = sodaGuy.LevelObjects;
+            recycledCan.Speed = MAX_SPEED;
+
+            if (!sodaGuy.LevelObjects.Contains(recycledCan))
+            {
+                sodaGuy.LevelObjects.Add(recycledCan);
+            }
         }
 
         private static Action<Enemy, double> Ai
@@ -69,7 +83,7 @@ namespace TermProject
                     }
                     else
                     {
-                        ((SodaCan)sodaCan).Rotate(.1f + (.1f * -((SodaCan)sodaCan).JumpHeight));                    
+                        ((SodaCan)sodaCan).Rotate(.1f + (.1f * -((SodaCan)sodaCan).JumpHeight));
                     }
                 };
             }

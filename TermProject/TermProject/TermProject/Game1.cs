@@ -126,7 +126,7 @@ namespace TermProject
                 : GamePlay.LevelObjects;
 
             drawableObjects
-                .Where(i => i.Rectangle.Intersects(GamePlay.ViewPort) || i.AlwaysDraw)
+                .Where(i => i.Alive && (i.Rectangle.Intersects(GamePlay.ViewPort) || i.AlwaysDraw))
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
@@ -141,6 +141,11 @@ namespace TermProject
                 .ThenBy(i => i is Sun)
                 .ToList().ForEach(i =>
             {
+                if (i is SodaCan)
+                {
+
+                }
+
                 i.Draw(SpriteBatch, i.Position.GetDrawablePosition(GamePlay.ViewPort), SpriteEffects.None);
             });
 
