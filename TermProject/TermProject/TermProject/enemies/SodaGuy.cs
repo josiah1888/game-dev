@@ -25,6 +25,19 @@ namespace TermProject
             this.SodaCanSprite = content.Load<Texture2D>("sprites/can");
         }
 
+        public static List<Enemy> CreateSodaGuysWithCans(ContentManager content, Vector2 position, int numberOfCans = 4)
+        {
+            List<Enemy> enemies = new List<Enemy>();
+            SodaGuy sodaGuy = new SodaGuy(content, position);
+            enemies.Add(sodaGuy);
+            for (int i = 0; i < numberOfCans; i++)
+            {
+                enemies.Add(new SodaCan(sodaGuy));
+            }
+
+            return enemies;
+        }
+
         private static Action<Enemy, double> Ai
         {
             get
@@ -51,7 +64,8 @@ namespace TermProject
             if (Timer.IsTimeYet(sodaGuy.AiLock, elapsed, IDLE_TIME))
             {
                 sodaGuy.State = EnemyState.Attack;
-                SodaCan can = new SodaCan(sodaGuy);
+                SodaCan sodaCan = (SodaCan)sodaGuy.LevelObjects.First(i => i is SodaCan && !i.Alive);
+                sodaCan.Recycle(sodaGuy);
             }
         }
 

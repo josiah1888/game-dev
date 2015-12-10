@@ -17,29 +17,44 @@ namespace TermProject
         private const float BOUNCE = 1.3f;
 
         private float Speed = MAX_SPEED;
+        private SodaGuy SodaGuy;
+
+        public override List<GameObject> LevelObjects
+        {
+            get
+            {
+                return this.SodaGuy.LevelObjects;
+            }
+        }
 
         public SodaCan(SodaGuy sodaGuy)
             : base(sodaGuy.SodaCanSprite, sodaGuy.Position + sodaGuy.Center, 1, 1, SodaCan.Ai)
         {
-            SodaCan recycledCan = (SodaCan)sodaGuy.LevelObjects.FirstOrDefault(i => i is SodaCan && !i.Alive) ?? this;
+            // todo: Debug to see if this works
+            //SodaCan recycledCan = (SodaCan)sodaGuy.LevelObjects.FirstOrDefault(i => i is SodaCan && !i.Alive) ?? this;
+            this.Position = sodaGuy.Position + sodaGuy.Center;
+            this.Alive = false;
+            this.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
+            this.Velocity.Y = JumpHeight;
+            this.Direction = sodaGuy.Direction;
+            this.Speed = MAX_SPEED;
+            this.SodaGuy = sodaGuy;
 
-            if (sodaGuy.LevelObjects.Any(i => i is SodaCan && !i.Alive))
-            {
+            //if (!sodaGuy.LevelObjects.Contains(recycledCan))
+            //{
+            //    sodaGuy.LevelObjects.Add(recycledCan);
+            //}
+        }
 
-            }
-
-            recycledCan.Position = sodaGuy.Position + sodaGuy.Center;
-            recycledCan.Alive = true;
-            recycledCan.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
-            recycledCan.Velocity.Y = JumpHeight;
-            recycledCan.Direction = sodaGuy.Direction;
-            recycledCan.LevelObjects = sodaGuy.LevelObjects;
-            recycledCan.Speed = MAX_SPEED;
-
-            if (!sodaGuy.LevelObjects.Contains(recycledCan))
-            {
-                sodaGuy.LevelObjects.Add(recycledCan);
-            }
+        public void Recycle(SodaGuy sodaGuy)
+        {
+            this.Position = sodaGuy.Position + sodaGuy.Center;
+            this.Alive = true;
+            this.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
+            this.Velocity.Y = JumpHeight;
+            this.Direction = sodaGuy.Direction;
+            this.Speed = MAX_SPEED;
+            this.SodaGuy = sodaGuy;
         }
 
         private static Action<Enemy, double> Ai

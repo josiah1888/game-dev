@@ -42,7 +42,9 @@ namespace TermProject
         }
         public float Scale = 1.0f;
         public int Designator;
-        public List<GameObject> LevelObjects;
+        public virtual List<GameObject> LevelObjects
+        { get; set; }
+
 
         [Flags]
         public enum Directions
@@ -239,7 +241,7 @@ namespace TermProject
 
         protected void CheckBoundsCollisions()
         {
-            if(this.Position.X < 0)
+            if (this.Position.X < 0)
             {
                 this.Velocity.X = Math.Abs(this.Velocity.X);
                 this.Position.X = 0;

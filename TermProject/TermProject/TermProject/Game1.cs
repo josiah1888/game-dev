@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TermProject.Particles;
 using System.Timers;
+using System.Threading.Tasks;
 
 namespace TermProject
 {
@@ -103,10 +104,16 @@ namespace TermProject
         #region Update
         private void Update_AnimatedObjects(double elapsed)
         {
+            const int UPDATE_FIELD_FACTOR = 100;
+            Rectangle updateBounds = new Rectangle(GamePlay.ViewPort.X - UPDATE_FIELD_FACTOR / 2, GamePlay.ViewPort.Y, GamePlay.ViewPort.Width + UPDATE_FIELD_FACTOR, GamePlay.ViewPort.Height);
+
+            List<AnimatedObject> temp =
             GamePlay.LevelObjects
-                .Where(i => i.Alive && i is AnimatedObject && !(i is Player))
-                .Select(i => (AnimatedObject)i).ToList()
-                .ForEach(i => i.Update(GamePlay.LevelObjects, elapsed));
+                .Where(i => i.Alive && i.Rectangle.Intersects(updateBounds) && i is AnimatedObject && !(i is Player))
+                .Select(i => (AnimatedObject)i).ToList();
+
+            Parallel.ForEach(temp, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, i => i.Update(GamePlay.LevelObjects, elapsed));
+            //    .ForEach(i => i.Update(GamePlay.LevelObjects, elapsed));
         }
 
         private void Update_Player(double elapsed)
@@ -131,10 +138,10 @@ namespace TermProject
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
                 .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
-                    /*
-                     * Player life icons 
-                     * todo: refactor into its own class
-                     */
+                /*
+                 * Player life icons 
+                 * todo: refactor into its own class
+                 */
                 .ThenBy(i => i is Tile)
                 .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)
