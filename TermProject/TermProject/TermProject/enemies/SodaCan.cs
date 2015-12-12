@@ -10,13 +10,17 @@ namespace TermProject
 {
     public class SodaCan : Enemy
     {
-        public float JumpHeight = -10;
+        public const float MAX_JUMP_HEIGHT = -10;
+        public const float DEATH_TOLERANCE = .50f;
+        public const double DEATH_DELAY = 1500;
+
+        public float JumpHeight;
+        public Timer Timer;
 
         private const float ACCERLATION = .05f;
-        private const float FRICTION = .02f;
-        private const float BOUNCE = 1.3f;
+        private const float FRICTION = .12f;
+        private const float BOUNCE = 1.6f;
 
-        private float Speed = MAX_SPEED;
         private SodaGuy SodaGuy;
 
         public override List<GameObject> LevelObjects
@@ -30,31 +34,25 @@ namespace TermProject
         public SodaCan(SodaGuy sodaGuy)
             : base(sodaGuy.SodaCanSprite, sodaGuy.Position + sodaGuy.Center, 1, 1, SodaCan.Ai)
         {
-            // todo: Debug to see if this works
-            //SodaCan recycledCan = (SodaCan)sodaGuy.LevelObjects.FirstOrDefault(i => i is SodaCan && !i.Alive) ?? this;
-            this.Position = sodaGuy.Position + sodaGuy.Center;
-            this.Alive = false;
-            this.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
-            this.Velocity.Y = JumpHeight;
-            this.Direction = sodaGuy.Direction;
-            this.Speed = MAX_SPEED;
-            this.SodaGuy = sodaGuy;
-
-            //if (!sodaGuy.LevelObjects.Contains(recycledCan))
-            //{
-            //    sodaGuy.LevelObjects.Add(recycledCan);
-            //}
+            initilize(sodaGuy, false);
         }
 
         public void Recycle(SodaGuy sodaGuy)
         {
+            initilize(sodaGuy, true);
+        }
+
+        private void initilize(SodaGuy sodaGuy, bool isAlive)
+        {
             this.Position = sodaGuy.Position + sodaGuy.Center;
-            this.Alive = true;
+            this.Alive = isAlive;
             this.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
-            this.Velocity.Y = JumpHeight;
             this.Direction = sodaGuy.Direction;
-            this.Speed = MAX_SPEED;
             this.SodaGuy = sodaGuy;
+            this.Velocity = new Vector2(Enemy.MAX_SPEED * sodaGuy.Direction.GetLateralDirectionSign(), MAX_JUMP_HEIGHT);
+            this.JumpHeight = MAX_JUMP_HEIGHT;
+            this.DeathAction = (GameObject gameObject) => { };
+            this.Timer = new Timer();
         }
 
         private static Action<Enemy, double> Ai
@@ -65,40 +63,29 @@ namespace TermProject
                 {
                     SodaCan sodaCan = (SodaCan)sodaCanEnemy;
 
-                    if (sodaCan.IsOnGround())
+                    if (sodaCan.IsOnGround() && sodaCan.Velocity != Vector2.Zero)
                     {
-                        if (sodaCan.JumpHeight < 0)
+                        sodaCan.JumpHeight = (int)(sodaCan.JumpHeight / SodaCan.BOUNCE);
+                        sodaCan.Velocity.Y = sodaCan.JumpHeight;
+                        sodaCan.Velocity.X -= FRICTION * sodaCan.Direction.GetLateralDirectionSign();
+                    }
+
+                    if (Math.Abs(sodaCan.Velocity.X) <= SodaCan.DEATH_TOLERANCE)
+                    {
+                        sodaCan.Velocity = Vector2.Zero;
+                        if (sodaCan.Timer.IsTimeYet(elapsed, SodaCan.DEATH_DELAY))
                         {
-                            sodaCan.JumpHeight = (int)Math.Ceiling(sodaCan.JumpHeight / BOUNCE);
-                            sodaCan.Velocity.Y = (sodaCan).JumpHeight;
+                            sodaCan.Alive = false;
                         }
-
-                        if (sodaCan.Velocity.Y == MAX_GRAVITY && sodaCan.JumpHeight > -10)
-                        {
-                            sodaCan.JumpHeight -= ACCERLATION;
-                        }
-
-                        sodaCan.Speed -= FRICTION;
                     }
 
-                    if (sodaCan.Speed <= 0)
+                    if (sodaCan.Velocity.Y == 0)
                     {
-                        sodaCan.Alive = false;
-                    }
-
-                    if (sodaCan.Alive)
-                    {
-                        sodaCan.Velocity.X = sodaCan.Speed * sodaCan.Direction.GetLateralDirectionSign();
-                    }
-
-                    if (sodaCan.IsOnGround() && ((SodaCan)sodaCan).JumpHeight == 0)
-                    {
-                        ((SodaCan)sodaCan).Rotation = 0;
-                        ((SodaCan)sodaCan).Speed -= FRICTION;
+                        sodaCan.Rotation = 0;
                     }
                     else
                     {
-                        ((SodaCan)sodaCan).Rotate(.1f + (.1f * -((SodaCan)sodaCan).JumpHeight));
+                        sodaCan.Rotate(.1f + (.1f * -sodaCan.JumpHeight));
                     }
                 };
             }

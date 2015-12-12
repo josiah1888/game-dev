@@ -22,8 +22,11 @@ namespace TermProject
         public List<GameObject> LevelObjects;
         private MapMaker MapMaker;
         private GameWindow Window;
+        private Timer Timer = new Timer();
+        private Action CurrentLevel;
 
         private const double TRANSITION_DELAY_TIME = 1800;
+        private const double SPLASH_DELAY_TIME = 2500;
         private const float CAMERA_SCROLL_SMOOTHNESS = 120f;
 
         private Queue<Action> _LevelCreators;
@@ -34,280 +37,129 @@ namespace TermProject
                 if (_LevelCreators == null)
                 {
                     _LevelCreators = new Queue<Action>();
-                    //_LevelCreators.Enqueue(() =>
-                    //{
-                    //    // todo: add timer event for GameStates.SplashScreen
-
-                    //    LevelObjects = MapMaker.MakeSplashScreen("splash-screens/logo");
-                    //    /*
-                    //     * includes team name/logo, and team member names(Game designers and model designers)
-                    //    */
-                    //});
-                    //_LevelCreators.Enqueue(() =>
-                    //{
-                    //    LevelObjects = MapMaker.MakeSplashScreen("splash-screens/contributors");
-                    //    /*
-                    //     * includes pictures of each team member and his/her contributions such as team leader, game designer, model designer, etc
-                    //    */
-                    //});
-                    //_LevelCreators.Enqueue(() =>
-                    //{
-                    //    LevelObjects = MapMaker.MakeSplashScreen("splash-screens/splash-screen");
-                    //    /*
-                    //     * includes a title screen for the game and audio introduction for the game background
-                    //    */
-                    //});
-                    //_LevelCreators.Enqueue(() =>
-                    //{
-                    //    LevelObjects = MapMaker.MakeSplashScreen("splash-screens/menu");
-                    //    /*
-                    //     * includes a menu for how to play the game
-                    //    */
-                    //});
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 1);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartSplashScreen("splash-screens/logo");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level8");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartSplashScreen("splash-screens/contributors");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level1--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartSplashScreen("splash-screens/splash-screen");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level1");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
+                        StartSplashScreen("splash-screens/menu");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator == 1)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 2);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 1);
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level2--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level1--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level2");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level1");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 3)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 3);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 2, GetKillLevelSelectionObjects(2));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level3--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level2--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level3");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level2");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 4)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 4);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 3, GetKillLevelSelectionObjects(3));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level4--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level3--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level4");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level3");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 5)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 5);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 4, GetKillLevelSelectionObjects(4));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level5--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level4--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level5");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level4");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 6)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 6);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 5, GetKillLevelSelectionObjects(5));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level6--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level5--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level6");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level5");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 7)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 7);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 6, GetKillLevelSelectionObjects(6));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level7--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level6--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level7");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level6");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 8)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 8);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 7, GetKillLevelSelectionObjects(7));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level8--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level7--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level8");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level7");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level-selection");
-                        LevelObjects
-                            .Where(i => i.Designator > 0 && i.Designator < 9)
-                            .ToList()
-                            .ForEach(i => i.Alive = false);
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == 9);
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level-selection", 8, GetKillLevelSelectionObjects(8));
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level9--intro");
-                        this.GameState = GameStates.Transition;
-                        UpdateViewport(0);
+                        StartTransition("maps/level8--intro");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        LevelCreators.Dequeue();
-                        LevelObjects = MapMaker.ReadMap("maps/level9");
-                        Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door));
-                        door.WinAction = LevelCreators.Skip(1).First();
-                        UpdateViewport(0);
+                        StartLevel("maps/level8");
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        StartLevel("maps/level-selection", 9, GetKillLevelSelectionObjects(9));
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        StartTransition("maps/level9--intro");
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        StartLevel("maps/level9");
                     });
                     _LevelCreators.Enqueue(() =>
                     {
@@ -316,6 +168,47 @@ namespace TermProject
                 }
                 return _LevelCreators;
             }
+        }
+
+        private Action GetKillLevelSelectionObjects(int maxDesignator)
+        {
+            return () => LevelObjects.Where(i => i.Designator > 0 && i.Designator < maxDesignator).ToList().ForEach(i => i.Alive = false);
+        }
+
+        private void StartSplashScreen(string splashScreen)
+        {
+            this.GameState = GameStates.SplashScreens;
+            this.LevelObjects = MapMaker.MakeSplashScreen(splashScreen);
+            this.LevelCreators.Dequeue();
+        }
+
+        private void StartLevel(string map, int doorDesignator = 0, Action levelSetup = null)
+        {
+            this.LevelCreators.Dequeue();
+
+            this.CurrentLevel = () =>
+            {
+                this.GameState = GameStates.Playing;
+                this.LevelObjects = MapMaker.ReadMap(map);
+                Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == doorDesignator);
+                door.WinAction = this.LevelCreators.Peek();
+                UpdateViewport(0);
+
+                if (levelSetup != null)
+                {
+                    levelSetup();
+                }
+            };
+
+            this.CurrentLevel();
+        }
+
+        private void StartTransition(string map)
+        {
+            this.GameState = GameStates.Transition;
+            this.LevelObjects = MapMaker.ReadMap(map);
+            this.LevelCreators.Dequeue();
+            UpdateViewport(0);
         }
 
         public GamePlay(MapMaker mapMaker, GameWindow window)
@@ -329,14 +222,23 @@ namespace TermProject
         public void Update(double elapsed)
         {
             UpdateCamera();
-
-            Player player = (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
-
-            if (this.GameState == GameStates.Transition && Timer.IsTimeYet(this, elapsed, TRANSITION_DELAY_TIME))
+            switch (this.GameState)
             {
-                this.GameState = GameStates.Playing;
-                LevelCreators.Skip(1).First()();
+                case GameStates.Playing:
+                    Update_Playing(elapsed);
+                    break;
+                case GameStates.Transition:
+                    Update_Transition(elapsed);
+                    break;
+                case GameStates.SplashScreens:
+                    Update_SplashScreens(elapsed);
+                    break;
             }
+        }
+
+        private void Update_Playing(double elapsed)
+        {
+            Player player = (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
 
             if (!player.Alive || isGameOver)
             {
@@ -347,11 +249,28 @@ namespace TermProject
                     UpdateViewport(0);
                 }
 
-                if (Timer.IsTimeYet(this, elapsed, TRANSITION_DELAY_TIME))
+                if (this.Timer.IsTimeYet(elapsed, TRANSITION_DELAY_TIME))
                 {
-                    LevelCreators.Peek()();
+                    this.CurrentLevel();
                     isGameOver = false;
                 }
+            }
+        }
+
+        private void Update_Transition(double elapsed)
+        {
+            if (this.Timer.IsTimeYet(elapsed, TRANSITION_DELAY_TIME))
+            {
+                this.GameState = GameStates.Playing;
+                this.LevelCreators.Peek()();
+            }
+        }
+
+        private void Update_SplashScreens(double elapsed)
+        {
+            if (this.Timer.IsTimeYet(elapsed, SPLASH_DELAY_TIME))
+            {
+                this.LevelCreators.Peek()();
             }
         }
 

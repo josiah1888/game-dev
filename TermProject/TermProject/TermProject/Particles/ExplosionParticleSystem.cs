@@ -36,7 +36,7 @@ namespace TermProject
                 maxScale = .6f;
 
                 minNumParticles = 5;
-                maxNumParticles = 10;
+                maxNumParticles = 25;
 
                 minRotationSpeed = -MathHelper.PiOver4;
                 maxRotationSpeed = MathHelper.PiOver4;

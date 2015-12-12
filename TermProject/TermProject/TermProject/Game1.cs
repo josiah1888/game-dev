@@ -92,7 +92,12 @@ namespace TermProject
 
             if (GamePlay.LevelObjects.Any())
             {
-                Update_AnimatedObjects(elapsed);
+
+                const int UPDATE_FIELD_FACTOR = 100;
+                Rectangle updateBounds = new Rectangle(GamePlay.ViewPort.X - UPDATE_FIELD_FACTOR / 2, GamePlay.ViewPort.Y, GamePlay.ViewPort.Width + UPDATE_FIELD_FACTOR, GamePlay.ViewPort.Height);
+
+                Update_ThreadSafe(elapsed, updateBounds);
+                Update_NonThreadSafe(elapsed, updateBounds);
                 Update_Player(elapsed);
             }
 
@@ -102,18 +107,22 @@ namespace TermProject
         }
 
         #region Update
-        private void Update_AnimatedObjects(double elapsed)
+        private void Update_ThreadSafe(double elapsed, Rectangle updateBounds)
         {
-            const int UPDATE_FIELD_FACTOR = 100;
-            Rectangle updateBounds = new Rectangle(GamePlay.ViewPort.X - UPDATE_FIELD_FACTOR / 2, GamePlay.ViewPort.Y, GamePlay.ViewPort.Width + UPDATE_FIELD_FACTOR, GamePlay.ViewPort.Height);
-
-            List<AnimatedObject> temp =
+            List<AnimatedObject> gameObjects =
             GamePlay.LevelObjects
-                .Where(i => i.Alive && i.Rectangle.Intersects(updateBounds) && i is AnimatedObject && !(i is Player))
+                .Where(i => i.IsThreadSafe && i.Alive && i.Rectangle.Intersects(updateBounds) && i is AnimatedObject && !(i is Player))
                 .Select(i => (AnimatedObject)i).ToList();
 
-            Parallel.ForEach(temp, new ParallelOptions() { MaxDegreeOfParallelism = 1 }, i => i.Update(GamePlay.LevelObjects, elapsed));
-            //    .ForEach(i => i.Update(GamePlay.LevelObjects, elapsed));
+            Parallel.ForEach(gameObjects, i => i.Update(GamePlay.LevelObjects, elapsed));
+        }
+
+        private void Update_NonThreadSafe(double elapsed, Rectangle updateBounds)
+        {
+            GamePlay.LevelObjects
+                .Where(i => !i.IsThreadSafe && i.Alive && i.Rectangle.Intersects(updateBounds) && i is AnimatedObject && !(i is Player))
+                .Select(i => (AnimatedObject)i).ToList()
+                .ForEach(i => i.Update(GamePlay.LevelObjects, elapsed));
         }
 
         private void Update_Player(double elapsed)
@@ -148,11 +157,6 @@ namespace TermProject
                 .ThenBy(i => i is Sun)
                 .ToList().ForEach(i =>
             {
-                if (i is SodaCan)
-                {
-
-                }
-
                 i.Draw(SpriteBatch, i.Position.GetDrawablePosition(GamePlay.ViewPort), SpriteEffects.None);
             });
 

@@ -12,7 +12,6 @@ namespace TermProject
 {
     public class MapMaker
     {
-
         private Dictionary<char, GameObjectType> _Legend;
         private Dictionary<char, GameObjectType> Legend
         {
@@ -28,7 +27,6 @@ namespace TermProject
                     _Legend.Add('e', GameObjectType.Emu);
                     _Legend.Add('s', GameObjectType.SodaGuy);
                     _Legend.Add('d', GameObjectType.Door);
-                    _Legend.Add('h', GameObjectType.Hill);
                 }
                 return _Legend;
             }
@@ -104,7 +102,7 @@ namespace TermProject
                                     break;
                             }
 
-                            foreach(GameObject gameObject in gameObjects)
+                            foreach (GameObject gameObject in gameObjects)
                             {
                                 if (lines[x].Length > y + 1)
                                 {
@@ -123,7 +121,8 @@ namespace TermProject
                 throw e;
             }
 
-            mapObjects.ForEach(i => {
+            mapObjects.ForEach(i =>
+            {
                 i.LevelObjects = mapObjects;
                 i.DeathAction = this.DeathAction;
             });
@@ -133,7 +132,11 @@ namespace TermProject
 
         public List<GameObject> MakeSplashScreen(string asset)
         {
-            return new List<GameObject>() { new GameObject(this.Content.Load<Texture2D>(asset), Vector2.Zero) };
+            return new List<GameObject>()
+            { 
+                new GameObject(this.Content.Load<Texture2D>(asset), Vector2.Zero) ,
+                new Player(this.Content, new Vector2(0, 9999), new List<GameObject>())
+            };
         }
 
         private Vector2 GetPosition(int x, int y)

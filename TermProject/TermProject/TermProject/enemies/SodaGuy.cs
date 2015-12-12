@@ -11,10 +11,13 @@ namespace TermProject
     public class SodaGuy : Enemy
     {
         public ContentManager Content;
-        private const int IDLE_TIME = 1000;
-        private const int ATTACK_TIME = 1000;
         public object AiLock = new object();
         public Texture2D SodaCanSprite;
+
+        public Timer Timer = new Timer();
+
+        private const int ATTACK_TIME = 1000;
+        private const int IDLE_TIME = 1000;
 
         public SodaGuy(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/sodaguy-idle"), position, 1, 1, SodaGuy.Ai)
@@ -61,7 +64,7 @@ namespace TermProject
 
         private static void Ai_Idle(SodaGuy sodaGuy, double elapsed)
         {
-            if (Timer.IsTimeYet(sodaGuy.AiLock, elapsed, IDLE_TIME))
+            if (sodaGuy.Timer.IsTimeYet(elapsed, IDLE_TIME))
             {
                 sodaGuy.State = EnemyState.Attack;
                 SodaCan sodaCan = (SodaCan)sodaGuy.LevelObjects.First(i => i is SodaCan && !i.Alive);
@@ -71,7 +74,7 @@ namespace TermProject
 
         private static void Ai_Attack(SodaGuy sodaGuy, double elapsed)
         {
-            if (Timer.IsTimeYet(sodaGuy.AiLock, elapsed, ATTACK_TIME))
+            if (sodaGuy.Timer.IsTimeYet(elapsed, ATTACK_TIME))
             {
                 sodaGuy.State = EnemyState.Idle;
             }
