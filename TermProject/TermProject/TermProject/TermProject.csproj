@@ -119,7 +119,9 @@
     <Compile Include="enemies\Frog.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GamePlay.cs" />
+    <Compile Include="PlayerLife.cs" />
     <Compile Include="MapMaker.cs" />
+    <None Include="maps\you-win" />
     <None Include="maps\level9" />
     <None Include="maps\level9--intro" />
     <None Include="maps\level8" />

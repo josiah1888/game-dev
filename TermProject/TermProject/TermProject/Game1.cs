@@ -83,7 +83,7 @@ namespace TermProject
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || GamePlay.timeToClose)
             {
                 this.Exit();
             }
@@ -146,11 +146,7 @@ namespace TermProject
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
-                .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
-                /*
-                 * Player life icons 
-                 * todo: refactor into its own class
-                 */
+                .ThenBy(i => i is PlayerLife)
                 .ThenBy(i => i is Tile)
                 .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)

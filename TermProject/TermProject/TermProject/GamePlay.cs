@@ -18,6 +18,7 @@ namespace TermProject
         public GameStates GameState;
         public Rectangle ViewPort;
         bool isGameOver = false;
+        public bool timeToClose = false;
 
         public List<GameObject> LevelObjects;
         private MapMaker MapMaker;
@@ -163,7 +164,11 @@ namespace TermProject
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-
+                        StartTransition("maps/you-win");
+                    });
+                    _LevelCreators.Enqueue(() =>
+                    {
+                        timeToClose = true; 
                     });
                 }
                 return _LevelCreators;
@@ -259,6 +264,14 @@ namespace TermProject
 
         private void Update_Transition(double elapsed)
         {
+            PlayerLife lifeIcon;
+
+            for (int i = 0; i < Player.MAX_HEALTH; i++)
+            {
+                lifeIcon = (PlayerLife)this.LevelObjects.FirstOrDefault(j => j.GetType() == typeof(PlayerLife) && ((PlayerLife)j).HealthDesignator == i);
+                lifeIcon.Alive = false;
+            }
+
             if (this.Timer.IsTimeYet(elapsed, TRANSITION_DELAY_TIME))
             {
                 this.GameState = GameStates.Playing;
@@ -268,6 +281,14 @@ namespace TermProject
 
         private void Update_SplashScreens(double elapsed)
         {
+            PlayerLife lifeIcon;
+
+            for (int i = 0; i < Player.MAX_HEALTH; i++)
+            {
+                lifeIcon = (PlayerLife)this.LevelObjects.FirstOrDefault(j => j.GetType() == typeof(PlayerLife) && ((PlayerLife)j).HealthDesignator == i);
+                lifeIcon.Alive = false;
+            }
+
             if (this.Timer.IsTimeYet(elapsed, SPLASH_DELAY_TIME))
             {
                 this.LevelCreators.Peek()();
@@ -277,6 +298,7 @@ namespace TermProject
         private void UpdateCamera()
         {
             Player player = (Player)this.LevelObjects.FirstOrDefault(i => i.GetType() == typeof(Player));
+            PlayerLife lifeIcon;
 
             float distancePlayerIsAhead = player.Position.X + player.Center.X - this.ViewPort.X;
             if (distancePlayerIsAhead > this.ViewPort.Width * (3.0 / 5.0))
@@ -285,8 +307,8 @@ namespace TermProject
 
                 for (int i = 0; i < Player.MAX_HEALTH; i++)
                 {
-                    // todo refactor into PlayerLife class
-                    player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
+                    lifeIcon = (PlayerLife)this.LevelObjects.FirstOrDefault(j => j.GetType() == typeof(PlayerLife) && ((PlayerLife)j).HealthDesignator == i);
+                    lifeIcon.Position.X = this.ViewPort.X + (32 + 32 * lifeIcon.HealthDesignator);
                 }
             }
             else if (distancePlayerIsAhead < this.ViewPort.Width * (2.0 / 5.0))
@@ -295,8 +317,8 @@ namespace TermProject
 
                 for (int i = 0; i < Player.MAX_HEALTH; i++)
                 {
-                    // todo refactor into PlayerLife class
-                    player.HealthIcons[i].Position.X = this.ViewPort.X + (32 + 32 * i);
+                    lifeIcon = (PlayerLife)this.LevelObjects.FirstOrDefault(j => j.GetType() == typeof(PlayerLife) && ((PlayerLife)j).HealthDesignator == i);
+                    lifeIcon.Position.X = this.ViewPort.X + (32 + 32 * lifeIcon.HealthDesignator);
                 }
             }
         }

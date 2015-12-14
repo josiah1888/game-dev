@@ -16,7 +16,7 @@ namespace TermProject
         public const int MERCY_INVINCIBILITY_TIME = 2000;
         public int Health = MAX_HEALTH;
         public bool IsInvincible = false;
-        public GameObject[] HealthIcons;
+        public Texture2D HealthIconSprite;
 
         private bool iconsAdded = false;
         private Timer Timer = new Timer();
@@ -33,14 +33,8 @@ namespace TermProject
         {
             this.TimePerFrame = 200f;
             this.JumpSound = content.Load<SoundEffect>("sounds/jump");
-            HealthIcons = new GameObject[MAX_HEALTH];
             this.LevelObjects = levelObjects ?? new List<GameObject>();
-
-            for (int i = 0; i < MAX_HEALTH; i++)
-            {
-                HealthIcons[i] = new GameObject(content.Load<Texture2D>("sprites/health-icon"), new Vector2(32 + 32 * i, 32));
-                HealthIcons[i].Alive = true;
-            }
+            this.HealthIconSprite = content.Load<Texture2D>("sprites/health-icon");
         }
 
         public void Update(List<GameObject> levelObjects, Keys[] keys, double elapsed)
@@ -133,18 +127,22 @@ namespace TermProject
 
         private void UpdateHealthIcons(List<GameObject> levelObjects)
         {
-            for (int i = 0; i < HealthIcons.Length; ++i)
+            for (int i = 0; i < MAX_HEALTH; ++i)
             {
+                PlayerLife lifeIcon;
+
+                if (levelObjects.FirstOrDefault(j => j.GetType() == typeof(PlayerLife) && ((PlayerLife)j).HealthDesignator == i) == null)
+                    lifeIcon = new PlayerLife(this, i);
+                else
+                    lifeIcon = (PlayerLife)levelObjects.FirstOrDefault(j => j.GetType() == typeof(PlayerLife) && ((PlayerLife)j).HealthDesignator == i);
+
                 if (!iconsAdded)
                 {
-                    HealthIcons[i].LevelObjects = levelObjects;
-                    levelObjects.Add(HealthIcons[i]);
+                    lifeIcon.LevelObjects = levelObjects;
+                    levelObjects.Add(lifeIcon);
                 }
 
-                if (Health <= i)
-                {
-                    HealthIcons[i].Alive = false;
-                }
+                lifeIcon.UpdateHealthIcons();
             }
             iconsAdded = true;
         }
