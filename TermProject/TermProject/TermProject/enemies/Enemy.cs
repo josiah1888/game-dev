@@ -38,7 +38,6 @@ namespace TermProject
             UpdateSprite();
             if (CheckLateralCollisions(levelObjects))
             {
-                this.Velocity.X = -this.Velocity.X;
                 this.Direction = this.Direction.HasFlag(Directions.Left) ? Directions.Right : Directions.Left;
             }
             CheckVerticalCollisions(levelObjects);

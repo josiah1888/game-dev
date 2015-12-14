@@ -5,11 +5,14 @@ using System.Text;
 
 namespace TermProject
 {
-    public static class Timer
+    public class Timer
     {
-        // todo: can't be a static class, double binding to the same object is happening
+        private double? WaitTime;
 
-        private static Dictionary<object, double> Times = new Dictionary<object, double>();
+        public Timer()
+        {
+
+        }
 
         /// <summary>
         /// Timer method to execute tasks on the main thread without sleeping or using C#6 features
@@ -18,22 +21,20 @@ namespace TermProject
         /// <param name="currentElapsed">current time elapsed</param>
         /// <param name="waitTime">total time to wait for</param>
         /// <returns></returns>
-        public static bool IsTimeYet(object timeLock, double currentElapsed, double? waitTime = null)
+        public bool IsTimeYet(double currentElapsed, double waitTime)
         {
             bool result = false;
-            if (Times.ContainsKey(timeLock))
+
+            if (!this.WaitTime.HasValue)
             {
-                result = Times[timeLock] < currentElapsed;
+                this.WaitTime = currentElapsed + waitTime;
             }
-            else if (waitTime.HasValue)
+            else if (currentElapsed > this.WaitTime)
             {
-                Times.Add(timeLock, currentElapsed + waitTime.Value);
+                this.WaitTime = null;
+                result = true;
             }
 
-            if (result)
-            {
-                Times.Remove(timeLock);
-            }
             return result;
         }
     }

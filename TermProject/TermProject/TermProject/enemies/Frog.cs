@@ -12,6 +12,7 @@ namespace TermProject
     {
         private const int JUMP_DELAY_TIME = 2000;
         private const int PREDICT_FRAMES = 3;
+        public Timer Timer = new Timer();
 
         public Frog(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/frog-idle"), position, 1, 1, Frog.Ai)
@@ -43,7 +44,7 @@ namespace TermProject
                         if (frog.IsOnGround())
                         {
                             frog.Velocity.X = 0;
-                            if (Timer.IsTimeYet(frog, elapsed, JUMP_DELAY_TIME))
+                            if (frog.Timer.IsTimeYet(elapsed, JUMP_DELAY_TIME))
                             {
                                 frog.Velocity.Y = -10;
                                 frog.Direction = (new List<Directions>() { Directions.Left, Directions.Right }[Rand.Next(2)]);

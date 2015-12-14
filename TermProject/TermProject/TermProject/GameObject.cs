@@ -23,6 +23,7 @@ namespace TermProject
         public Vector2 Velocity;
         public Action<GameObject> DeathAction = (GameObject gameObject) => { };
         public bool AlwaysDraw = false;
+        public bool IsThreadSafe = true;
 
         private bool _Alive = true;
         public bool Alive
@@ -42,7 +43,9 @@ namespace TermProject
         }
         public float Scale = 1.0f;
         public int Designator;
-        public List<GameObject> LevelObjects;
+        public virtual List<GameObject> LevelObjects
+        { get; set; }
+
 
         [Flags]
         public enum Directions
@@ -95,7 +98,7 @@ namespace TermProject
                 {
                     batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.5f, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
                 }
-                else if (this is SodaCan && (!this.IsOnGround() || ((SodaCan)this).JumpHeight > 0 || this.Rotation != 0f))
+                else if (this is SodaCan && (!this.IsOnGround() || ((SodaCan)this).Velocity.Y > 0 || this.Rotation != 0f))
                     batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, this.Center, 1.0f, spriteEffects, 0);
                 else
                     batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
@@ -104,9 +107,12 @@ namespace TermProject
 
         public virtual void Update()
         {
-            this.Position.X += this.Velocity.X;
-            this.Position.Y += this.Velocity.Y;
-            ApplyGravity();
+            if (Alive)
+            {
+                this.Position.X += this.Velocity.X;
+                this.Position.Y += this.Velocity.Y;
+                ApplyGravity();
+            }
         }
 
         public void Rotate(float rotation = .05f)
@@ -236,7 +242,7 @@ namespace TermProject
 
         protected void CheckBoundsCollisions()
         {
-            if(this.Position.X < 0)
+            if (this.Position.X < 0)
             {
                 this.Velocity.X = Math.Abs(this.Velocity.X);
                 this.Position.X = 0;

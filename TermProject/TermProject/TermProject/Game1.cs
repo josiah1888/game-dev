@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using TermProject.Particles;
 using System.Timers;
+using System.Threading.Tasks;
 
 namespace TermProject
 {
@@ -91,7 +92,12 @@ namespace TermProject
 
             if (GamePlay.LevelObjects.Any())
             {
-                Update_AnimatedObjects(elapsed);
+
+                const int UPDATE_FIELD_FACTOR = 100;
+                Rectangle updateBounds = new Rectangle(GamePlay.ViewPort.X - UPDATE_FIELD_FACTOR / 2, GamePlay.ViewPort.Y, GamePlay.ViewPort.Width + UPDATE_FIELD_FACTOR, GamePlay.ViewPort.Height);
+
+                Update_ThreadSafe(elapsed, updateBounds);
+                Update_NonThreadSafe(elapsed, updateBounds);
                 Update_Player(elapsed);
             }
 
@@ -101,10 +107,20 @@ namespace TermProject
         }
 
         #region Update
-        private void Update_AnimatedObjects(double elapsed)
+        private void Update_ThreadSafe(double elapsed, Rectangle updateBounds)
+        {
+            List<AnimatedObject> gameObjects =
+            GamePlay.LevelObjects
+                .Where(i => i.IsThreadSafe && i.Alive && i.Rectangle.Intersects(updateBounds) && i is AnimatedObject && !(i is Player))
+                .Select(i => (AnimatedObject)i).ToList();
+
+            Parallel.ForEach(gameObjects, i => i.Update(GamePlay.LevelObjects, elapsed));
+        }
+
+        private void Update_NonThreadSafe(double elapsed, Rectangle updateBounds)
         {
             GamePlay.LevelObjects
-                .Where(i => i.Alive && i is AnimatedObject && !(i is Player))
+                .Where(i => !i.IsThreadSafe && i.Alive && i.Rectangle.Intersects(updateBounds) && i is AnimatedObject && !(i is Player))
                 .Select(i => (AnimatedObject)i).ToList()
                 .ForEach(i => i.Update(GamePlay.LevelObjects, elapsed));
         }
@@ -126,15 +142,15 @@ namespace TermProject
                 : GamePlay.LevelObjects;
 
             drawableObjects
-                .Where(i => i.Rectangle.Intersects(GamePlay.ViewPort) || i.AlwaysDraw)
+                .Where(i => i.Alive && (i.Rectangle.Intersects(GamePlay.ViewPort) || i.AlwaysDraw))
                 .OrderBy(i => i is Player)
                 .ThenBy(i => i is Enemy)
                 .ThenBy(i => i is Door)
                 .ThenBy(i => !(i is Player || i is Enemy || i is Door || i is Tile || i is Cloud || i is Hill || i is Sun))
-                    /*
-                     * Player life icons 
-                     * todo: refactor into its own class
-                     */
+                /*
+                 * Player life icons 
+                 * todo: refactor into its own class
+                 */
                 .ThenBy(i => i is Tile)
                 .ThenBy(i => i is Hill)
                 .ThenBy(i => i is Cloud)

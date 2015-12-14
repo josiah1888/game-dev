@@ -199,7 +199,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="splash-screens\" />
+    <Compile Include="splash-screens\splash-screen.png">
+      <Name>splash-screen</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sprites\sun.png">
@@ -216,6 +220,21 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="splash-screens\contributors.png">
+      <Name>contributors</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="splash-screens\logo.png">
+      <Name>logo</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="splash-screens\menu.png">
+      <Name>menu</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Compile Include="sprites\bg-hill-new.png">
       <Name>bg-hill-new</Name>
       <Importer>TextureImporter</Importer>

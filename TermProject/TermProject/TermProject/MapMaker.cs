@@ -12,7 +12,6 @@ namespace TermProject
 {
     public class MapMaker
     {
-
         private Dictionary<char, GameObjectType> _Legend;
         private Dictionary<char, GameObjectType> Legend
         {
@@ -28,7 +27,6 @@ namespace TermProject
                     _Legend.Add('e', GameObjectType.Emu);
                     _Legend.Add('s', GameObjectType.SodaGuy);
                     _Legend.Add('d', GameObjectType.Door);
-                    _Legend.Add('h', GameObjectType.Hill);
                 }
                 return _Legend;
             }
@@ -71,47 +69,47 @@ namespace TermProject
                         if (this.Legend.ContainsKey(mapCode))
                         {
                             GameObjectType gameObjectType = this.Legend[char.ToLower(mapCode)];
-                            GameObject gameObject = null;
+                            List<GameObject> gameObjects = new List<GameObject>();
                             switch (gameObjectType)
                             {
                                 default:
                                 case GameObjectType.SolidTile:
-                                    gameObject = new SolidTile(this.Content, GetPosition(x, y));
+                                    gameObjects.Add(new SolidTile(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.SemiSolidTile:
-                                    gameObject = new SemiSolidTile(this.Content, GetPosition(x, y));
+                                    gameObjects.Add(new SemiSolidTile(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.Player:
-                                    gameObject = new Player(this.Content, GetPosition(x, y));
+                                    gameObjects.Add(new Player(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.Frog:
-                                    gameObject = new Frog(this.Content, GetPosition(x, y));
+                                    gameObjects.Add(new Frog(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.Emu:
-                                    gameObject = new Emu(this.Content, GetPosition(x, y));
+                                    gameObjects.Add(new Emu(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.SodaGuy:
-                                    gameObject = new SodaGuy(this.Content, GetPosition(x, y));
+                                    gameObjects.AddRange(SodaGuy.CreateSodaGuysWithCans(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.Door:
-                                    gameObject = new Door(this.Content, GetPosition(x, y));
+                                    gameObjects.Add(new Door(this.Content, GetPosition(x, y)));
                                     break;
                                 case GameObjectType.Hill:
-                                    gameObject = new Hill(this.Content);
+                                    gameObjects.Add(new Hill(this.Content));
                                     break;
                                 case GameObjectType.Sun:
-                                    gameObject = new Sun(this.Content);
+                                    gameObjects.Add(new Sun(this.Content));
                                     break;
                             }
 
-                            if (gameObject != null)
+                            foreach (GameObject gameObject in gameObjects)
                             {
                                 if (lines[x].Length > y + 1)
                                 {
                                     string designator = lines[x][y + 1].ToString();
                                     int.TryParse(designator, out gameObject.Designator);
                                 }
-                                mapObjects.Add(gameObject);
+                                mapObjects.AddRange(gameObjects);
                             }
                         }
                     }
@@ -123,7 +121,8 @@ namespace TermProject
                 throw e;
             }
 
-            mapObjects.ForEach(i => {
+            mapObjects.ForEach(i =>
+            {
                 i.LevelObjects = mapObjects;
                 i.DeathAction = this.DeathAction;
             });
@@ -133,7 +132,11 @@ namespace TermProject
 
         public List<GameObject> MakeSplashScreen(string asset)
         {
-            return new List<GameObject>() { new GameObject(this.Content.Load<Texture2D>(asset), Vector2.Zero) };
+            return new List<GameObject>()
+            { 
+                new GameObject(this.Content.Load<Texture2D>(asset), Vector2.Zero) ,
+                new Player(this.Content, new Vector2(0, 9999), new List<GameObject>())
+            };
         }
 
         private Vector2 GetPosition(int x, int y)

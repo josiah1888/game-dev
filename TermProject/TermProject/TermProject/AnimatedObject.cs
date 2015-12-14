@@ -64,7 +64,7 @@ namespace TermProject
         public virtual void Update(List<GameObject> levelObjects, double elapsed)
         {
             // todo: refactor to use Timer.IsTimeYet
-            if (!IsPaused && TimePerFrame > 0)
+            if (Alive && !IsPaused && TimePerFrame > 0)
             {
                 if (elapsed - Elapsed > TimePerFrame)
                 {

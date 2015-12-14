@@ -13,12 +13,13 @@ namespace TermProject
     public class Player : AnimatedObject
     {
         public const int MAX_HEALTH = 3;
+        public const int MERCY_INVINCIBILITY_TIME = 2000;
         public int Health = MAX_HEALTH;
         public bool IsInvincible = false;
-        public const int MERCY_INVINCIBILITY_TIME = 2000;
-
         public GameObject[] HealthIcons;
+
         private bool iconsAdded = false;
+        private Timer Timer = new Timer();
 
         private const int MAX_SPEED = 6;
         private const float WALKING_TOLERANCE = .3f;
@@ -27,12 +28,13 @@ namespace TermProject
 
         private SoundEffect JumpSound;
 
-        public Player(ContentManager content, Vector2 position)
+        public Player(ContentManager content, Vector2 position, List<GameObject> levelObjects = null)
             : base(content.Load<Texture2D>("sprites/player-walk"), position, 0f, 1f, 1f, 4, 200f)
         {
             this.TimePerFrame = 200f;
             this.JumpSound = content.Load<SoundEffect>("sounds/jump");
             HealthIcons = new GameObject[MAX_HEALTH];
+            this.LevelObjects = levelObjects ?? new List<GameObject>();
 
             for (int i = 0; i < MAX_HEALTH; i++)
             {
@@ -154,7 +156,7 @@ namespace TermProject
 
         private void UpdateInvincibilty(double elapsed)
         {
-            if (this.IsInvincible && Timer.IsTimeYet(this, elapsed, MERCY_INVINCIBILITY_TIME))
+            if (this.IsInvincible && this.Timer.IsTimeYet(elapsed, MERCY_INVINCIBILITY_TIME))
             {
                 this.IsInvincible = false;
             }

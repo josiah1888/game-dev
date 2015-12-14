@@ -15,12 +15,14 @@ namespace TermProject
         private Texture2D SwingingSprite;
         public bool IsOpen = false;
         public const double DOOR_DELAY_TIME = 1500;
+        Timer Timer = new Timer();
 
         public Door(ContentManager content, Vector2 position)
             : base(content.Load<Texture2D>("sprites/door"), position, 0f, 1f, 1f, 1, .8f)
         {
             this.SwingingSprite = content.Load<Texture2D>("sprites/door-swing");
             this.ObeysGravity = false;
+            this.IsThreadSafe = false;
         }
 
         public override void Update(List<GameObject> levelObjects, double elapsed)
@@ -32,7 +34,7 @@ namespace TermProject
                 player.Stop();
                 OpenDoor();
             }
-            else if (this.IsOpen && Timer.IsTimeYet(this, elapsed, DOOR_DELAY_TIME))
+            else if (this.IsOpen && Timer.IsTimeYet(elapsed, DOOR_DELAY_TIME))
             {
                 this.WinAction();
             }
