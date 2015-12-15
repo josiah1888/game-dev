@@ -94,7 +94,11 @@ namespace TermProject
             {
 
                 const int UPDATE_FIELD_FACTOR = 100;
-                Rectangle updateBounds = new Rectangle(GamePlay.ViewPort.X - UPDATE_FIELD_FACTOR / 2, GamePlay.ViewPort.Y, GamePlay.ViewPort.Width + UPDATE_FIELD_FACTOR, GamePlay.ViewPort.Height);
+                Rectangle updateBounds = new Rectangle(
+                    GamePlay.ViewPort.X - UPDATE_FIELD_FACTOR / 2, 
+                    GamePlay.ViewPort.Y - UPDATE_FIELD_FACTOR / 2, 
+                    GamePlay.ViewPort.Width + UPDATE_FIELD_FACTOR, 
+                    GamePlay.ViewPort.Height + UPDATE_FIELD_FACTOR);
 
                 Update_ThreadSafe(elapsed, updateBounds);
                 Update_NonThreadSafe(elapsed, updateBounds);
