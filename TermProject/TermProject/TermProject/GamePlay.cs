@@ -40,10 +40,6 @@ namespace TermProject
                     _LevelCreators = new Queue<Action>();
                     _LevelCreators.Enqueue(() =>
                     {
-                        StartLevel("maps/level7");
-                    });
-                    _LevelCreators.Enqueue(() =>
-                    {
                         StartSplashScreen("splash-screens/logo");
                     });
                     _LevelCreators.Enqueue(() =>
