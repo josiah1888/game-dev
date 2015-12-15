@@ -14,7 +14,6 @@ namespace TermProject
 {
     public abstract class Tile : GameObject
     {
-        // todo: possibly refactor as abstract class with abstract/virtual methods
         public const int SIZE = 32;
         public TileType Type;
         

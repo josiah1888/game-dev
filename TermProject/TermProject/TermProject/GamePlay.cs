@@ -12,13 +12,13 @@ namespace TermProject
         {
             Playing,
             Transition,
-            SplashScreens
+            SplashScreens,
+            Exit
         }
 
         public GameStates GameState;
         public Rectangle ViewPort;
         bool isGameOver = false;
-        public bool timeToClose = false;
 
         public List<GameObject> LevelObjects;
         private MapMaker MapMaker;
@@ -168,7 +168,7 @@ namespace TermProject
                     });
                     _LevelCreators.Enqueue(() =>
                     {
-                        timeToClose = true; 
+                        this.GameState = GameStates.Exit;
                     });
                 }
                 return _LevelCreators;

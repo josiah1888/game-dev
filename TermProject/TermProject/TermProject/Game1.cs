@@ -83,7 +83,7 @@ namespace TermProject
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || GamePlay.timeToClose)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || GamePlay.GameState == TermProject.GamePlay.GameStates.Exit)
             {
                 this.Exit();
             }
