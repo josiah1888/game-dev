@@ -29,6 +29,7 @@ namespace TermProject
         private const double TRANSITION_DELAY_TIME = 1800;
         private const double SPLASH_DELAY_TIME = 2500;
         private const float CAMERA_SCROLL_SMOOTHNESS = 120f;
+        private int maxViewportLength;
 
         private Queue<Action> _LevelCreators;
         private Queue<Action> LevelCreators
@@ -197,6 +198,16 @@ namespace TermProject
                 this.LevelObjects = MapMaker.ReadMap(map);
                 Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == doorDesignator);
                 door.WinAction = this.LevelCreators.Peek();
+
+                try
+                {
+                    string line = System.IO.File.ReadLines("../../../" + map).First();
+                    maxViewportLength = line.Length * LevelObjects.First(i => i.GetType() == typeof(SolidTile)).Sprite.Width;
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
                 UpdateViewport(0);
 
                 if (levelSetup != null)
@@ -303,7 +314,7 @@ namespace TermProject
             float distancePlayerIsAhead = player.Position.X + player.Center.X - this.ViewPort.X;
             if (distancePlayerIsAhead > this.ViewPort.Width * (3.0 / 5.0))
             {
-                UpdateViewport(this.ViewPort.X + (distancePlayerIsAhead / CAMERA_SCROLL_SMOOTHNESS));
+                UpdateViewport(Math.Min(maxViewportLength - this.ViewPort.Width, this.ViewPort.X + (distancePlayerIsAhead / CAMERA_SCROLL_SMOOTHNESS)));
 
                 for (int i = 0; i < Player.MAX_HEALTH; i++)
                 {

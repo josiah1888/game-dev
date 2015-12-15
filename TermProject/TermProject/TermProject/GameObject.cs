@@ -109,10 +109,16 @@ namespace TermProject
 
         public virtual void Update()
         {
-            if (Alive)
+            if (Alive && !(this is SodaCan))
             {
                 this.Position.X += this.Velocity.X;
                 this.Position.Y += this.Velocity.Y;
+                ApplyGravity();
+            }
+            else if (Alive && this is SodaCan)
+            {
+                this.Position.X += this.Velocity.X / 4;
+                this.Position.Y += this.Velocity.Y / 4;
                 ApplyGravity();
             }
         }
@@ -169,9 +175,13 @@ namespace TermProject
         {
             if (this.ObeysGravity)
             {
-                if (!IsOnGround())
+                if (!IsOnGround() && !(this is SodaCan))
                 {
                     this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + 1);
+                }
+                else if (!IsOnGround() && this is SodaCan)
+                {
+                    this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + 0.25f);
                 }
                 else if (this.Velocity.Y > 0)
                 {

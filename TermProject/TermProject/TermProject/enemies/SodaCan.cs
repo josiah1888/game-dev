@@ -18,7 +18,7 @@ namespace TermProject
         public Timer Timer;
 
         private const float ACCERLATION = .05f;
-        private const float FRICTION = .12f;
+        private const float FRICTION = .02f;
         private const float BOUNCE = 1.6f;
 
         private SodaGuy SodaGuy;
