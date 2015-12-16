@@ -9,6 +9,8 @@ namespace TermProject
     public class AnimatedObject : GameObject
     {
         public float Depth;
+        public bool Repeat = true;
+        public bool IsPaused = false;
 
         protected int FrameCount;
         private float _TimePerFrame;
@@ -24,6 +26,9 @@ namespace TermProject
             }
         }
 
+        private float MaxSpeed;
+        private int Frame;
+        private Timer Timer = new Timer();
         private SpriteEffects _Effects;
         private SpriteEffects Effects
         {
@@ -41,11 +46,6 @@ namespace TermProject
                 return _Effects;
             }
         }
-        private float MaxSpeed;
-        private int Frame;
-        private double Elapsed;
-        public bool Repeat = true;
-        public bool IsPaused = false;
 
         public AnimatedObject(Texture2D loadedTexture, Vector2 position, float rotation, float scale, float depth, int frameCount, float timePerFrame, float maxSpeed = 5)
             : base(loadedTexture, position)
@@ -55,7 +55,6 @@ namespace TermProject
             this.Scale = scale;
             this.Depth = depth;
             this.FrameCount = frameCount;
-            this.Elapsed = 0;
             this.Frame = 0;
             this.TimePerFrame = timePerFrame;
             this.MaxSpeed = maxSpeed;
@@ -63,14 +62,9 @@ namespace TermProject
 
         public virtual void Update(List<GameObject> levelObjects, double elapsed)
         {
-            // todo: refactor to use Timer.IsTimeYet
-            if (Alive && !IsPaused && TimePerFrame > 0)
+            if (Alive && !IsPaused && Timer.IsTimeYet(elapsed, TimePerFrame))
             {
-                if (elapsed - Elapsed > TimePerFrame)
-                {
-                    Frame = Repeat ? (Frame + 1) % FrameCount : Math.Min(FrameCount - 1, Frame + 1);
-                    Elapsed = elapsed;
-                }
+                Frame = Repeat ? (Frame + 1) % FrameCount : Math.Min(FrameCount - 1, Frame + 1);
             }
 
             base.Update();
@@ -85,7 +79,7 @@ namespace TermProject
         public void Reset()
         {
             Frame = 0;
-            Elapsed = 0f;
+            this.Timer = new Timer();
         }
 
         public void Stop()
