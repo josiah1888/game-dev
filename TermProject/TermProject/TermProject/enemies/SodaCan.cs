@@ -37,6 +37,12 @@ namespace TermProject
             initilize(sodaGuy, false);
         }
 
+        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
+        {
+            this.Origin = this.Velocity.Y > 0 || this.Rotation != 0f || !this.IsOnGround() ? this.Center : Vector2.Zero;
+            base.Draw(batch, position, spriteEffects, spriteFrame, color);
+        }
+
         public void Recycle(SodaGuy sodaGuy)
         {
             initilize(sodaGuy, true);

@@ -21,7 +21,7 @@ namespace TermProject
             this.AlwaysDraw = true;
         }
 
-        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
         {
             batch.Draw(this.Sprite, new Vector2(SUN_POSITION_X, SUN_POSITION_Y), spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
         }

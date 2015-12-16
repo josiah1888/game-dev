@@ -98,11 +98,11 @@ namespace TermProject
             IsPaused = true;
         }
 
-        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
         {
             int frameWidth = Sprite.Width / FrameCount;
             spriteFrame = new Rectangle(frameWidth * this.Frame, 0, frameWidth, this.Rectangle.Height);
-            base.Draw(batch, position, Effects, spriteFrame);
+            base.Draw(batch, position, Effects, spriteFrame, color);
         }
 
         public override Rectangle Rectangle

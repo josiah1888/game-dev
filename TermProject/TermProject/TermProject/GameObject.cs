@@ -59,6 +59,7 @@ namespace TermProject
 
         public Directions Direction;
         protected bool ObeysGravity = true;
+        protected Vector2 Origin = Vector2.Zero;
 
         private const float MIN_BOUNCE_BACK = .8f;
         private const float VISION_FIELD = .02f;
@@ -90,20 +91,16 @@ namespace TermProject
             this.Velocity = Vector2.Zero;
         }
 
-        public virtual void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
+        public virtual void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
         {
             if (this.Alive)
             {
-                if (this is Player && ((Player)this).IsInvincible)
-                {
-                    batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.5f, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
-                }
-                else if (this is SodaCan && (!this.IsOnGround() || ((SodaCan)this).Velocity.Y > 0 || this.Rotation != 0f))
-                    batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, this.Center, 1.0f, spriteEffects, 0);
+                if (this is SodaCan && (!this.IsOnGround() || ((SodaCan)this).Velocity.Y > 0 || this.Rotation != 0f))
+                    batch.Draw(this.Sprite, position, spriteFrame, color ?? Color.White, this.Rotation, this.Center, 1.0f, spriteEffects, 0);
                 else if (this is Hill)
-                    batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.75f, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+                    batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.75f, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
                 else
-                    batch.Draw(this.Sprite, position, spriteFrame, Color.White, this.Rotation, Vector2.Zero, 1.0f, spriteEffects, 0);
+                    batch.Draw(this.Sprite, position, spriteFrame, color ?? Color.White, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
             }
         }
 
