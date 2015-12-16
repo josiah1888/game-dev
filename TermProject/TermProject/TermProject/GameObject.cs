@@ -95,9 +95,7 @@ namespace TermProject
         {
             if (this.Alive)
             {
-                if (this is SodaCan && (!this.IsOnGround() || ((SodaCan)this).Velocity.Y > 0 || this.Rotation != 0f))
-                    batch.Draw(this.Sprite, position, spriteFrame, color ?? Color.White, this.Rotation, this.Center, 1.0f, spriteEffects, 0);
-                else if (this is Hill)
+                if (this is Hill)
                     batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.75f, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
                 else
                     batch.Draw(this.Sprite, position, spriteFrame, color ?? Color.White, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
