@@ -34,21 +34,15 @@ namespace TermProject
         public SodaCan(SodaGuy sodaGuy)
             : base(sodaGuy.SodaCanSprite, sodaGuy.Position + sodaGuy.Center, 1, 1, SodaCan.Ai)
         {
-            initilize(sodaGuy, false);
-        }
-
-        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
-        {
-            this.Origin = this.Velocity.Y > 0 || this.Rotation != 0f || !this.IsOnGround() ? this.Center : Vector2.Zero;
-            base.Draw(batch, position, spriteEffects, spriteFrame, color);
+            Initilize(sodaGuy, false);
         }
 
         public void Recycle(SodaGuy sodaGuy)
         {
-            initilize(sodaGuy, true);
+            Initilize(sodaGuy, true);
         }
 
-        private void initilize(SodaGuy sodaGuy, bool isAlive)
+        private void Initilize(SodaGuy sodaGuy, bool isAlive)
         {
             this.Position = sodaGuy.Position + sodaGuy.Center;
             this.Alive = isAlive;
@@ -93,6 +87,8 @@ namespace TermProject
                     {
                         sodaCan.Rotate(.1f + (.1f * -sodaCan.JumpHeight));
                     }
+
+                    sodaCan.Origin = sodaCan.Velocity.Y > 0 || sodaCan.Rotation != 0f || !sodaCan.IsOnGround() ? sodaCan.Center : Vector2.Zero;
                 };
             }
         }

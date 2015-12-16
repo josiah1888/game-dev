@@ -15,6 +15,7 @@ namespace TermProject
         {
             this.Velocity = Vector2.Zero;
             this.ObeysGravity = false;
+            this.Color = Color.White * 0.75f;
         }
 
         private static Vector2 GetRandomHillPosition()

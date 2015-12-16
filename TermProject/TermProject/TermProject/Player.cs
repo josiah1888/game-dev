@@ -53,14 +53,10 @@ namespace TermProject
             base.Update(levelObjects, elapsed);
         }
 
-        public override void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
-        {
-            color = this.IsInvincible ? Color.White * 0.5f : Color.White;
-            base.Draw(batch, position, spriteEffects, spriteFrame, color);
-        }
-
         private void UpdateSprite()
         {
+            this.Color = this.IsInvincible ? Color.White * 0.5f : Color.White;
+
             if (Math.Abs(this.Velocity.X) > WALKING_TOLERANCE && this.IsPaused)
             {
                 this.Restart();

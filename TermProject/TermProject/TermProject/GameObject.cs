@@ -60,6 +60,7 @@ namespace TermProject
         public Directions Direction;
         protected bool ObeysGravity = true;
         protected Vector2 Origin = Vector2.Zero;
+        protected Color Color = Color.White;
 
         private const float MIN_BOUNCE_BACK = .8f;
         private const float VISION_FIELD = .02f;
@@ -91,14 +92,11 @@ namespace TermProject
             this.Velocity = Vector2.Zero;
         }
 
-        public virtual void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null, Color? color = null)
+        public virtual void Draw(SpriteBatch batch, Vector2 position, SpriteEffects spriteEffects, Rectangle? spriteFrame = null)
         {
             if (this.Alive)
             {
-                if (this is Hill)
-                    batch.Draw(this.Sprite, position, spriteFrame, Color.White * 0.75f, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
-                else
-                    batch.Draw(this.Sprite, position, spriteFrame, color ?? Color.White, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
+                batch.Draw(this.Sprite, position, spriteFrame, this.Color, this.Rotation, this.Origin, 1.0f, spriteEffects, 0);
             }
         }
 
