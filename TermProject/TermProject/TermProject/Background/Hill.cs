@@ -11,7 +11,7 @@ namespace TermProject
     public class Hill : GameObject
     {
         public Hill(ContentManager content)
-            : base(content.Load<Texture2D>("sprites/lazyhill"), GetRandomHillPosition())
+            : base(content.Load<Texture2D>("sprites/lazy-hill"), GetRandomHillPosition())
         {
             this.Velocity = Vector2.Zero;
             this.ObeysGravity = false;

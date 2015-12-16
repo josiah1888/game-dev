@@ -47,11 +47,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="sprites\old-bird.png">
-      <Name>old-bird</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sprites\frog-idle.png">
@@ -61,16 +56,6 @@
     </Compile>
     <Compile Include="sprites\frog-jump.png">
       <Name>frog-jump</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sprites\place-holder.png">
-      <Name>place-holder</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sprites\player-idle.png">
-      <Name>player-idle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -86,16 +71,6 @@
     </Compile>
     <Compile Include="sprites\solid-tile.png">
       <Name>solid-tile</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sprites\test-platform1-left.png">
-      <Name>test-platform1-left</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sprites\test-platform1-right.png">
-      <Name>test-platform1-right</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -142,16 +117,6 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="sprites\door-open.png">
-      <Name>door-open</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sprites\tempsun.png">
-      <Name>tempsun</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="sprites\health-icon.png">
@@ -173,11 +138,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\emu-idle.png">
-      <Name>emu-idle</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
     <Compile Include="sprites\emu-walk.png">
       <Name>emu-walk</Name>
       <Importer>TextureImporter</Importer>
@@ -185,15 +145,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="sprites\bg-hill.png">
-      <Name>bg-hill</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="sprites\lazyhill.png">
-      <Name>lazyhill</Name>
+    <Compile Include="sprites\lazy-hill.png">
+      <Name>lazy-hill</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -232,11 +185,6 @@
     </Compile>
     <Compile Include="splash-screens\menu.png">
       <Name>menu</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="sprites\bg-hill-new.png">
-      <Name>bg-hill-new</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
