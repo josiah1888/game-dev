@@ -10,8 +10,21 @@ using TermProject.Particles;
 
 namespace TermProject
 {
+    public class Map
+    {
+        public Map(List<GameObject> levelObjects, Rectangle maxViewPort)
+        {
+            this.LevelObjects = levelObjects;
+            this.MaxViewPort = maxViewPort;
+        }
+
+        public List<GameObject> LevelObjects;
+        public Rectangle MaxViewPort;
+    }
+
     public class MapMaker
     {
+
         private Dictionary<char, GameObjectType> _Legend;
         private Dictionary<char, GameObjectType> Legend
         {
@@ -54,80 +67,72 @@ namespace TermProject
             this.DeathAction = deathAction;
         }
 
-        public List<GameObject> ReadMap(string asset)
+        public Map ReadMap(string asset)
         {
-            List<GameObject> mapObjects = new List<GameObject>();
-            try
+            List<GameObject> levelObjects = new List<GameObject>();
+            List<string> lines = new List<string>(System.IO.File.ReadAllLines("../../../" + asset)); // asset not getting copied to bin folder
+            for (int height = 0; height < lines.Count; height++)
             {
-                List<string> lines = new List<string>(System.IO.File.ReadAllLines("../../../" + asset)); // asset not getting copied to bin folder
-                for (int x = 0; x < lines.Count; x++)
+                for (int width = 0; width < lines.Min(i => i.Length); width++)
                 {
-                    for (int y = 0; y < lines.Min(i => i.Length); y++)
+                    char mapCode = lines[height][width];
+
+                    if (this.Legend.ContainsKey(mapCode))
                     {
-                        char mapCode = lines[x][y];
-
-                        if (this.Legend.ContainsKey(mapCode))
+                        GameObjectType gameObjectType = this.Legend[char.ToLower(mapCode)];
+                        List<GameObject> gameObjects = new List<GameObject>();
+                        switch (gameObjectType)
                         {
-                            GameObjectType gameObjectType = this.Legend[char.ToLower(mapCode)];
-                            List<GameObject> gameObjects = new List<GameObject>();
-                            switch (gameObjectType)
-                            {
-                                default:
-                                case GameObjectType.SolidTile:
-                                    gameObjects.Add(new SolidTile(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.SemiSolidTile:
-                                    gameObjects.Add(new SemiSolidTile(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.Player:
-                                    gameObjects.Add(new Player(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.Frog:
-                                    gameObjects.Add(new Frog(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.Emu:
-                                    gameObjects.Add(new Emu(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.SodaGuy:
-                                    gameObjects.AddRange(SodaGuy.CreateSodaGuysWithCans(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.Door:
-                                    gameObjects.Add(new Door(this.Content, GetPosition(x, y)));
-                                    break;
-                                case GameObjectType.Hill:
-                                    gameObjects.Add(new Hill(this.Content));
-                                    break;
-                                case GameObjectType.Sun:
-                                    gameObjects.Add(new Sun(this.Content));
-                                    break;
-                            }
+                            default:
+                            case GameObjectType.SolidTile:
+                                gameObjects.Add(new SolidTile(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.SemiSolidTile:
+                                gameObjects.Add(new SemiSolidTile(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.Player:
+                                gameObjects.Add(new Player(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.Frog:
+                                gameObjects.Add(new Frog(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.Emu:
+                                gameObjects.Add(new Emu(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.SodaGuy:
+                                gameObjects.AddRange(SodaGuy.CreateSodaGuysWithCans(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.Door:
+                                gameObjects.Add(new Door(this.Content, GetPosition(height, width)));
+                                break;
+                            case GameObjectType.Hill:
+                                gameObjects.Add(new Hill(this.Content));
+                                break;
+                            case GameObjectType.Sun:
+                                gameObjects.Add(new Sun(this.Content));
+                                break;
+                        }
 
-                            foreach (GameObject gameObject in gameObjects)
+                        foreach (GameObject gameObject in gameObjects)
+                        {
+                            if (lines[height].Length > width + 1)
                             {
-                                if (lines[x].Length > y + 1)
-                                {
-                                    string designator = lines[x][y + 1].ToString();
-                                    int.TryParse(designator, out gameObject.Designator);
-                                }
-                                mapObjects.AddRange(gameObjects);
+                                string designator = lines[height][width + 1].ToString();
+                                int.TryParse(designator, out gameObject.Designator);
                             }
+                            levelObjects.AddRange(gameObjects);
                         }
                     }
                 }
             }
-            catch (Exception e)
-            {
-                // Maybe try to load a different level? reload? Maybe this will just never happen
-                throw e;
-            }
 
-            mapObjects.ForEach(i =>
+            levelObjects.ForEach(i =>
             {
-                i.LevelObjects = mapObjects;
+                i.LevelObjects = levelObjects;
                 i.DeathAction = this.DeathAction;
             });
 
-            return mapObjects;
+            return new Map(levelObjects, new Rectangle(0, 0, lines.Min(i => i.Length) * Tile.SIZE, lines.Count * Tile.SIZE));
         }
 
         public List<GameObject> MakeSplashScreen(string asset)

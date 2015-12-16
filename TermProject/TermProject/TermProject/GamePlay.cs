@@ -25,11 +25,11 @@ namespace TermProject
         private GameWindow Window;
         private Timer Timer = new Timer();
         private Action CurrentLevel;
+        private Rectangle MaxViewport;
 
         private const double TRANSITION_DELAY_TIME = 1800;
         private const double SPLASH_DELAY_TIME = 2500;
         private const float CAMERA_SCROLL_SMOOTHNESS = 120f;
-        private int maxViewportLength;
 
         private Queue<Action> _LevelCreators;
         private Queue<Action> LevelCreators
@@ -188,26 +188,19 @@ namespace TermProject
             this.LevelCreators.Dequeue();
         }
 
-        private void StartLevel(string map, int doorDesignator = 0, Action levelSetup = null)
+        private void StartLevel(string asset, int doorDesignator = 0, Action levelSetup = null)
         {
             this.LevelCreators.Dequeue();
 
             this.CurrentLevel = () =>
             {
                 this.GameState = GameStates.Playing;
-                this.LevelObjects = MapMaker.ReadMap(map);
+                Map map = MapMaker.ReadMap(asset);
+                this.LevelObjects = map.LevelObjects;
+                this.MaxViewport = map.MaxViewPort;
                 Door door = (Door)this.LevelObjects.First(i => i.GetType() == typeof(Door) && i.Designator == doorDesignator);
                 door.WinAction = this.LevelCreators.Peek();
 
-                try
-                {
-                    string line = System.IO.File.ReadLines("../../../" + map).First();
-                    maxViewportLength = line.Length * LevelObjects.First(i => i.GetType() == typeof(SolidTile)).Sprite.Width;
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
                 UpdateViewport(0);
 
                 if (levelSetup != null)
@@ -219,10 +212,10 @@ namespace TermProject
             this.CurrentLevel();
         }
 
-        private void StartTransition(string map)
+        private void StartTransition(string asset)
         {
             this.GameState = GameStates.Transition;
-            this.LevelObjects = MapMaker.ReadMap(map);
+            this.LevelObjects = MapMaker.ReadMap(asset).LevelObjects;
             this.LevelCreators.Dequeue();
             UpdateViewport(0);
         }
@@ -261,7 +254,7 @@ namespace TermProject
                 if (!isGameOver)
                 {
                     isGameOver = true;
-                    LevelObjects = MapMaker.ReadMap("maps/game-over");
+                    LevelObjects = MapMaker.ReadMap("maps/game-over").LevelObjects;
                     UpdateViewport(0);
                 }
 
@@ -314,7 +307,7 @@ namespace TermProject
             float distancePlayerIsAhead = player.Position.X + player.Center.X - this.ViewPort.X;
             if (distancePlayerIsAhead > this.ViewPort.Width * (3.0 / 5.0))
             {
-                UpdateViewport(Math.Min(maxViewportLength - this.ViewPort.Width, this.ViewPort.X + (distancePlayerIsAhead / CAMERA_SCROLL_SMOOTHNESS)));
+                UpdateViewport(Math.Min(this.MaxViewport.Width - this.ViewPort.Width, this.ViewPort.X + (distancePlayerIsAhead / CAMERA_SCROLL_SMOOTHNESS)));
 
                 for (int i = 0; i < Player.MAX_HEALTH; i++)
                 {
