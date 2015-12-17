@@ -18,7 +18,8 @@
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
     <Thumbnail>GameThumbnail.png</Thumbnail>
-    <PublishUrl>publish\</PublishUrl>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\builds\game-dev-1.0\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -28,10 +29,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -58,6 +59,18 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>EB295D5735717B6FED0C3A9B9B1C19AFD0D5F4A3</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>TermProject_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
@@ -121,26 +134,64 @@
     <Compile Include="GamePlay.cs" />
     <Compile Include="PlayerLife.cs" />
     <Compile Include="MapMaker.cs" />
-    <None Include="maps\you-win" />
-    <None Include="maps\level9" />
-    <None Include="maps\level9--intro" />
-    <None Include="maps\level8" />
-    <None Include="maps\level8--intro" />
-    <None Include="maps\level7" />
-    <None Include="maps\level7--intro" />
-    <None Include="maps\level6" />
-    <None Include="maps\level6--intro" />
-    <None Include="maps\level5" />
-    <None Include="maps\level5--intro" />
-    <None Include="maps\level4" />
-    <None Include="maps\level4--intro" />
-    <None Include="maps\game-over" />
-    <None Include="maps\level2--intro" />
-    <None Include="maps\level2" />
-    <None Include="maps\level3--intro" />
+    <Content Include="maps\you-win">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level9">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level9--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level8">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level8--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level7">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level7--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level6">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level6--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level5">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level5--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level4">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level4--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\game-over">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level2--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level3--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="Timer.cs" />
-    <None Include="maps\level-selection" />
-    <None Include="maps\level1--intro" />
+    <Content Include="maps\level-selection">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="maps\level1--intro">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Compile Include="particles\ExplosionParticleSystem.cs" />
     <Compile Include="particles\ExplosionSmokeParticleSystem.cs" />
     <Compile Include="particles\Particle.cs" />
@@ -154,11 +205,14 @@
     <Compile Include="enemies\SodaGuy.cs" />
     <Compile Include="tiles\SolidTile.cs" />
     <Compile Include="tiles\Tile.cs" />
+    <None Include="TermProject_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
-    <None Include="maps\level3" />
+    <Content Include="maps\level3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TermProjectContent\TermProjectContent.contentproj">
@@ -194,7 +248,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="maps\level1" />
+    <Content Include="maps\level1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />

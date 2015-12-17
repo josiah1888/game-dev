@@ -70,7 +70,7 @@ namespace TermProject
         public Map ReadMap(string asset)
         {
             List<GameObject> levelObjects = new List<GameObject>();
-            List<string> lines = new List<string>(System.IO.File.ReadAllLines("../../../" + asset)); // asset not getting copied to bin folder
+            List<string> lines = new List<string>(System.IO.File.ReadAllLines(asset));
             for (int height = 0; height < lines.Count; height++)
             {
                 for (int width = 0; width < lines.Min(i => i.Length); width++)
