@@ -1,7 +1,0 @@
-public Func<Vector2> frogAI(Enemy.EnemyState state)
-{
-    if (state == Enemy.EnemyState.Idle)
-    {
-           
-    }
-}
