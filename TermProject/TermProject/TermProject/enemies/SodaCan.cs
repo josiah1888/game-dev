@@ -10,7 +10,7 @@ namespace TermProject
 {
     public class SodaCan : Enemy
     {
-        public const float MAX_JUMP_HEIGHT = -10;
+        public const float MAX_JUMP_HEIGHT = -5;
         public const float DEATH_TOLERANCE = .50f;
         public const double DEATH_DELAY = 1500;
 
@@ -20,6 +20,7 @@ namespace TermProject
         private const float ACCERLATION = .05f;
         private const float FRICTION = .02f;
         private const float BOUNCE = 1.6f;
+        private const float MAX_SPEED = 2.0f;
 
         private SodaGuy SodaGuy;
 
@@ -49,10 +50,11 @@ namespace TermProject
             this.AttackSprite = this.IdleSprite = sodaGuy.SodaCanSprite;
             this.Direction = sodaGuy.Direction;
             this.SodaGuy = sodaGuy;
-            this.Velocity = new Vector2(Enemy.MAX_SPEED * sodaGuy.Direction.GetLateralDirectionSign(), MAX_JUMP_HEIGHT);
+            this.Velocity = new Vector2(MAX_SPEED * sodaGuy.Direction.GetLateralDirectionSign(), MAX_JUMP_HEIGHT);
             this.JumpHeight = MAX_JUMP_HEIGHT;
             this.DeathAction = (GameObject gameObject) => { };
             this.Timer = new Timer();
+            this.GravityAccerlation = .13f;
         }
 
         private static Action<Enemy, double> Ai

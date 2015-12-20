@@ -61,11 +61,12 @@ namespace TermProject
         protected bool ObeysGravity = true;
         protected Vector2 Origin = Vector2.Zero;
         protected Color Color = Color.White;
+        protected float GravityAccerlation = 1.0f;
 
         private const float MIN_BOUNCE_BACK = .8f;
         private const float VISION_FIELD = .02f;
+        private const float MAX_GRAVITY = 3.0f;
         private const int VISION_LENGTH = 350;
-        private const int MAX_GRAVITY = 3;
 
         private Vector2 FlightSpeeds = new Vector2(10, 10);
 
@@ -102,16 +103,10 @@ namespace TermProject
 
         public virtual void Update()
         {
-            if (Alive && !(this is SodaCan))
+            if (Alive)
             {
                 this.Position.X += this.Velocity.X;
                 this.Position.Y += this.Velocity.Y;
-                ApplyGravity();
-            }
-            else if (Alive && this is SodaCan)
-            {
-                this.Position.X += this.Velocity.X / 4;
-                this.Position.Y += this.Velocity.Y / 4;
                 ApplyGravity();
             }
         }
@@ -168,13 +163,9 @@ namespace TermProject
         {
             if (this.ObeysGravity)
             {
-                if (!IsOnGround() && !(this is SodaCan))
+                if (!IsOnGround())
                 {
-                    this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + 1);
-                }
-                else if (!IsOnGround() && this is SodaCan)
-                {
-                    this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + 0.25f);
+                    this.Velocity.Y = Math.Min(MAX_GRAVITY, this.Velocity.Y + this.GravityAccerlation);
                 }
                 else if (this.Velocity.Y > 0)
                 {
