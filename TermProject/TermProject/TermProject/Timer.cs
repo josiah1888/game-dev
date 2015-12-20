@@ -17,7 +17,6 @@ namespace TermProject
         /// <summary>
         /// Timer method to execute tasks on the main thread without sleeping or using C#6 features
         /// </summary>
-        /// <param name="timeLock">object to bind to</param>
         /// <param name="currentElapsed">current time elapsed</param>
         /// <param name="waitTime">total time to wait for</param>
         /// <returns></returns>
