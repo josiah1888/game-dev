@@ -1,21 +1,22 @@
-# game-dev
+# Jump Death
 Southeast Missouri State University 2D Game Development Project
 
-This is our Term Project at Southeast Missouri State University. We are writing a 2D platformer in XNA Game Studio. The big things we are include here are:
+This is our Term Project at Southeast Missouri State University. We are writing a 2D platformer in C# with the XNA Framework. The big things we have included here are:
 - Multiple enemies with varying AIs
 - Side scrolling
-- Moving background
+- Moving background elements
 - Sound effects, Background music
+- Particle explosions and smoke effects
 - Animated sprites
-- Multiple levels
-- Title screen, Level selection screen, Ending screen
+- Ten levels with transitions
+- Splash screens
+- Parallel processing
+- Most importantly, object oriented, maintainable, SOLID C# code
 
-We have some cool enemies planned out already. Say hello to:
+Say hello to the fearsome enemies in Jump Death:
 - Emu
   - A large, aggressive, flightless pecking bird
 - Frog
   - An always-in-your-way jumping beast with collision intersection AI
 - Soda Guy
   - This one's a lot of fun. The Soda Guy sits on the ground next to his bottomless six pack and repeated a cycle of aggrevated littering. Soda Guy picks up a can, chugs away, then pitches the can on the ground where it rolls, bounces and trips up the player.
-
-As far as explosions, sweet graphics and other cool ideas, well - we'll see what we can accomplish before Finals: Fall 2015
